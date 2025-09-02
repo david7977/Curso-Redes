@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>5 Tipos de software de red Test</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans'; margin: 24px; line-height: 1.45; }
+  header { border: 2px solid #e5e7eb; border-left: 8px solid var(--card); padding: 16px 18px; border-radius: 14px; margin-bottom: 22px; background: #f8fafc; }
+  h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; margin: 18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px 14px; border-radius:12px; }
+  .layerlist { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; margin-top:8px; }
+  .layer { background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
+  .layer b { display:block; }
+  .mnemo { background:#ecfeff; border:1px solid #bae6fd; padding:10px 12px; border-radius:12px; }
+  .muted { color:#6b7280; }
+
+  /* Novato panel */
+  .reader-tools { display:flex; gap:10px; align-items:center; margin: 12px 0 8px; flex-wrap:wrap; }
+  .switch { display:inline-flex; align-items:center; gap:8px; }
+  .switch button { padding:8px 12px; border-radius:999px; border:1px solid #e5e7eb; background:#1f2937; color:#fff; cursor:pointer; }
+  .novato { border: 1px solid #e5e7eb; border-left: 6px solid var(--accent); background:#eff6ff; color:#1e3a8a; padding: 14px; border-radius: 12px; margin: 10px 0 18px; }
+  .novato h3 { margin: 0 0 8px 0; }
+  .novato .cols { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px; }
+  .card { background:#ffffff; border:1px solid #dbeafe; border-radius:12px; padding:10px 12px; }
+  .check { margin-top:8px; font-size:.95rem; color:#334155; }
+
+  /* Quiz */
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; padding:0; margin:18px 0; background:#fff; overflow:hidden; }
+  .toolbar { position: sticky; top: 0; z-index: 50; display:flex; gap:10px; align-items:center; justify-content:flex-start; padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; }
+  .legend { padding: 8px 16px; font-size:.95rem; color:#475569; border-bottom:1px solid #e5e7eb; }
+  .qwrap { padding:16px; }
+  .q { border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:14px 0 12px; background:#fff; }
+  .q p { margin: 0 0 8px 0; }
+  label { display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; }
+  .correct { background: #dcfce7; border-color: #bbf7d0; }
+  .incorrect { background: #fee2e2; border-color: #fecaca; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+  button { padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer; background:#111827; color:#fff; }
+  button.secondary { background:#f3f4f6; color:#111827; }
+  .score { font-weight:700; margin-left: auto; }
+  .feedback { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--bad); background:#fff1f2; border-radius:10px; }
+  .success { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--ok); background:#ecfdf5; border-radius:10px; }
+  .hint { display:none; margin-top:8px; padding:8px 10px; border-left:4px solid var(--accent); background:#eff6ff; border-radius:10px; color:#1e3a8a; }
+  .hint-btn { background:#1f2937; }
+  footer { margin-top:24px; color:#475569; font-size:.95rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">Redes — SO de red + TCP/IP + Herramientas</div>
+  <h1>5 Tipos de software de red</h1>
+  <p>Las redes son como tu smartphone: coordinan muchas tareas a la vez. Para que los datos lleguen <i>bien y seguros</i>, se combinan <b>sistemas operativos de red</b>, <b>protocolos</b> y <b>herramientas</b>.</p>
+
+  <div class="layerlist">
+    <div class="layer"><b>Sistemas operativos de red</b> Controlan el <i>hardware</i> del router/switch para enrutar y conmutar, aplicar seguridad y QoS. Ej.: <b>Cisco IOS</b>, <b>Juniper Junos</b>, <b>Cumulus Linux</b>.</div>
+    <div class="layer"><b>Protocolos (TCP/IP)</b> Reglas para mover datos: <b>TCP</b> asegura orden/fiabilidad; <b>IP</b> direcciona y enruta.</div>
+    <div class="layer"><b>Análisis de tráfico</b> Mirar “los paquetes” para diagnosticar: <b>Wireshark</b> (GUI), <b>tcpdump</b> (CLI).</div>
+    <div class="layer"><b>Monitorización</b> Vigilar todo y alertar: <b>Nagios</b>, <b>Zabbix</b>, <b>OpenNMS</b>.</div>
+  </div>
+
+  <h2>Nemotecnia</h2>
+  <div class="mnemo">
+    <p><b>Recuerda el flujo</b>: <span class="mono">SPAM</span> → <b>S</b>istemas, <b>P</b>rotocolos, <b>A</b>nálisis, <b>M</b>onitorización.</p>
+    <p class="muted">Primero el equipo (SO), luego las reglas (TCP/IP), después miras paquetes (Wireshark/tcpdump) y por último vigilas todo (Nagios/Zabbix/OpenNMS).</p>
+  </div>
+
+  <h2>Historia breve</h2>
+  <div class="story">
+    <p>Tu empresa envía un informe. El <b>SO del router</b> decide por qué puerto/salto sale. <b>TCP</b> corta en trozos numerados y <b>IP</b> pone direcciones. Si algo va mal, miras con <b>Wireshark</b> o <b>tcpdump</b> para ver qué pasa. Y si se cae algo, te avisa <b>Nagios/Zabbix/OpenNMS</b> antes de que el jefe lo note.</p>
+  </div>
+
+  <!-- Modo Novato -->
+  <div class="reader-tools">
+    <div class="switch">
+      <span>Modo Novato:</span>
+      <button id="toggle-novato">Activado</button>
+    </div>
+    <span class="muted">Explicación llana y mapa mental para empezar desde cero.</span>
+  </div>
+
+  <section id="novato-panel" class="novato">
+    <h3>Explicación para principiantes</h3>
+    <div class="cols">
+      <div class="card">
+        <b>Las 4 piezas</b>
+        <ul>
+          <li><b>SO de red:</b> “sistema del router/switch” (IOS, Junos, Cumulus) que manda el tráfico y aplica seguridad.</li>
+          <li><b>TCP/IP:</b> TCP cuida el orden y reenvía pérdidas; IP elige rutas con direcciones.</li>
+          <li><b>Análisis:</b> Wireshark (ventanas) y tcpdump (terminal) para ver paquetes.</li>
+          <li><b>Monitorización:</b> Nagios/Zabbix/OpenNMS vigilan y alertan.</li>
+        </ul>
+        <div class="check">Frase clave: <span class="mono">SO → TCP/IP → Análisis → Monitorización</span>.</div>
+      </div>
+      <div class="card">
+        <b>¿Cuándo mirar cada cosa?</b>
+        <ul>
+          <li><b>Cortes Wi‑Fi/cable</b> → revisa el equipo (SO, puertos, VLAN, logs).</li>
+          <li><b>Ping ok pero la web no abre</b> → capa aplicación/puertos (TCP), DNS.</li>
+          <li><b>Pérdidas/latencia</b> → captura con Wireshark/tcpdump y mira retransmisiones.</li>
+          <li><b>Prevención</b> → activa alertas en Nagios/Zabbix (CPU, interfaz, latencia, HTTPS, etc.).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <b>Mini glosario</b>
+        <ul>
+          <li><b>Conmutación</b>: mover tramas dentro de una LAN (switch).</li>
+          <li><b>Enrutamiento</b>: mover paquetes entre redes (router).</li>
+          <li><b>ACL</b>: lista de control de acceso; permite/bloquea tráfico.</li>
+          <li><b>QoS</b>: priorizar voz/vídeo frente a descargas.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <b>Ejemplos</b>
+        <ul>
+          <li><b>Cisco IOS</b> y <b>Junos</b>: CLI robusta, protocolos de enrutamiento, ACL, QoS.</li>
+          <li><b>Cumulus Linux</b>: Linux en switches “whitebox”, integra herramientas estándar y automatización.</li>
+          <li><b>Wireshark</b>: filtra por <span class="mono">ip.addr==x</span>, <span class="mono">tcp.port==443</span>.</li>
+          <li><b>tcpdump</b>: <span class="mono">tcpdump -i eth0 port 53</span> (DNS).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</header>
+
+<section class="quiz-card">
+  <div class="toolbar">
+    <div class="controls">
+      <button id="btn-correct">Corregir</button>
+      <button id="btn-reset" class="secondary">Reiniciar y barajar</button>
+    </div>
+    <span class="score" id="score"></span>
+  </div>
+  <div class="legend">Usa <b>Pista</b> si dudas. Al corregir: correctas en <b>verde</b>, seleccionadas incorrectas en <b>rojo</b>, y verás <b>respuesta correcta + explicación</b> cuando falle.</div>
+  <div class="qwrap" id="quiz"></div>
+</section>
+
+<footer>
+  <p class="muted">Tip: repite <b>SPAM</b> (Sistemas, Protocolos, Análisis, Monitorización) antes del test.</p>
+</footer>
+
+<script>
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const novatoBtn = document.getElementById('toggle-novato');
+const novatoPanel = document.getElementById('novato-panel');
+function setNovato(on) {
+  novatoPanel.style.display = on ? 'block' : 'none';
+  novatoBtn.textContent = on ? 'Activado' : 'Desactivado';
+  localStorage.setItem('novato_on', on ? '1' : '0');
+}
+novatoBtn.addEventListener('click', () => setNovato(novatoPanel.style.display === 'none'));
+setNovato(localStorage.getItem('novato_on') !== '0');
+
+const BANK = [
+  { type:"single",
+    text:"¿Qué afirmación describe mejor a un sistema operativo de red (en routers/switches)?",
+    options:[
+      {t:"Gestiona hardware de red, enrutamiento/conmutación y seguridad", ok:true},
+      {t:"Es un antivirus para PCs de usuario", ok:false},
+      {t:"Solo muestra estadísticas sin configurar nada", ok:false}
+    ],
+    hint:"Piensa en quién decide por dónde sale el tráfico y aplica ACL/QoS.",
+    explain:"El SO de red controla puertos, protocolos (OSPF/BGP), ACLs, QoS, etc."
+  },
+  { type:"single",
+    text:"Cisco utiliza principalmente el sistema operativo llamado:",
+    options:[
+      {t:"IOS", ok:true},
+      {t:"Junos", ok:false},
+      {t:"OpenNMS", ok:false}
+    ],
+    hint:"Interfaz CLI clásica de Cisco.",
+    explain:"IOS es el SO de dispositivos Cisco (routers/switches)."
+  },
+  { type:"single",
+    text:"¿Qué proveedor usa Junos?",
+    options:[
+      {t:"Juniper Networks", ok:true},
+      {t:"Cumulus Networks", ok:false},
+      {t:"Zabbix LLC", ok:false}
+    ],
+    hint:"Marca asociada a routers/switches de alto rendimiento.",
+    explain:"Junos es el SO de Juniper Networks."
+  },
+  { type:"single",
+    text:"Cumulus Linux destaca porque:",
+    options:[
+      {t:"Es Linux para switches ‘whitebox’ y usa herramientas estándar", ok:true},
+      {t:"Solo corre en routers Cisco propietarios", ok:false},
+      {t:"Es una plataforma de monitorización", ok:false}
+    ],
+    hint:"Piensa en Linux + automatización sobre hardware abierto.",
+    explain:"Cumulus Linux permite administrar switches con herramientas Linux y automatización."
+  },
+  { type:"multi",
+    text:"Relaciona categorías con ejemplos correctos:",
+    options:[
+      {t:"SO de red → IOS / Junos / Cumulus", ok:true},
+      {t:"Análisis de tráfico → Wireshark / tcpdump", ok:true},
+      {t:"Monitorización → Nagios / Zabbix / OpenNMS", ok:true},
+      {t:"Protocolos → TCP / IP", ok:true}
+    ],
+    hint:"Piensa en la nemotecnia SPAM.",
+    explain:"Sistemas (IOS/Junos/Cumulus), Protocolos (TCP/IP), Análisis (Wireshark/tcpdump), Monitorización (Nagios/Zabbix/OpenNMS)."
+  },
+  { type:"single",
+    text:"El propósito principal de TCP es:",
+    options:[
+      {t:"Garantizar entrega fiable y ordenada con control de flujo", ok:true},
+      {t:"Elegir la ruta entre redes", ok:false},
+      {t:"Detectar presencia de dispositivos vía ARP", ok:false}
+    ],
+    hint:"Trocear, numerar, confirmar, reintentar.",
+    explain:"TCP segmenta, numera, confirma (ACK) y retransmite para fiabilidad y orden."
+  },
+  { type:"single",
+    text:"El propósito principal de IP es:",
+    options:[
+      {t:"Direccionar y enrutar paquetes entre redes", ok:true},
+      {t:"Priorizar paquetes de voz sobre datos", ok:false},
+      {t:"Monitorear el estado de servicios", ok:false}
+    ],
+    hint:"Direcciones y rutas.",
+    explain:"IP define direcciones lógicas y el enrutamiento entre redes."
+  },
+  { type:"single",
+    text:"Wireshark frente a tcpdump se diferencia principalmente en que:",
+    options:[
+      {t:"Wireshark tiene GUI; tcpdump es CLI", ok:true},
+      {t:"tcpdump no puede capturar paquetes", ok:false},
+      {t:"Wireshark solo funciona en Windows", ok:false}
+    ],
+    hint:"Ventanas vs terminal.",
+    explain:"Wireshark ofrece interfaz gráfica; tcpdump funciona en línea de comandos."
+  },
+  { type:"multi",
+    text:"¿Qué puedes monitorizar con Nagios/Zabbix/OpenNMS?",
+    options:[
+      {t:"Disponibilidad de hosts/servicios", ok:true},
+      {t:"Uso de CPU/Memoria/Interfaces", ok:true},
+      {t:"Alertas y gráficos de rendimiento", ok:true},
+      {t:"Compilar núcleos de Linux", ok:false}
+    ],
+    hint:"Observabilidad y alertas, no compilación.",
+    explain:"Estas plataformas vigilan métricas/servicios y alertan ante fallos."
+  },
+  { type:"single",
+    text:"Una ACL en un router sirve para:",
+    options:[
+      {t:"Permitir o bloquear tráfico según reglas", ok:true},
+      {t:"Cambiar el sistema de archivos del router", ok:false},
+      {t:"Reparar cables dañados", ok:false}
+    ],
+    hint:"Seguridad basada en reglas.",
+    explain:"Las ACLs filtran tráfico por IP/puertos/protocolos."
+  },
+  { type:"single",
+    text:"Si la videollamada se entrecorta por mala señal Wi‑Fi, es problema sobre todo de:",
+    options:[
+      {t:"Capa de acceso/Física", ok:true},
+      {t:"Capa de aplicación", ok:false},
+      {t:"Monitorización", ok:false}
+    ],
+    hint:"Medio de transmisión: potencia, canal, interferencias.",
+    explain:"La calidad del enlace inalámbrico pertenece a capa física/enlace."
+  },
+  { type:"multi",
+    text:"Elegir todas las funciones típicas de un SO de red moderno:",
+    options:[
+      {t:"Soporte de protocolos de enrutamiento (OSPF/BGP)", ok:true},
+      {t:"QoS para priorizar tráfico", ok:true},
+      {t:"RBAC/usuarios/ssh/logs", ok:true},
+      {t:"Renderizar gráficos 3D", ok:false}
+    ],
+    hint:"Piensa en control de tráfico y seguridad.",
+    explain:"Los SO de red manejan protocolos, QoS y seguridad/gestión de usuarios."
+  },
+  { type:"single",
+    text:"Para ver solo tráfico DNS con tcpdump, ¿qué filtro sirve de ejemplo?",
+    options:[
+      {t:"tcpdump -i eth0 port 53", ok:true},
+      {t:"tcpdump -i eth0 port 22 and host 8.8.8.8 (SSH)", ok:false},
+      {t:"tcpdump -i eth0 arp and port 80", ok:false}
+    ],
+    hint:"El puerto típico de DNS.",
+    explain:"DNS suele usar puerto 53 (UDP/TCP)."
+  },
+  { type:"single",
+    text:"Zabbix se diferencia de tcpdump en que Zabbix:",
+    options:[
+      {t:"Es plataforma de monitorización con agentes y gráficos", ok:true},
+      {t:"Es un sniffer de paquetes en CLI", ok:false},
+      {t:"Es un SO de switches", ok:false}
+    ],
+    hint:"Monitorización vs captura de paquetes.",
+    explain:"Zabbix monitoriza y alerta; tcpdump captura paquetes."
+  },
+  { type:"multi",
+    text:"Tu red local funciona, pero no sales a Internet desde la PC. ¿Qué revisar primero?",
+    options:[
+      {t:"Puerta de enlace por defecto en la PC", ok:true},
+      {t:"Que el router tenga ruta/Internet", ok:true},
+      {t:"Nombre del switch", ok:false},
+      {t:"Color del cable de red", ok:false}
+    ],
+    hint:"Ruta de salida y configuración IP coherente.",
+    explain:"Sin gateway o sin ruta, no hay tráfico fuera de la subred."
+  },
+  { type:"single",
+    text:"OpenNMS es principalmente:",
+    options:[
+      {t:"Una plataforma de gestión/monitorización de red", ok:true},
+      {t:"Un sistema operativo para routers", ok:false},
+      {t:"Un protocolo de enrutamiento", ok:false}
+    ],
+    hint:"Gestión y eventos.",
+    explain:"OpenNMS ofrece monitorización/gestión con eventos y descubrimiento."
+  },
+  { type:"multi",
+    text:"En Wireshark, para seguir una conexión HTTPS específica, te ayudan filtros como:",
+    options:[
+      {t:"tcp.port == 443", ok:true},
+      {t:"ip.addr == <IP_destino>", ok:true},
+      {t:"arp.opcode == request", ok:false},
+      {t:"icmp.type == 8 (echo request)", ok:false}
+    ],
+    hint:"Piensa en puerto 443 y direcciones IP implicadas.",
+    explain:"HTTPS viaja en TCP/443; puedes acotar además por IP origen/destino."
+  },
+  { type:"single",
+    text:"¿Qué ventaja aporta la arquitectura modular de Junos?",
+    options:[
+      {t:"Aislar procesos y mejorar estabilidad/seguridad", ok:true},
+      {t:"Permitir gráficos 4K en el router", ok:false},
+      {t:"Eliminar la necesidad de protocolos", ok:false}
+    ],
+    hint:"Cada demonio por su lado.",
+    explain:"La modularidad aísla fallos por proceso y favorece estabilidad."
+  }
+];
+
+let QUESTIONS = [];
+const quiz = document.getElementById('quiz');
+const btnCorrect = document.getElementById('btn-correct');
+const btnReset = document.getElementById('btn-reset');
+const scoreEl = document.getElementById('score');
+
+function createQuestionEl(q, idx) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'q';
+  wrapper.dataset.type = q.type;
+
+  const p = document.createElement('p');
+  p.innerHTML = `<b>${idx + 1}.</b> ${q.text}`;
+  wrapper.appendChild(p);
+
+  const opts = shuffle(q.options.map(o => ({...o})));
+  opts.forEach(o => {
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = o.ok ? 'true' : 'false';
+    label.appendChild(input);
+    label.insertAdjacentText('beforeend', ' ' + o.t);
+    wrapper.appendChild(label);
+  });
+
+  const hintBtn = document.createElement('button');
+  hintBtn.type = 'button';
+  hintBtn.textContent = 'Pista';
+  hintBtn.className = 'hint-btn secondary';
+  const hintBox = document.createElement('div');
+  hintBox.className = 'hint';
+  hintBox.innerHTML = q.hint;
+  wrapper.appendChild(hintBtn);
+  wrapper.appendChild(hintBox);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  wrapper.appendChild(fb);
+  const ok = document.createElement('div');
+  ok.className = 'success';
+  ok.textContent = '✅ ¡Correcto!';
+  wrapper.appendChild(ok);
+
+  hintBtn.addEventListener('click', () => {
+    hintBox.style.display = 'block';
+    hintBtn.disabled = true;
+  });
+
+  return wrapper;
+}
+
+function buildQuiz() {
+  quiz.innerHTML = '';
+  QUESTIONS = shuffle(BANK.map(q => ({...q, options: q.options.map(o => ({...o}))})));
+  QUESTIONS.forEach((q, i) => quiz.appendChild(createQuestionEl(q, i)));
+  scoreEl.textContent = '';
+  window.scrollTo({ top: 0 });
+}
+
+function evaluateQuestion(node) {
+  const type = node.dataset.type;
+  const labels = Array.from(node.querySelectorAll('label'));
+  let ok = true;
+  let correctTexts = [];
+
+  labels.forEach(label => {
+    label.classList.remove('correct', 'incorrect');
+    const cb = label.querySelector('input[type="checkbox"]');
+    const isTrue = cb.value === 'true';
+    const checked = cb.checked;
+    if (isTrue) {
+      label.classList.add('correct');
+      correctTexts.push(label.textContent.trim());
+      if (!checked) ok = false;
+    } else {
+      if (checked) {
+        label.classList.add('incorrect');
+        ok = false;
+      }
+    }
+  });
+
+  if (type === 'single') {
+    const checkedCount = labels.filter(l => l.querySelector('input').checked).length;
+    const correctChecked = labels.some(l => l.querySelector('input').checked && l.querySelector('input').value === 'true');
+    if (!(checkedCount === 1 && correctChecked)) ok = false;
+  }
+
+  const fb = node.querySelector('.feedback');
+  const okBox = node.querySelector('.success');
+  if (ok) {
+    fb.style.display = 'none';
+    fb.innerHTML = '';
+    okBox.style.display = 'block';
+  } else {
+    okBox.style.display = 'none';
+    const qText = node.querySelector('p').innerText.replace(/^\d+\.\s*/, '');
+    const match = QUESTIONS.find(q => q.text === qText);
+    const explanation = match ? match.explain : '';
+    const correctList = correctTexts.map(t => `<li>${t}</li>`).join('');
+    fb.innerHTML = `<b>Respuesta correcta:</b><ul>${correctList}</ul><div>${explanation}</div>`;
+    fb.style.display = 'block';
+  }
+  return ok;
+}
+
+function correctAll() {
+  const qNodes = Array.from(document.querySelectorAll('.q'));
+  let right = 0;
+  qNodes.forEach(node => { if (evaluateQuestion(node)) right++; });
+  scoreEl.textContent = `Puntuación: ${right} / ${qNodes.length}`;
+  document.querySelector('.quiz-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  buildQuiz();
+}
+
+document.getElementById('btn-correct').addEventListener('click', correctAll);
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+buildQuiz();
+</script>
+</body>
+</html>

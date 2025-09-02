@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13 - Direccionamiento IP y Subneting</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#f8fafc; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  .pill { background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px; margin:6px 0;}
+  .story { border:1px dashed #cbd5e1; background:#fff; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin:14px 0;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; margin:6px 0; border:1px solid #e5e7eb; border-radius:10px;}
+  .correct{background:#dcfce7;}
+  .incorrect{background:#fee2e2;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px; border-radius:10px;}
+  .feedback{background:#fff1f2; border-left:4px solid var(--bad);}
+  .success{background:#ecfdf5; border-left:4px solid var(--ok);}
+  .hint{background:#eff6ff; border-left:4px solid var(--accent);}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; border:none; cursor:pointer;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Unidad 3</div>
+<h1>Direccionamiento IP y Subneting</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+El <b>direccionamiento IP</b> permite identificar dispositivos en la red.  
+Existen dos versiones: <b>IPv4</b> (32 bits) e <b>IPv6</b> (128 bits).  
+El <b>subneting</b> divide redes grandes en subredes pequeñas para mejorar seguridad y eficiencia.  
+También diferenciamos <b>IP pública</b> (visible en internet) e <b>IP privada</b> (uso interno).
+</div>
+
+<h2>🧩 Conceptos Clave (10 años)</h2>
+<div class="card">
+Imagina que cada casa del mundo necesita una dirección única.  
+Eso son las <b>IP</b>. IPv4 son como números cortos (ej: 192.168.1.1), pero se están acabando. IPv6 son números muy largos (ej: 2001:db8::1) que nunca se acabarán.  
+El <b>subneting</b> es como dividir un barrio en calles más pequeñas para organizar mejor el tráfico.  
+Las <b>IPs públicas</b> son como direcciones en la calle; las privadas son como direcciones dentro de un edificio.
+</div>
+
+<h2>📚 Desglose</h2>
+<div class="grid">
+<div class="card"><ul>
+<li><b>IPv4:</b> 32 bits, ~4.3 mil millones de direcciones, notación decimal con puntos.</li>
+<li><b>IPv6:</b> 128 bits, espacio casi infinito, notación hexadecimal con “:”.</li>
+<li><b>Subneting:</b> divide redes grandes en subredes más pequeñas.</li>
+<li><b>IP Privada:</b> uso en LAN internas, no visible en internet.</li>
+<li><b>IP Pública:</b> asignada por ISP, accesible desde internet.</li>
+</ul></div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+En 1980, <b>IPv4</b> parecía suficiente. Pero con el crecimiento de internet se agotaron las direcciones.  
+En los 90 nació <b>IPv6</b>, diseñado para soportar millones de millones de dispositivos.  
+El <b>subneting</b> se convirtió en la herramienta de los ingenieros para organizar y proteger las redes empresariales.
+</div>
+
+<section class="novato">
+<h3>Modo Novato</h3>
+<div class="card"><b>Recordatorio:</b>
+<ul>
+<li>IPv4 = 4 números con puntos (ej: 192.168.0.1)</li>
+<li>IPv6 = números largos con “:”</li>
+<li>Subneting = dividir redes grandes en subredes</li>
+<li>Privada = dentro de casa/empresa</li>
+<li>Pública = visible en internet</li>
+</ul></div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+<li>Direccionamiento IP identifica dispositivos en red.</li>
+<li>IPv4 limitado; IPv6 prácticamente infinito.</li>
+<li>Subneting organiza y mejora seguridad.</li>
+<li>IP privada = uso interno; IP pública = acceso global.</li>
+</ul>
+
+<h2>Resumen exprés</h2>
+<div class="card">IP = dirección en internet. IPv4 corto, IPv6 largo. Subneting organiza. Privada interna, Pública global.</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+<button id="btn-correct" class="primary">Corregir</button>
+<button id="btn-shuffle" class="secondary">Barajar</button>
+<button id="btn-reset" class="secondary">Reiniciar</button>
+<span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const BANK=[
+// 100% texto
+{text:"¿Cuál es la función principal del direccionamiento IP?",options:[{t:"Identificar y localizar dispositivos en una red",ok:true},{t:"Controlar voltajes eléctricos",ok:false},{t:"Configurar impresoras",ok:false}],hint:"Es la 'dirección' en internet.",explain:"IP identifica dispositivos y permite su comunicación."},
+{text:"¿Cuántos bits tiene IPv4?",options:[{t:"32",ok:true},{t:"64",ok:false},{t:"128",ok:false}],hint:"Son 4 bloques decimales.",explain:"IPv4 usa 32 bits → 4 números separados por puntos."},
+{text:"¿Cuántos bits tiene IPv6?",options:[{t:"128",ok:true},{t:"32",ok:false},{t:"256",ok:false}],hint:"Muy largo.",explain:"IPv6 usa 128 bits en notación hexadecimal."},
+{text:"¿Qué es el subneting?",options:[{t:"Dividir una red grande en subredes más pequeñas",ok:true},{t:"Un protocolo de correo",ok:false},{t:"Un software de encriptación",ok:false}],hint:"Organización de redes.",explain:"El subneting mejora seguridad, rendimiento y gestión de IPs."},
+{text:"¿Qué diferencia hay entre IP pública y privada?",options:[{t:"La pública es accesible en internet, la privada solo dentro de la red local",ok:true},{t:"La privada es más rápida",ok:false},{t:"La pública no tiene seguridad",ok:false}],hint:"Una es global, la otra interna.",explain:"Privada = LAN interna. Pública = Internet."},
+{text:"¿Qué ventaja ofrece IPv6 sobre IPv4?",options:[{t:"Espacio casi infinito de direcciones",ok:true},{t:"No necesita routers",ok:false},{t:"Funciona sin cables",ok:false}],hint:"Escasez de IPv4.",explain:"IPv6 soluciona la limitación de direcciones."},
+
+// Extra profesional
+{text:"En una empresa, ¿por qué aplicar subneting?",options:[{t:"Para segmentar departamentos y aumentar seguridad",ok:true},{t:"Para ahorrar cables",ok:false},{t:"Para evitar contraseñas",ok:false}],hint:"Organización + seguridad.",explain:"El subneting permite aislar tráfico y reducir riesgos."},
+{text:"Si trabajas desde casa, ¿qué tipo de IP usa tu PC en la LAN?",options:[{t:"Privada",ok:true},{t:"Pública",ok:false},{t:"Ninguna",ok:false}],hint:"No visible en internet.",explain:"Los dispositivos en casa usan IP privadas, el router tiene la pública."},
+{text:"¿Qué pasa si intentas usar la misma IP privada en dos equipos?",options:[{t:"Conflicto de direcciones",ok:true},{t:"Aumenta la velocidad",ok:false},{t:"Se crea otra subred",ok:false}],hint:"No puede duplicarse.",explain:"Dos dispositivos no pueden compartir la misma IP sin conflicto."}
+];
+
+let QUESTIONS=[];const quiz=document.getElementById('quiz');const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,i){
+ const w=document.createElement('div');w.className='q';
+ const p=document.createElement('p');p.innerHTML=`<b>${i+1}.</b> ${q.text}`;w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,j)=>{const id=`q${i}_opt${j}`;const label=document.createElement('label');label.setAttribute('for',id);
+ const input=document.createElement('input');input.type='radio';input.name=`q${i}`;input.id=id;input.value=o.ok?'true':'false';
+ label.appendChild(input);label.insertAdjacentText('beforeend',' '+o.t);w.appendChild(label);});
+ const hb=document.createElement('button');hb.type='button';hb.textContent='Pista';hb.className='hint-btn';
+ const hbBox=document.createElement('div');hbBox.className='hint';hbBox.innerHTML=q.hint;w.appendChild(hb);w.appendChild(hbBox);
+ const fb=document.createElement('div');fb.className='feedback';w.appendChild(fb);
+ const ok=document.createElement('div');ok.className='success';ok.textContent='✅ ¡Correcto!';w.appendChild(ok);
+ hb.addEventListener('click',()=>{hbBox.style.display='block';hb.disabled=true;});
+ return w;
+}
+function buildQuiz(){quiz.innerHTML='';QUESTIONS=shuffle(BANK.map(q=>({...q,options:q.options.map(o=>({...o}))})));QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i)));scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labs=Array.from(node.querySelectorAll('label'));let ok=false;let sel=null;let corr=null;
+ labs.forEach(l=>{l.classList.remove('correct','incorrect');const input=l.querySelector('input');if(input.value==='true') corr=l;if(input.checked){sel=l;ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback');const okBox=node.querySelector('.success');
+ if(ok){corr.classList.add('correct');okBox.style.display='block';fb.style.display='none';}
+ else{if(sel) sel.classList.add('incorrect');if(corr) corr.classList.add('correct');okBox.style.display='none';fb.innerHTML=`<b>Respuesta correcta:</b> ${corr?corr.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+.\s*/,'')).explain}</div>`;fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q');let right=0;nodes.forEach(n=>{if(evaluateQuestion(n)) right++;});scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

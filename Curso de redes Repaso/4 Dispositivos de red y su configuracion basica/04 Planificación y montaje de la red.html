@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas Planificación y Montaje de Redes</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas sobre Planificación y Montaje de Redes</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Qué elementos básicos se necesitan para construir una red desde cero?", options:[{t:"Routers, switches, cables y computadoras",ok:true},{t:"Solo Wi-Fi",ok:false},{t:"Un servidor y nada más",ok:false}], hint:"Piensa en componentes físicos.", explain:"Los elementos básicos son routers, switches, cables y PCs."},
+ {text:"¿Qué se debe planificar primero en una red?", options:[{t:"La disposición física y selección de equipos",ok:true},{t:"La contraseña Wi-Fi",ok:false},{t:"La compra de impresoras",ok:false}], hint:"Antes de cablear.", explain:"Primero se planifica la disposición y equipos."},
+ {text:"¿Qué impacto tiene elegir bien los componentes?", options:[{t:"Mejora eficiencia y seguridad",ok:true},{t:"Ninguno",ok:false},{t:"Hace la red más lenta",ok:false}], hint:"Piensa en calidad.", explain:"La elección correcta mejora rendimiento y seguridad."},
+ {text:"¿Qué es una LAN?", options:[{t:"Red de área local en espacio limitado",ok:true},{t:"Red global de Internet",ok:false},{t:"Un protocolo de enrutamiento",ok:false}], hint:"Oficina o casa.", explain:"LAN conecta dispositivos en un área pequeña."},
+ {text:"¿Qué dirección se asigna al router como gateway?", options:[{t:"Primera dirección IP utilizable de la subred",ok:true},{t:"La última dirección broadcast",ok:false},{t:"Una IP aleatoria",ok:false}], hint:"Suele ser .1", explain:"Generalmente se asigna la primera IP utilizable."},
+ {text:"¿Qué dispositivo central conecta cuatro departamentos?", options:[{t:"Router con interfaces y switches",ok:true},{t:"Un firewall",ok:false},{t:"Un hub",ok:false}], hint:"Debe enrutar y conmutar.", explain:"Se usan routers y switches por departamento."},
+ {text:"¿Qué IP se asigna como gateway a PCs?", options:[{t:"La IP del puerto del router conectado",ok:true},{t:"Cualquier IP libre",ok:false},{t:"La IP del switch",ok:false}], hint:"Es el puerto de salida.", explain:"El gateway es la IP del router correspondiente."},
+ {text:"¿Qué rango de IPs se usó para edición, animación y producción?", options:[{t:"192.168.2.0/24",ok:true},{t:"10.0.0.0/8",ok:false},{t:"172.16.0.0/16",ok:false}], hint:"Segundo octeto = 2.", explain:"Se asignó 192.168.2.0/24 a esos departamentos."},
+ {text:"¿Qué rango de IPs se usó para sistemas?", options:[{t:"192.168.1.0/24",ok:true},{t:"192.168.3.0/24",ok:false},{t:"192.168.10.0/24",ok:false}], hint:"Primer octeto privado típico.", explain:"El depto. de sistemas usa 192.168.1.0/24."},
+ {text:"¿Cómo comprobar red funcionando?", options:[{t:"Haciendo ping entre PCs",ok:true},{t:"Reiniciando router",ok:false},{t:"Instalando antivirus",ok:false}], hint:"Comando básico de prueba.", explain:"Se hacen pings y se verifican respuestas."},
+ {text:"¿Por qué usar switches en departamentos?", options:[{t:"Organizan tráfico y evitan colisiones",ok:true},{t:"Son más baratos",ok:false},{t:"No requieren configuración",ok:false}], hint:"Mejor que hubs.", explain:"Switches mejoran velocidad y reducen colisiones."},
+ {text:"¿Qué ventaja ofrecen rangos IP diferentes por departamento?", options:[{t:"Segmentan tráfico y evitan conflictos",ok:true},{t:"Duplican direcciones",ok:false},{t:"No aportan nada",ok:false}], hint:"Evitan solapamientos.", explain:"Se facilita gestión y seguridad."},
+ {text:"¿Qué pasa si dos departamentos usan mismo rango IP?", options:[{t:"Conflictos de direcciones",ok:true},{t:"Mayor seguridad",ok:false},{t:"Mejor rendimiento",ok:false}], hint:"No se puede duplicar.", explain:"Los conflictos impiden comunicación correcta."},
+ {text:"¿Qué hacen los puertos Gigabit Ethernet en router?", options:[{t:"Conectan redes departamentales",ok:true},{t:"Solo sirven para Wi-Fi",ok:false},{t:"Dan energía",ok:false}], hint:"Son enlaces rápidos.", explain:"Permiten conectar subredes entre sí."},
+ {text:"¿Por qué activar puertos tras configurar IP?", options:[{t:"Están deshabilitados por defecto",ok:true},{t:"Porque cambia la contraseña",ok:false},{t:"Para ahorrar energía",ok:false}], hint:"Recuerda no shutdown.", explain:"Sin activarlos no transmiten."},
+ {text:"¿Qué cableado usarías en empresa gráfica?", options:[{t:"Gigabit para diseño, estándar/wi-fi para otros",ok:true},{t:"Siempre coaxial",ok:false},{t:"Cable telefónico",ok:false}], hint:"Depende del tráfico.", explain:"Gigabit para archivos grandes, básico para otros."},
+ {text:"¿Cómo priorizar diseño hacia servidores?", options:[{t:"Switch dedicado y QoS",ok:true},{t:"Instalar más PCs",ok:false},{t:"Compartir Wi-Fi",ok:false}], hint:"Calidad de servicio.", explain:"QoS y switch dedicado garantizan prioridad."},
+ {text:"¿Qué riesgo hay si todos comparten mismo switch?", options:[{t:"Congestión y menos seguridad",ok:true},{t:"Más velocidad",ok:false},{t:"Nada",ok:false}], hint:"Sin segmentación.", explain:"Habrá congestión y accesos indebidos."},
+ {text:"¿Qué pasos incluye verificación final?", options:[{t:"IPs, gateways, pings y comunicación entre deptos.",ok:true},{t:"Apagar PCs",ok:false},{t:"Cambiar cables",ok:false}], hint:"Última comprobación.", explain:"Se revisa configuración y conectividad."},
+ {text:"¿Cómo organizar físicamente router, switches y PCs?", options:[{t:"Router en sala de comunicaciones, switches por depto., cableado estructurado y gateways configurados",ok:true},{t:"Router en cada PC",ok:false},{t:"Todo en un hub",ok:false}], hint:"Eficiencia y seguridad.", explain:"Se centraliza router, switches segmentan y PCs se conectan ordenados."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\\.\\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

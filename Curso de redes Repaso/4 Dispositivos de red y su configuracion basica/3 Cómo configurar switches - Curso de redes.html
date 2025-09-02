@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20 - Configuración y mantenimiento de switches</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border:1px solid #e5e7eb; border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin: 14px 0;}
+  .novato .cols {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 20</div>
+<h1>Configuración y mantenimiento de switches</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+Un <b>switch</b> bien configurado mejora el <b>rendimiento</b> y la <b>seguridad</b> de una red.  
+En este capítulo aprenderás:  
+- Configuración inicial de un switch.  
+- Asignación de dirección IP para administración remota.  
+- Creación y configuración de VLANs.  
+- Uso de VLANs para segmentar tráfico, aumentar seguridad y reducir broadcast.  
+- Administración remota mediante Telnet/SSH.
+</div>
+
+<h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+<div class="card">
+Imagina que un switch es como un <b>edificio de oficinas</b>:  
+- Cada piso es una <b>VLAN</b>, donde solo entran empleados de ese departamento.  
+- La dirección IP del switch es como la <b>oficina del administrador</b>, desde donde controla todo.  
+- Si alguien quiere entrar a otro piso, debe pasar por un router (o firewall).  
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid">
+  <div class="card">
+    <ul>
+      <li><b>Inicialización:</b> limpiar config previa, definir hostname, contraseñas.</li>
+      <li><b>Dirección IP:</b> en una interfaz VLAN para administración remota.</li>
+      <li><b>VLANs:</b> crean redes virtuales dentro del switch para segmentar tráfico.</li>
+      <li><b>Seguridad:</b> VLAN = aislamiento de departamentos.</li>
+      <li><b>Administración remota:</b> Telnet (inseguro) o SSH (recomendado).</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+Antes, todos los dispositivos de una oficina compartían la misma red → mucho ruido y riesgo.  
+Con los <b>switches gestionables</b> y <b>VLANs</b>, se pudo separar tráfico:  
+Contabilidad, Ventas, RRHH y Soporte ya no interfieren entre sí.  
+Hoy, la gestión remota ahorra tiempo y permite un control centralizado.  
+</div>
+
+<section class="novato">
+  <h3>Modo Novato</h3>
+  <div class="cols">
+    <div class="card">
+      <b>Pasos básicos</b>
+      <ul>
+        <li>1. Poner nombre al switch.</li>
+        <li>2. Configurar contraseña.</li>
+        <li>3. Crear VLANs por departamento.</li>
+        <li>4. Asignar puertos a cada VLAN.</li>
+        <li>5. Dar IP al switch para gestionarlo.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Errores comunes</b>
+      <ul>
+        <li>No activar puertos asignados.</li>
+        <li>Olvidar asignar IP para gestión.</li>
+        <li>Usar Telnet en vez de SSH.</li>
+        <li>No documentar qué VLAN corresponde a qué departamento.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+  <li>Switch inicializa con hostname y password.</li>
+  <li>Se configura IP en interfaz VLAN para administración.</li>
+  <li>VLANs segmentan tráfico entre departamentos.</li>
+  <li>La gestión remota debe ser segura (SSH mejor que Telnet).</li>
+</ul>
+
+<h2>Resumen exprés (5 líneas)</h2>
+<div class="card">
+1. Inicializar switch.<br>
+2. Crear VLANs (ej: Contabilidad, Ventas, RRHH, Soporte).<br>
+3. Asignar puertos a VLANs.<br>
+4. Configurar IP en VLAN para administración remota.<br>
+5. Usar SSH para gestionar con seguridad.
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ // Básicas
+ {text:"¿Qué comando se usa para crear una VLAN?",options:[{t:"vlan [número]",ok:true},{t:"ip vlan",ok:false}],hint:"Es literal.",explain:"'vlan [id]' crea una nueva VLAN en Cisco IOS."},
+ {text:"¿Dónde se configura la IP de administración en un switch?",options:[{t:"En la interfaz VLAN",ok:true},{t:"En el puerto físico",ok:false}],hint:"Es una interfaz lógica.",explain:"Se usa una VLAN interface (ej. vlan1)."},
+ {text:"¿Qué protocolo es más seguro para administrar remotamente un switch?",options:[{t:"SSH",ok:true},{t:"Telnet",ok:false}],hint:"Piensa en cifrado.",explain:"SSH cifra la comunicación, Telnet no."},
+ {text:"¿Qué ocurre si olvidas asignar una IP al switch?",options:[{t:"No podrás gestionarlo remotamente",ok:true},{t:"Se apaga",ok:false}],hint:"Sin dirección IP no hay acceso remoto.",explain:"La IP es necesaria para gestión."},
+ {text:"¿Para qué sirven las VLANs?",options:[{t:"Segmentar tráfico y aumentar seguridad",ok:true},{t:"Acelerar el CPU del switch",ok:false}],hint:"Separar redes lógicas.",explain:"Las VLAN aíslan tráfico en la red."},
+ // Profesionales
+ {text:"En una empresa, ¿cómo separarías contabilidad y ventas en un switch?",options:[{t:"Creando dos VLANs distintas",ok:true},{t:"Cambiando cables de red",ok:false}],hint:"Es lógico, no físico.",explain:"Cada departamento debe estar en VLAN distinta."},
+ {text:"¿Qué comando activa una interfaz en Cisco IOS?",options:[{t:"no shutdown",ok:true},{t:"enable interface",ok:false}],hint:"Muy usado en IOS.",explain:"'no shutdown' levanta la interfaz."},
+ {text:"¿Qué ventaja tiene usar VLANs?",options:[{t:"Reducen el tamaño del dominio de broadcast",ok:true},{t:"Consumen más ancho de banda",ok:false}],hint:"Optimización.",explain:"Menos broadcast = red más eficiente."},
+ {text:"Si un puerto está en VLAN 10, ¿con quién puede comunicarse?",options:[{t:"Solo con dispositivos de VLAN 10",ok:true},{t:"Con todos los dispositivos del switch",ok:false}],hint:"Piensa en aislamiento.",explain:"Las VLANs aíslan el tráfico."},
+ {text:"¿Qué pasa si todos los puertos de un switch están en VLAN 1?",options:[{t:"Todo el tráfico se mezcla",ok:true},{t:"Cada depto queda aislado",ok:false}],hint:"Es la VLAN por defecto.",explain:"Si no configuras VLANs, todo está junto."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

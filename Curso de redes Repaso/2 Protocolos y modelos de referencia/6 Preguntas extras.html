@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 - Protocolos en redes locales</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 15</div>
+<h1>Protocolos en redes locales (LAN)</h1>
+<p>Explicación, conceptos clave, resúmenes y banco de preguntas ampliado (incluye tus 20 preguntas añadidas).</p>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+// --- Preguntas base + profesionales ---
+{text:"¿Qué protocolo permite conexión con cables en una LAN?",options:[{t:"Ethernet",ok:true},{t:"Wi-Fi",ok:false},{t:"ARP",ok:false}],hint:"El más estable y físico.",explain:"Ethernet usa cables para conexiones rápidas."},
+{text:"¿Qué protocolo permite conexión inalámbrica en una LAN?",options:[{t:"Wi-Fi",ok:true},{t:"Ethernet",ok:false},{t:"DHCP",ok:false}],hint:"Ondas de radio.",explain:"Wi-Fi conecta sin cables."},
+{text:"¿Qué hace DHCP?",options:[{t:"Asigna IP y parámetros de red automáticamente",ok:true},{t:"Traduce IP en MAC",ok:false},{t:"Cifra contraseñas",ok:false}],hint:"Piensa en configuración automática.",explain:"DHCP asigna IP, máscara, gateway y DNS."},
+{text:"¿Qué hace ARP?",options:[{t:"Convierte direcciones IP en direcciones MAC",ok:true},{t:"Asigna IP",ok:false},{t:"Conecta por Wi-Fi",ok:false}],hint:"Traducción para la capa de enlace.",explain:"ARP permite enviar datos al destino correcto en la LAN."},
+{text:"¿Qué ocurriría sin DHCP?",options:[{t:"Habría que configurar IP manualmente en cada equipo",ok:true},{t:"No existiría el Wi-Fi",ok:false},{t:"La red sería más rápida",ok:false}],hint:"Piensa en trabajo extra.",explain:"Sin DHCP la gestión de IP sería manual y propensa a errores."},
+{text:"¿Qué ocurre si ARP no funciona?",options:[{t:"Los equipos no sabrían a qué dispositivo físico enviar los datos",ok:true},{t:"Se pierden contraseñas",ok:false},{t:"Wi-Fi deja de existir",ok:false}],hint:"Es como no tener cartero.",explain:"ARP es clave para traducir IP → MAC."},
+{text:"¿Cómo solucionas un conflicto de IP en red local?",options:[{t:"Revisando el servidor DHCP y reservas de IP",ok:true},{t:"Cambiando de cable",ok:false},{t:"Reiniciando la impresora",ok:false}],hint:"La gestión de direcciones es la clave.",explain:"Los conflictos se corrigen configurando correctamente DHCP o IP estáticas."},
+{text:"¿Qué comando en Windows/Linux muestra la tabla ARP?",options:[{t:"arp -a",ok:true},{t:"ping 8.8.8.8",ok:false},{t:"ipconfig /all",ok:false}],hint:"Es específico para ARP.",explain:"'arp -a' lista las asociaciones IP ↔ MAC."},
+{text:"¿Por qué es útil reservar IP en DHCP para un servidor?",options:[{t:"Para que siempre tenga la misma IP",ok:true},{t:"Para que tenga mejor Wi-Fi",ok:false},{t:"Para que funcione más rápido",ok:false}],hint:"Piensa en estabilidad.",explain:"Los servidores necesitan IP fija para servicios (ej. impresoras, NAS)."},
+{text:"¿Qué riesgo de seguridad tiene ARP?",options:[{t:"Es vulnerable a ataques de suplantación (ARP Spoofing)",ok:true},{t:"Hace que el Wi-Fi se caiga",ok:false},{t:"Bloquea al router",ok:false}],hint:"Muy explotado en ataques MITM.",explain:"ARP puede ser manipulado para desviar tráfico (Man-In-The-Middle)."},
+
+// --- Tus preguntas añadidas ---
+{text:"¿Qué permiten los protocolos en una red local?",options:[{t:"Comunicación fluida, segura y organizada",ok:true},{t:"Únicamente conexión a Internet",ok:false},{t:"Evitar uso de cables",ok:false}],hint:"Son los héroes ocultos.",explain:"Los protocolos aseguran comunicación ordenada entre dispositivos."},
+{text:"Menciona dos funciones esenciales de los protocolos en LAN.",options:[{t:"Asignar IP y gestionar tráfico",ok:true},{t:"Reiniciar routers y cambiar contraseñas",ok:false},{t:"Solo cifrar contraseñas",ok:false}],hint:"Piensa en DHCP y ARP.",explain:"Las funciones clave son asignación de IP y gestión del tráfico."},
+{text:"¿Cuáles son los dos principales protocolos físicos en redes LAN?",options:[{t:"Ethernet y Wi-Fi",ok:true},{t:"DHCP y ARP",ok:false},{t:"VPN y MPLS",ok:false}],hint:"Cables y ondas.",explain:"Ethernet y Wi-Fi permiten conexión física e inalámbrica."},
+{text:"¿Qué caracteriza a Ethernet?",options:[{t:"Usa cables físicos, estable y seguro",ok:true},{t:"Siempre inalámbrico",ok:false},{t:"Menor velocidad que Wi-Fi",ok:false}],hint:"Piensa en oficinas.",explain:"Ethernet ofrece estabilidad y velocidad por cable."},
+{text:"¿Qué caracteriza a Wi-Fi?",options:[{t:"Ondas de radio, movilidad sin cables",ok:true},{t:"Siempre más estable que Ethernet",ok:false},{t:"Usa fibra óptica",ok:false}],hint:"Conexión inalámbrica.",explain:"Wi-Fi ofrece movilidad eliminando cables."},
+{text:"¿En qué entorno es más recomendable Ethernet y por qué?",options:[{t:"En oficinas/centros de datos por estabilidad",ok:true},{t:"En móviles por flexibilidad",ok:false},{t:"En zonas rurales por antenas",ok:false}],hint:"Piensa en estabilidad crítica.",explain:"Ethernet es clave donde la velocidad y estabilidad son vitales."},
+{text:"¿En qué entorno es más recomendable Wi-Fi y por qué?",options:[{t:"Hogares/oficinas abiertas por flexibilidad",ok:true},{t:"Centros de datos",ok:false},{t:"Exclusivamente servidores",ok:false}],hint:"Piensa en movilidad.",explain:"Wi-Fi da flexibilidad sin cables."},
+{text:"¿Qué problema evita DHCP frente a configuración manual?",options:[{t:"Conflictos de IP y errores humanos",ok:true},{t:"Interferencias electromagnéticas",ok:false},{t:"Cortes de cable",ok:false}],hint:"Automatización.",explain:"DHCP elimina conflictos y errores al asignar IP."},
+{text:"Un portátil se conecta al Wi-Fi de la oficina. ¿Qué protocolo le asigna su IP?",options:[{t:"DHCP",ok:true},{t:"ARP",ok:false},{t:"Ethernet",ok:false}],hint:"Piensa en IP automática.",explain:"DHCP asigna direcciones dinámicamente."},
+{text:"Un PC conoce IP pero no MAC. ¿Qué protocolo interviene?",options:[{t:"ARP",ok:true},{t:"DHCP",ok:false},{t:"Wi-Fi",ok:false}],hint:"Traducción lógica-física.",explain:"ARP resuelve la dirección MAC desde la IP."},
+{text:"¿Por qué se dice que los protocolos son los héroes no reconocidos?",options:[{t:"Porque funcionan en segundo plano sin que el usuario lo note",ok:true},{t:"Porque siempre fallan",ok:false},{t:"Porque no se usan en redes LAN",ok:false}],hint:"Piensa en invisibilidad.",explain:"Aseguran conectividad sin que el usuario lo perciba."},
+{text:"Explica la relación entre IP y MAC en una LAN.",options:[{t:"IP = lógica, MAC = física. ARP traduce entre ambas",ok:true},{t:"IP y MAC son lo mismo",ok:false},{t:"La MAC solo se usa en Internet",ok:false}],hint:"Piensa en capas OSI.",explain:"La IP identifica lógicamente, la MAC físicamente. ARP traduce."},
+{text:"¿Cómo optimiza DHCP el uso de IP?",options:[{t:"Reasigna direcciones libres cuando dispositivos se desconectan",ok:true},{t:"Elimina necesidad de ARP",ok:false},{t:"Duplica IP en varios PCs",ok:false}],hint:"Eficiencia.",explain:"DHCP reutiliza IP libres evitando desperdicio."},
+{text:"¿Qué pasaría si no existiera ARP en Ethernet?",options:[{t:"Los dispositivos no podrían enviar paquetes aunque conozcan la IP",ok:true},{t:"Wi-Fi dejaría de existir",ok:false},{t:"Los routers no funcionarían",ok:false}],hint:"Sin traductor no hay entrega.",explain:"ARP es necesario para saber la dirección física de destino."},
+{text:"¿Qué ventaja tiene combinar Ethernet y Wi-Fi en empresa?",options:[{t:"Estabilidad + flexibilidad",ok:true},{t:"Redundancia en cables",ok:false},{t:"Mayor coste siempre",ok:false}],hint:"Dos mundos juntos.",explain:"Ethernet asegura velocidad, Wi-Fi movilidad."},
+{text:"¿Cómo impacta DHCP en la escalabilidad de una red?",options:[{t:"Facilita administración de IP en cientos de dispositivos",ok:true},{t:"Hace la red más lenta",ok:false},{t:"Obliga a configurar manualmente",ok:false}],hint:"Piensa en crecimiento.",explain:"Automatiza gestión en redes grandes."},
+{text:"¿Cómo influye ARP en la seguridad de la red?",options:[{t:"Es esencial, pero vulnerable a ataques (ARP Spoofing)",ok:true},{t:"Siempre cifra los datos",ok:false},{t:"Evita que se use Wi-Fi",ok:false}],hint:"Riesgo MITM.",explain:"Puede explotarse para desviar tráfico."},
+{text:"¿Qué ocurre si falla el servidor DHCP?",options:[{t:"Nuevos equipos no reciben IP",ok:true},{t:"ARP deja de funcionar",ok:false},{t:"Wi-Fi se apaga",ok:false}],hint:"Piensa en asignación de IP.",explain:"Los nuevos dispositivos quedarían sin IP válida."},
+{text:"¿Por qué es clave comprender DHCP y ARP para un profesional?",options:[{t:"Porque su correcto manejo asegura eficiencia y resolución de problemas",ok:true},{t:"Porque no se usan",ok:false},{t:"Porque sustituyen routers",ok:false}],hint:"Fundamentos de redes.",explain:"Un experto debe dominarlos para gestionar LAN."},
+{text:"¿Qué pasa si falla Wi-Fi y queda Ethernet?",options:[{t:"Fijos siguen, móviles pierden movilidad",ok:true},{t:"Toda la red se cae",ok:false},{t:"Nadie puede conectarse",ok:false}],hint:"Piensa en portátiles.",explain:"Se mantiene conectividad fija, pero se pierde flexibilidad."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

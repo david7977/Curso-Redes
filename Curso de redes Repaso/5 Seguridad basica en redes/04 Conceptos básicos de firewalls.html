@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas – Firewalls en Seguridad de Redes</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas – Firewalls en Seguridad de Redes</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Qué es un firewall?", options:[{t:"Herramienta que controla tráfico y bloquea accesos no autorizados",ok:true},{t:"Un switch avanzado",ok:false},{t:"Un antivirus",ok:false}], hint:"Es la primera barrera de seguridad.", explain:"Un firewall filtra tráfico y bloquea accesos no autorizados."},
+ {text:"¿Qué analogía se usa para explicar un firewall?", options:[{t:"Un sistema de seguridad en una casa",ok:true},{t:"Un coche en la carretera",ok:false},{t:"Un antivirus",ok:false}], hint:"Controla quién entra y quién no.", explain:"Se compara con un sistema de seguridad doméstico."},
+ {text:"¿En qué década surgieron los primeros firewalls?", options:[{t:"1980s",ok:true},{t:"1990s",ok:false},{t:"2000s",ok:false}], hint:"Hace más de 40 años.", explain:"Los primeros firewalls surgieron en los años 80."},
+ {text:"¿Qué criterios usa un firewall para decidir?", options:[{t:"Direcciones IP, puertos y protocolos",ok:true},{t:"Color de pantalla",ok:false},{t:"Velocidad de Internet",ok:false}], hint:"Se basa en parámetros de red.", explain:"IP, puertos y protocolos determinan reglas de tráfico."},
+ {text:"¿Qué ventaja tienen firewalls avanzados?", options:[{t:"Inspección profunda y defensas adaptadas",ok:true},{t:"Menor costo",ok:false},{t:"Sirven como hubs",ok:false}], hint:"Más allá de los básicos.", explain:"Los firewalls avanzados analizan tráfico y bloquean amenazas sofisticadas."},
+ {text:"¿Dónde colocar un firewall de hardware?", options:[{t:"Entre Internet y la red interna",ok:true},{t:"Dentro de cada PC",ok:false},{t:"En un correo electrónico",ok:false}], hint:"Es perimetral.", explain:"Se coloca entre la conexión a Internet y la red."},
+ {text:"¿Qué firewall protege dispositivos individuales?", options:[{t:"Firewall de software",ok:true},{t:"De hardware",ok:false},{t:"Router",ok:false}], hint:"Se instala en el dispositivo.", explain:"Un firewall de software protege equipos individuales."},
+ {text:"¿Impacto de firewall de software en rendimiento?", options:[{t:"Puede consumir recursos y ralentizar",ok:true},{t:"Aumenta velocidad",ok:false},{t:"No tiene impacto",ok:false}], hint:"Se ejecuta en el equipo.", explain:"El firewall de software consume recursos."},
+ {text:"¿Qué distingue a firewalls de próxima generación?", options:[{t:"Filtran a nivel de aplicación e integran IPS/malware",ok:true},{t:"Son más lentos",ok:false},{t:"No usan IPs",ok:false}], hint:"Analizan a nivel de aplicación.", explain:"Los NGFW filtran tráfico de aplicación y tienen funciones avanzadas."},
+ {text:"¿Qué firewall detecta aplicaciones específicas en red?", options:[{t:"Firewall de próxima generación",ok:true},{t:"Uno básico",ok:false},{t:"Un switch",ok:false}], hint:"Más avanzado.", explain:"Los NGFW permiten detectar y controlar aplicaciones."},
+ {text:"¿Por qué un firewall de hardware es más seguro?", options:[{t:"Es un dispositivo independiente difícil de comprometer",ok:true},{t:"Usa menos energía",ok:false},{t:"No requiere reglas",ok:false}], hint:"Está separado del sistema.", explain:"Un firewall de hardware es independiente de PCs."},
+ {text:"¿Desventaja de firewall de software?", options:[{t:"Depende del dispositivo y puede ser comprometido",ok:true},{t:"No protege nada",ok:false},{t:"No consume recursos",ok:false}], hint:"Está ligado al equipo.", explain:"Si el equipo es atacado, el firewall también."},
+ {text:"¿Por qué firewalls son primera línea de defensa?", options:[{t:"Filtran accesos antes de entrar a la red",ok:true},{t:"Hacen copias de seguridad",ok:false},{t:"Encriptan datos",ok:false}], hint:"Bloquean accesos iniciales.", explain:"Son la primera barrera de protección."},
+ {text:"¿Qué aporta inspección profunda en NGFW?", options:[{t:"Mayor control e identificación de ataques",ok:true},{t:"Menos velocidad",ok:false},{t:"Nada nuevo",ok:false}], hint:"Analiza más allá de cabeceras.", explain:"Permite detectar ataques sofisticados."},
+ {text:"¿Importancia del firewall frente a amenazas internas?", options:[{t:"Regula tráfico y aplica políticas de acceso",ok:true},{t:"Solo protege Internet",ok:false},{t:"No afecta",ok:false}], hint:"También protege dentro.", explain:"Controla tráfico interno y acceso a servicios."},
+ {text:"¿Qué factores considerar para elegir firewall?", options:[{t:"Presupuesto, dispositivos, movilidad y seguridad",ok:true},{t:"Color del dispositivo",ok:false},{t:"Número de teclados",ok:false}], hint:"Depende de contexto.", explain:"Se evalúa costo, seguridad y facilidad de gestión."},
+ {text:"¿Impacto de no actualizar reglas del firewall?", options:[{t:"Permitir accesos indebidos y nuevas amenazas",ok:true},{t:"Nada cambia",ok:false},{t:"Hace la red más rápida",ok:false}], hint:"Piensa en vulnerabilidades.", explain:"Las reglas desactualizadas dejan huecos de seguridad."},
+ {text:"¿Limitación de depender solo de firewall?", options:[{t:"No protege de phishing ni errores humanos",ok:true},{t:"Elimina todos los virus",ok:false},{t:"Sustituye antivirus",ok:false}], hint:"No es suficiente.", explain:"Debe complementarse con otras medidas."},
+ {text:"¿Por qué NGFW son más adecuados para empresas grandes?", options:[{t:"Manejan más tráfico y políticas complejas",ok:true},{t:"Son más baratos",ok:false},{t:"Solo protegen hogares",ok:false}], hint:"Empresas requieren funciones avanzadas.", explain:"Los NGFW soportan grandes redes y amenazas complejas."},
+ {text:"¿Cómo convencer a dirección para invertir en firewall?", options:[{t:"Es la primera barrera que protege datos y continuidad",ok:true},{t:"Sirve para ahorrar energía",ok:false},{t:"No es necesario",ok:false}], hint:"Habla de protección de negocio.", explain:"Un firewall protege datos, operatividad y confianza."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

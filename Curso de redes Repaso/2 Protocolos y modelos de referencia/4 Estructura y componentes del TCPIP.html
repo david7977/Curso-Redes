@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modelo TCP/IP por capas — Explicación + Test (con Modo Novato)</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans'; margin: 24px; line-height: 1.45; }
+  header { border: 2px solid #e5e7eb; border-left: 8px solid var(--card); padding: 16px 18px; border-radius: 14px; margin-bottom: 22px; background: #f8fafc; }
+  h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; margin: 18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px 14px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px; margin-top:8px; }
+  .card { background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
+  .mnemo { background:#ecfeff; border:1px solid #bae6fd; padding:10px 12px; border-radius:12px; }
+  .muted { color:#6b7280; }
+
+  /* Novato panel */
+  .reader-tools { display:flex; gap:10px; align-items:center; margin: 12px 0 8px; flex-wrap:wrap; }
+  .switch { display:inline-flex; align-items:center; gap:8px; }
+  .switch button { padding:8px 12px; border-radius:999px; border:1px solid #e5e7eb; background:#1f2937; color:#fff; cursor:pointer; }
+  .novato { border: 1px solid #e5e7eb; border-left: 6px solid var(--accent); background:#eff6ff; color:#1e3a8a; padding: 14px; border-radius: 12px; margin: 10px 0 18px; }
+  .novato h3 { margin: 0 0 8px 0; }
+  .novato .cols { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 12px; }
+
+  /* Quiz */
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; padding:0; margin:18px 0; background:#fff; overflow:hidden; }
+  .toolbar { position: sticky; top: 0; z-index: 50; display:flex; gap:10px; align-items:center; justify-content:flex-start; padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; }
+  .legend { padding: 8px 16px; font-size:.95rem; color:#475569; border-bottom:1px solid #e5e7eb; }
+  .qwrap { padding:16px; }
+  .q { border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:14px 0 12px; background:#fff; }
+  .q p { margin: 0 0 8px 0; }
+  label { display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; }
+  .correct { background: #dcfce7; border-color: #bbf7d0; }
+  .incorrect { background: #fee2e2; border-color: #fecaca; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+  button { padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer; background:#111827; color:#fff; }
+  button.secondary { background:#f3f4f6; color:#111827; }
+  .score { font-weight:700; margin-left: auto; }
+  .feedback { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--bad); background:#fff1f2; border-radius:10px; }
+  .success { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--ok); background:#ecfdf5; border-radius:10px; }
+  .hint { display:none; margin-top:8px; padding:8px 10px; border-left:4px solid var(--accent); background:#eff6ff; border-radius:10px; color:#1e3a8a; }
+  .hint-btn { background:#1f2937; }
+  footer { margin-top:24px; color:#475569; font-size:.95rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">Modelo TCP/IP en 4 capas</div>
+  <h1>4 Estructura y componentes del TCPIP</h1>
+  <p>Pulsas <b>Enviar</b> y empieza un viaje: el medio mueve bits, <b>IP</b> elige rutas, <b>TCP/UDP</b> garantizan (o no) el orden, y la <b>Aplicación</b> te los pone delante.</p>
+
+  <div class="grid">
+    <div class="card"><b>Acceso a red</b> (Enlace+Física): Wi‑Fi/Ethernet, tramas, MAC, medio. “Las <i>carreteras</i> locales”.</div>
+    <div class="card"><b>Internet</b>: IP/ICMP, direcciones, rutas, TTL, fragmentación. “El <i>GPS</i> entre ciudades”.</div>
+    <div class="card"><b>Transporte</b>: TCP/UDP, puertos, SEQ/ACK, ventana, fiabilidad. “El <i>gestor</i> que trocea y recompone”.</div>
+    <div class="card"><b>Aplicación</b>: HTTP/SMTP/FTP/DNS… “El <i>repartidor</i> en tu puerta”.</div>
+  </div>
+
+  <h2>Nemotecnia</h2>
+  <div class="mnemo">
+    <p><b>De arriba a abajo:</b> <span class="mono">App Transporta Internet al Acceso</span> → Aplicación → Transporte → Internet → Acceso.</p>
+  </div>
+
+  <h2>Historia breve del “paquete”</h2>
+  <div class="story">
+    <p>Tu app prepara el contenido (<b>Aplicación</b>). <b>TCP</b> lo trocea, numera y reintenta si se pierde; o <b>UDP</b> lo lanza “exprés” (<b>Transporte</b>). <b>IP</b> le pone direcciones y decide pasos por routers (<b>Internet</b>). El <b>Acceso</b> lo mete en tramas y lo mueve por Wi‑Fi/cable. En destino, TCP reordena y la app te lo muestra.</p>
+  </div>
+
+  <!-- Modo Novato -->
+  <div class="reader-tools">
+    <div class="switch">
+      <span>Modo Novato:</span>
+      <button id="toggle-novato">Activado</button>
+    </div>
+    <span class="muted">Explicación llana y mapa mental para empezar.</span>
+  </div>
+
+  <section id="novato-panel" class="novato">
+    <h3>Explicación para principiantes</h3>
+    <div class="cols">
+      <div class="card">
+        <b>Idea simple</b>
+        <ul>
+          <li><b>Acceso</b>: las “carreteras” locales (Wi‑Fi/Ethernet) que mueven bits.</li>
+          <li><b>Internet</b>: <b>IP</b> decide rutas con direcciones.</li>
+          <li><b>Transporte</b>: <b>TCP</b> asegura orden/fiabilidad; <b>UDP</b> es rápido pero sin garantías.</li>
+          <li><b>Aplicación</b>: protocolos que usas (web/correo/archivos).</li>
+        </ul>
+      </div>
+      <div class="card">
+        <b>Si ocurre X… revisa</b>
+        <ul>
+          <li>Wi‑Fi débil / cortes → <b>Acceso</b>.</li>
+          <li>Ping sí, web no → <b>Aplicación</b> o puertos <b>TCP</b>.</li>
+          <li>Descarga se para y sigue → <b>TCP</b> reintenta/ordena.</li>
+          <li>No sales a Internet → <b>IP/gateway</b> en <b>Internet</b>.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <b>Glosario rápido</b>
+        <ul>
+          <li><b>Segmento (TCP)</b>: trozo con número de secuencia.</li>
+          <li><b>Paquete (IP)</b>: cajita con direcciones.</li>
+          <li><b>Trama (Enlace)</b>: sobre el medio local (MAC).</li>
+          <li><b>Puerto</b>: “ventana” de una app (80 web, 25 correo…).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</header>
+
+<section class="quiz-card">
+  <div class="toolbar">
+    <div class="controls">
+      <button id="btn-correct">Corregir</button>
+      <button id="btn-reset" class="secondary">Reiniciar y barajar</button>
+    </div>
+    <span class="score" id="score"></span>
+  </div>
+  <div class="legend">Antes de corregir, pulsa <b>Pista</b> en cada pregunta. Al corregir: correctas en <b>verde</b>, tus selecciones erróneas en <b>rojo</b>, y verás <b>respuesta correcta + explicación</b> si fallas.</div>
+  <div class="qwrap" id="quiz"></div>
+</section>
+
+<footer>
+  <p class="muted">Tip: repite <b>App ⇢ TCP ⇢ IP ⇢ Acceso</b> antes del test.</p>
+</footer>
+
+<script>
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+const novatoBtn = document.getElementById('toggle-novato');
+const novatoPanel = document.getElementById('novato-panel');
+function setNovato(on) {
+  novatoPanel.style.display = on ? 'block' : 'none';
+  novatoBtn.textContent = on ? 'Activado' : 'Desactivado';
+  localStorage.setItem('novato_on', on ? '1' : '0');
+}
+novatoBtn.addEventListener('click', () => setNovato(novatoPanel.style.display === 'none'));
+setNovato(localStorage.getItem('novato_on') !== '0');
+
+const BANK = [
+  { type:"single",
+    text:"La capa que mueve bits por el medio local (Wi‑Fi/Ethernet) es:",
+    options:[
+      {t:"Acceso a red (Enlace/Física)", ok:true},
+      {t:"Internet (IP/ICMP)", ok:false},
+      {t:"Transporte (TCP/UDP)", ok:false}
+    ],
+    hint:"Piensa en ‘carreteras’ y tramas.",
+    explain:"Acceso a red engloba Enlace+Física: medio, tramas y direcciones MAC."
+  },
+  { type:"single",
+    text:"¿Qué capa decide la ruta entre redes usando direcciones lógicas?",
+    options:[
+      {t:"Internet (IP)", ok:true},
+      {t:"Aplicación (HTTP/SMTP)", ok:false},
+      {t:"Acceso a red", ok:false}
+    ],
+    hint:"El ‘GPS’ del viaje.",
+    explain:"La capa Internet (IP) direcciona y enruta paquetes entre redes."
+  },
+  { type:"multi",
+    text:"Funciones típicas de TCP en la capa de Transporte:",
+    options:[
+      {t:"Entrega ordenada y fiable (SEQ/ACK)", ok:true},
+      {t:"Control de flujo (ventana deslizante)", ok:true},
+      {t:"Enrutamiento entre redes", ok:false},
+      {t:"Definir voltajes del medio", ok:false}
+    ],
+    hint:"Logística del paquete: orden y reintentos.",
+    explain:"TCP gestiona orden/fiabilidad/flujo; enrutamiento es IP; voltajes son Física."
+  },
+  { type:"single",
+    text:"Si priorizas rapidez sobre fiabilidad y orden, eliges:",
+    options:[
+      {t:"UDP", ok:true},
+      {t:"TCP", ok:false},
+      {t:"ICMP", ok:false}
+    ],
+    hint:"Streaming/voz en tiempo real a veces lo usa.",
+    explain:"UDP no garantiza entrega ni orden; es ligero y rápido."
+  },
+  { type:"multi",
+    text:"Selecciona protocolos propios de la capa de Aplicación:",
+    options:[
+      {t:"HTTP / SMTP / FTP / DNS", ok:true},
+      {t:"TCP / UDP", ok:false},
+      {t:"IP / ICMP", ok:false},
+      {t:"Ethernet / Wi‑Fi", ok:false}
+    ],
+    hint:"Donde interactúa el usuario.",
+    explain:"Aplicación agrupa protocolos de servicios; TCP/UDP es Transporte; IP es Internet; Ethernet/Wi‑Fi es Acceso."
+  },
+  { type:"single",
+    text:"Un ‘ping’ exitoso demuestra principalmente:",
+    options:[
+      {t:"Conectividad IP/ICMP entre origen y destino", ok:true},
+      {t:"Que HTTP funciona correctamente", ok:false},
+      {t:"Que TCP escucha en 443", ok:false}
+    ],
+    hint:"Ecos de control, no de aplicación.",
+    explain:"Ping usa ICMP (Internet); no verifica servicios de aplicación ni puertos TCP concretos."
+  },
+  { type:"single",
+    text:"La fragmentación por MTU insuficiente pertenece a:",
+    options:[
+      {t:"Internet (IP)", ok:true},
+      {t:"Transporte (TCP)", ok:false},
+      {t:"Aplicación", ok:false}
+    ],
+    hint:"No confundir con ‘segmentación’.",
+    explain:"IP puede fragmentar paquetes si el camino lo exige; segmentar es de TCP."
+  },
+  { type:"multi",
+    text:"Estás descargando un archivo y la conexión se corta y reanuda. Señala mecanismos que lo explican:",
+    options:[
+      {t:"Retransmisiones TCP tras timeout", ok:true},
+      {t:"ACK acumulativos", ok:true},
+      {t:"Ventana deslizante", ok:true},
+      {t:"Fragmentación IP garantiza orden extremo a extremo", ok:false}
+    ],
+    hint:"Piensa en Transporte, no en IP para el orden.",
+    explain:"TCP aporta reintentos/orden/flujo; IP no garantiza orden extremo a extremo."
+  },
+  { type:"single",
+    text:"‘3‑way handshake’ (SYN, SYN‑ACK, ACK) ocurre en:",
+    options:[
+      {t:"Transporte (TCP)", ok:true},
+      {t:"Internet (IP)", ok:false},
+      {t:"Acceso a red", ok:false}
+    ],
+    hint:"Establecimiento de conexión fiable.",
+    explain:"Es el mecanismo de inicio de conexión de TCP."
+  },
+  { type:"multi",
+    text:"Relaciona capa y ejemplo:",
+    options:[
+      {t:"Acceso → Ethernet/Wi‑Fi, MAC, tramas", ok:true},
+      {t:"Internet → IP/ICMP, rutas, TTL", ok:true},
+      {t:"Transporte → TCP/UDP, puertos", ok:true},
+      {t:"Aplicación → HTTP/SMTP/DNS", ok:true}
+    ],
+    hint:"De medio a usuario.",
+    explain:"Es la pila de 4 capas de TCP/IP."
+  },
+  { type:"single",
+    text:"Cuando haces clic en ‘Enviar’, ¿qué capa sitúa direcciones de origen/destino en el paquete?",
+    options:[
+      {t:"Internet (IP)", ok:true},
+      {t:"Aplicación", ok:false},
+      {t:"Acceso", ok:false}
+    ],
+    hint:"Direcciones lógicas, no MAC.",
+    explain:"IP define las direcciones de red que permiten el enrutamiento."
+  },
+  { type:"multi",
+    text:"Señala diferencias clave TCP vs UDP:",
+    options:[
+      {t:"TCP orientado a conexión; UDP no", ok:true},
+      {t:"TCP garantiza orden; UDP no", ok:true},
+      {t:"UDP usa 3‑way handshake", ok:false},
+      {t:"TCP carece de control de flujo", ok:false}
+    ],
+    hint:"Uno es fiable y ordenado; el otro, no.",
+    explain:"TCP ofrece conexión/orden/flujo; UDP es sin conexión y ligero."
+  },
+  { type:"single",
+    text:"Si la descarga falla por Wi‑Fi débil/interferencias, ¿qué capa revisar primero?",
+    options:[
+      {t:"Acceso a red", ok:true},
+      {t:"Aplicación", ok:false},
+      {t:"Internet", ok:false}
+    ],
+    hint:"Medio físico e inalámbrico.",
+    explain:"Problemas de señal son de Acceso (Enlace/Física)."
+  },
+  { type:"single",
+    text:"Para ‘seguir’ un flujo HTTPS concreto en un sniffer, es útil filtrar por:",
+    options:[
+      {t:"tcp.port == 443", ok:true},
+      {t:"icmp.type == 8", ok:false},
+      {t:"arp", ok:false}
+    ],
+    hint:"Puerto típico de HTTPS.",
+    explain:"HTTPS usa TCP/443; ICMP/ARP no son el flujo TLS de aplicación."
+  },
+  { type:"single",
+    text:"¿Qué capa ofrece servicios como ‘web’, ‘correo’ o ‘archivos’ al usuario?",
+    options:[
+      {t:"Aplicación", ok:true},
+      {t:"Transporte", ok:false},
+      {t:"Internet", ok:false}
+    ],
+    hint:"Donde viven HTTP/SMTP/FTP.",
+    explain:"La interacción con servicios se hace en la capa de Aplicación."
+  },
+  { type:"single",
+    text:"Si un router envía “TTL exceeded”, ¿qué capa te está hablando?",
+    options:[
+      {t:"Internet (ICMP)", ok:true},
+      {t:"Transporte (TCP)", ok:false},
+      {t:"Acceso", ok:false}
+    ],
+    hint:"Mensaje de control de red.",
+    explain:"ICMP es parte de la capa Internet (diagnóstico/control)."
+  }
+];
+
+let QUESTIONS = [];
+const quiz = document.getElementById('quiz');
+const btnCorrect = document.getElementById('btn-correct');
+const btnReset = document.getElementById('btn-reset');
+const scoreEl = document.getElementById('score');
+
+function createQuestionEl(q, idx) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'q';
+  wrapper.dataset.type = q.type;
+
+  const p = document.createElement('p');
+  p.innerHTML = `<b>${idx + 1}.</b> ${q.text}`;
+  wrapper.appendChild(p);
+
+  const opts = shuffle(q.options.map(o => ({...o})));
+  opts.forEach(o => {
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = o.ok ? 'true' : 'false';
+    label.appendChild(input);
+    label.insertAdjacentText('beforeend', ' ' + o.t);
+    wrapper.appendChild(label);
+  });
+
+  const hintBtn = document.createElement('button');
+  hintBtn.type = 'button';
+  hintBtn.textContent = 'Pista';
+  hintBtn.className = 'hint-btn secondary';
+  const hintBox = document.createElement('div');
+  hintBox.className = 'hint';
+  hintBox.innerHTML = q.hint;
+  wrapper.appendChild(hintBtn);
+  wrapper.appendChild(hintBox);
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  wrapper.appendChild(fb);
+  const ok = document.createElement('div');
+  ok.className = 'success';
+  ok.textContent = '✅ ¡Correcto!';
+  wrapper.appendChild(ok);
+
+  hintBtn.addEventListener('click', () => {
+    hintBox.style.display = 'block';
+    hintBtn.disabled = true;
+  });
+
+  return wrapper;
+}
+
+function buildQuiz() {
+  quiz.innerHTML = '';
+  QUESTIONS = shuffle(BANK.map(q => ({...q, options: q.options.map(o => ({...o}))})));
+  QUESTIONS.forEach((q, i) => quiz.appendChild(createQuestionEl(q, i)));
+  scoreEl.textContent = '';
+  window.scrollTo({ top: 0 });
+}
+
+function evaluateQuestion(node) {
+  const type = node.dataset.type;
+  const labels = Array.from(node.querySelectorAll('label'));
+  let ok = true;
+  let correctTexts = [];
+
+  labels.forEach(label => {
+    label.classList.remove('correct', 'incorrect');
+    const cb = label.querySelector('input[type="checkbox"]');
+    const isTrue = cb.value === 'true';
+    const checked = cb.checked;
+    if (isTrue) {
+      label.classList.add('correct');
+      correctTexts.push(label.textContent.trim());
+      if (!checked) ok = false;
+    } else {
+      if (checked) {
+        label.classList.add('incorrect');
+        ok = false;
+      }
+    }
+  });
+
+  if (type === 'single') {
+    const checkedCount = labels.filter(l => l.querySelector('input').checked).length;
+    const correctChecked = labels.some(l => l.querySelector('input').checked && l.querySelector('input').value === 'true');
+    if (!(checkedCount === 1 && correctChecked)) ok = false;
+  }
+
+  const fb = node.querySelector('.feedback');
+  const okBox = node.querySelector('.success');
+  if (ok) {
+    fb.style.display = 'none';
+    fb.innerHTML = '';
+    okBox.style.display = 'block';
+  } else {
+    okBox.style.display = 'none';
+    const qText = node.querySelector('p').innerText.replace(/^\d+\.\s*/, '');
+    const match = QUESTIONS.find(q => q.text === qText);
+    const explanation = match ? match.explain : '';
+    const correctList = correctTexts.map(t => `<li>${t}</li>`).join('');
+    fb.innerHTML = `<b>Respuesta correcta:</b><ul>${correctList}</ul><div>${explanation}</div>`;
+    fb.style.display = 'block';
+  }
+  return ok;
+}
+
+function correctAll() {
+  const qNodes = Array.from(document.querySelectorAll('.q'));
+  let right = 0;
+  qNodes.forEach(node => { if (evaluateQuestion(node)) right++; });
+  scoreEl.textContent = `Puntuación: ${right} / ${qNodes.length}`;
+  document.querySelector('.quiz-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  buildQuiz();
+}
+
+document.getElementById('btn-correct').addEventListener('click', correctAll);
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+buildQuiz();
+</script>
+</body>
+</html>

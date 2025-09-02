@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test práctico: Componentes esenciales del hardware de red</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
+    h1 { color: #222; }
+    .question { margin-bottom: 20px; }
+    .question label { display: block; margin: 5px 0; }
+    #resultado { font-weight: bold; margin-top: 20px; }
+    button { margin-top: 10px; padding: 8px 16px; font-size: 16px; }
+    .correcta { background-color: #c8f7c5; }
+    .incorrecta { background-color: #f8d7da; }
+  </style>
+</head>
+<body>
+  <h1>Test práctico: 4 Componentes de hardware de red</h1>
+
+  <form id="quizForm"></form>
+  <button type="button" onclick="corregir()">Corregir</button>
+  <p id="resultado"></p>
+
+  <script>
+    const preguntas = [
+      { texto: "¿Qué dispositivo se utiliza para conectar diferentes redes entre sí?", opciones: ["Switch", "Router", "Hub"], correcta: 1 },
+      { texto: "¿Qué componente se encarga de dirigir paquetes dentro de una misma red local?", opciones: ["Router", "Switch", "Access Point"], correcta: 1 },
+      { texto: "¿Qué función realiza un hub en una red?", opciones: ["Filtra los datos por MAC", "Envía datos a todos los puertos", "Asigna direcciones IP"], correcta: 1 },
+      { texto: "¿En qué capa del modelo OSI opera un router?", opciones: ["Capa 2 - Enlace de datos", "Capa 3 - Red", "Capa 1 - Física"], correcta: 1 },
+      { texto: "¿Qué dispositivo almacena direcciones MAC para enviar datos al destino exacto?", opciones: ["Router", "Switch", "Hub"], correcta: 1 },
+      { texto: "¿Cuál es la principal desventaja de un hub respecto a un switch?", opciones: ["Precio", "Seguridad y eficiencia", "Complejidad de configuración"], correcta: 1 },
+      { texto: "¿Qué tipo de dirección utiliza un switch para operar?", opciones: ["IP", "MAC", "DNS"], correcta: 1 },
+      { texto: "¿Qué dispositivo opera en la capa física y transmite todo a todos los puertos?", opciones: ["Router", "Switch", "Hub"], correcta: 2 },
+      { texto: "¿Qué medio transmite datos mediante pulsos de luz?", opciones: ["Fibra óptica", "Cable coaxial", "Par trenzado"], correcta: 0 },
+      { texto: "¿Cuál es un inconveniente de la fibra óptica?", opciones: ["Alta latencia", "Dificultad de empalme y coste elevado", "Ancho de banda bajo"], correcta: 1 },
+      { texto: "¿Qué medio no guiado es el más común en redes WiFi?", opciones: ["Microondas", "Ondas de radio", "Infrarrojos"], correcta: 1 },
+      { texto: "¿Qué condición requieren las microondas para ser efectivas?", opciones: ["Alta presión", "Línea de vista directa", "Cable coaxial"], correcta: 1 },
+      { texto: "¿Cuál es la mayor limitación del infrarrojo?", opciones: ["Necesita contacto físico", "Requiere línea de vista directa y corto alcance", "Consume mucha energía"], correcta: 1 },
+      { texto: "¿Qué hace un switch si recibe un paquete con dirección MAC desconocida?", opciones: ["Lo descarta", "Lo envía por todos los puertos", "Solicita al router que lo analice"], correcta: 1 },
+      { texto: "¿Qué ventaja ofrece la fibra óptica sobre otros medios físicos?", opciones: ["Mayor interferencia", "Mayor alcance y velocidad", "Menor coste"], correcta: 1 },
+      { texto: "¿Qué componente sirve como enlace entre dispositivos inalámbricos y una red LAN por cable?", opciones: ["Switch", "Access Point", "Router"], correcta: 1 },
+      { texto: "¿Qué elemento físico de red actúa como arteria de comunicación en redes modernas?", opciones: ["Cable coaxial", "Fibra óptica", "Ondas infrarrojas"], correcta: 1 },
+      { texto: "¿Cuál es el principal uso del cable de par trenzado en redes?", opciones: ["Conexión inalámbrica", "Redes Ethernet LAN", "Backbone óptico"], correcta: 1 }
+    ];
+
+    for (let i = 0; i < preguntas.length; i++) {
+      const pregunta = preguntas[i];
+      const div = document.createElement('div');
+      div.className = 'question';
+      const p = document.createElement('p');
+      p.textContent = `${i + 1}. ${pregunta.texto}`;
+      div.appendChild(p);
+
+      pregunta.opciones.forEach((opcion, j) => {
+        const label = document.createElement('label');
+        label.classList.add(`opcion-q${i + 1}`);
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `q${i + 1}`;
+        input.value = j;
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(' ' + opcion));
+        div.appendChild(label);
+      });
+      document.getElementById('quizForm').appendChild(div);
+    }
+
+    function corregir() {
+      let total = 0;
+      const resultado = document.getElementById('resultado');
+
+      preguntas.forEach((pregunta, i) => {
+        const seleccionada = document.querySelector(`input[name="q${i + 1}"]:checked`);
+        const labels = document.querySelectorAll(`.opcion-q${i + 1}`);
+        labels.forEach((label, j) => {
+          label.classList.remove('correcta', 'incorrecta');
+          if (j === pregunta.correcta) label.classList.add('correcta');
+          if (seleccionada && parseInt(seleccionada.value) !== pregunta.correcta && j === parseInt(seleccionada.value)) {
+            label.classList.add('incorrecta');
+          }
+        });
+        if (seleccionada && parseInt(seleccionada.value) === pregunta.correcta) total++;
+      });
+
+      if (document.querySelectorAll('input[type="radio"]:checked').length < preguntas.length) {
+        resultado.textContent = "Por favor, responde todas las preguntas.";
+        resultado.style.color = "red";
+      } else {
+        resultado.textContent = `Tu puntuación: ${total} / ${preguntas.length}`;
+        resultado.style.color = total >= preguntas.length * 0.85 ? "green" : total >= preguntas.length * 0.6 ? "orange" : "red";
+      }
+    }
+  </script>
+</body>
+</html>

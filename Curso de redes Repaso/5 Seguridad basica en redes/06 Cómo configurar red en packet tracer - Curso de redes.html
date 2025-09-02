@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas – Construcción de una Red Completa en Packet Tracer</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas – Construcción de una Red Completa en Packet Tracer</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Qué herramienta se utilizó para simular redes?", options:[{t:"Cisco Packet Tracer",ok:true},{t:"Microsoft Excel",ok:false},{t:"Wireshark",ok:false}], hint:"Es de Cisco.", explain:"La herramienta usada fue Cisco Packet Tracer."},
+ {text:"¿Qué dispositivos básicos conforman una red en Packet Tracer?", options:[{t:"Routers, switches, PCs, laptops, servidores y smartphones",ok:true},{t:"Solo PCs",ok:false},{t:"Impresoras y cámaras",ok:false}], hint:"Incluye routers y switches.", explain:"Son routers, switches, PCs, laptops, servidores y smartphones."},
+ {text:"¿Qué cuatro departamentos se configuraron en la práctica?", options:[{t:"Recursos Humanos, Contabilidad, Desarrollo y Soporte Técnico",ok:true},{t:"Marketing, Finanzas, Logística y Ventas",ok:false},{t:"Producción, QA, Legal y Ventas",ok:false}], hint:"Son cuatro áreas administrativas y técnicas.", explain:"Los departamentos fueron RH, Contabilidad, Desarrollo y Soporte Técnico."},
+ {text:"¿Qué direcciones IP se asignaron a cada departamento?", options:[{t:"RH:192.168.10.0, Dev:192.168.20.0, Soporte:192.168.30.0, Contabilidad:192.168.40.0",ok:true},{t:"RH:192.168.1.0, Dev:192.168.2.0, Soporte:192.168.3.0, Contabilidad:192.168.4.0",ok:false},{t:"Todas 10.0.0.0/8",ok:false}], hint:"Usan subredes distintas 10/20/30/40.", explain:"Cada departamento tenía un rango específico en 192.168.x.0/24."},
+ {text:"¿Qué protocolo de enrutamiento dinámico se usó?", options:[{t:"RIP",ok:true},{t:"OSPF",ok:false},{t:"EIGRP",ok:false}], hint:"Es el más sencillo.", explain:"Se usó RIP en la práctica."},
+ {text:"¿Qué comando configura un pool DHCP en router?", options:[{t:"ip dhcp pool <nombre> ...",ok:true},{t:"enable secret <clave>",ok:false},{t:"ip route <destino>",ok:false}], hint:"Usa 'ip dhcp pool'.", explain:"Se crea un pool DHCP con ip dhcp pool."},
+ {text:"¿Qué IP se usó en enlace entre routers?", options:[{t:"192.168.60.0/24",ok:true},{t:"10.0.0.0/8",ok:false},{t:"172.16.0.0/16",ok:false}], hint:"Es una red /24.", explain:"Se utilizó 192.168.60.0/24."},
+ {text:"¿Gateway de Recursos Humanos?", options:[{t:"192.168.10.1",ok:true},{t:"192.168.1.1",ok:false},{t:"192.168.20.1",ok:false}], hint:"Está en la subred 192.168.10.0.", explain:"El gateway fue 192.168.10.1."},
+ {text:"¿Por qué servidor tiene IP estática?", options:[{t:"Porque necesita accesibilidad fija",ok:true},{t:"Porque DHCP no funciona",ok:false},{t:"Porque se cambia cada día",ok:false}], hint:"Piensa en estabilidad.", explain:"Un servidor debe tener IP fija para garantizar accesibilidad."},
+ {text:"¿Qué herramienta de Packet Tracer verifica comunicación?", options:[{t:"Ping/Simulation mode",ok:true},{t:"Microsoft Word",ok:false},{t:"Notepad",ok:false}], hint:"Sirve para enviar paquetes.", explain:"Se usan pings o simulation mode."},
+ {text:"¿Por qué usar RIP y no solo rutas estáticas?", options:[{t:"Simplifica gestión e intercambia rutas automáticamente",ok:true},{t:"Porque es más caro",ok:false},{t:"Porque es obligatorio",ok:false}], hint:"Permite intercambio automático.", explain:"RIP simplifica la gestión de múltiples subredes."},
+ {text:"¿Qué pasa si interfaz no se activa tras asignar IP?", options:[{t:"No transmite tráfico",ok:true},{t:"Funciona normal",ok:false},{t:"Aumenta velocidad",ok:false}], hint:"Debe activarse con 'no shutdown'.", explain:"Sin activarla, la interfaz no transmite."},
+ {text:"¿Problema si dos departamentos usan mismo rango IP?", options:[{t:"Conflictos de direcciones y fallos de comunicación",ok:true},{t:"Mayor velocidad",ok:false},{t:"Nada",ok:false}], hint:"Piensa en duplicación.", explain:"Provoca conflictos de red y fallos de comunicación."},
+ {text:"¿Por qué probar conectividad tras configurar RIP?", options:[{t:"Para confirmar tablas de enrutamiento y comunicación",ok:true},{t:"Para reiniciar routers",ok:false},{t:"Para cambiar contraseñas",ok:false}], hint:"Se debe verificar comunicación.", explain:"Pruebas confirman que las tablas de enrutamiento funcionan."},
+ {text:"¿Ventaja de DHCP frente a IP manual?", options:[{t:"Automatiza y reduce errores humanos",ok:true},{t:"Obliga a configurar manualmente",ok:false},{t:"Hace la red más insegura",ok:false}], hint:"Piensa en automatización.", explain:"DHCP facilita asignación de IPs y reduce errores."},
+ {text:"¿Consideraciones de cableado en oficina real?", options:[{t:"Cableado estructurado, estándares adecuados, redundancia",ok:true},{t:"Cables al azar",ok:false},{t:"Sin switches",ok:false}], hint:"Piensa en organización física.", explain:"Es importante estructurar y planificar cableado."},
+ {text:"¿Riesgo de no configurar enrutamiento en red con varios routers?", options:[{t:"Subredes aisladas sin comunicación",ok:true},{t:"Más seguridad",ok:false},{t:"Nada cambia",ok:false}], hint:"Enrutamiento conecta subredes.", explain:"Sin protocolo, subredes quedan aisladas."},
+ {text:"¿Qué mejoras de seguridad implementarías?", options:[{t:"Firewalls, VLANs, autenticación y políticas",ok:true},{t:"Ninguna",ok:false},{t:"Más impresoras",ok:false}], hint:"Piensa en seguridad extra.", explain:"Se deben implementar VLANs, firewalls y políticas de seguridad."},
+ {text:"¿Impacto de IPs duplicadas?", options:[{t:"Conflictos y pérdida de conectividad",ok:true},{t:"Más ancho de banda",ok:false},{t:"Mejor rendimiento",ok:false}], hint:"Duplicación genera conflictos.", explain:"IPs duplicadas causan fallos de red."},
+ {text:"¿Tres argumentos sobre valor de esta red?", options:[{t:"Conectividad eficiente, escalabilidad y base de seguridad",ok:true},{t:"Mayor velocidad de Internet, menos PCs y más Wi-Fi",ok:false},{t:"Todo en la misma red sin seguridad",ok:false}], hint:"Piensa en eficiencia y escalabilidad.", explain:"Aporta conectividad, escalabilidad y seguridad futura."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

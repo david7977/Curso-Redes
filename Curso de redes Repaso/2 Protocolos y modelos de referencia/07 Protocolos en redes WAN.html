@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16 - Funcionalidad y operación de TCP/IP</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border:1px solid #e5e7eb; border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin: 14px 0;}
+  .novato .cols {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 16</div>
+<h1>Funcionalidad y operación de TCP/IP</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+TCP/IP es el corazón de Internet.  
+- <b>IP</b> asigna direcciones y guía paquetes.  
+- <b>BGP</b> permite que grandes redes se entiendan y compartan rutas.  
+- <b>TCP</b> asegura orden y fiabilidad.  
+- <b>UDP</b> da rapidez para tiempo real.  
+- <b>SSL/TLS</b> protege la información con cifrado.  
+Juntos permiten que veas vídeos, juegues online o hagas banca digital de forma segura.
+</div>
+
+<h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+<div class="card">
+Imagina que mandas <b>paquetes</b>:  
+- <b>IP</b> es el cartero que pone direcciones en cada paquete.  
+- <b>BGP</b> son los mapas que usan los carteros de cada país.  
+- <b>TCP</b> es el mensajero premium: revisa que todos lleguen y en orden.  
+- <b>UDP</b> es el envío rápido: llega casi siempre, pero sin control.  
+- <b>SSL/TLS</b> es un sobre secreto que solo el receptor puede abrir.  
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid">
+<div class="card">
+<ul>
+<li><b>IP (v4/v6):</b> dirección única, fragmenta y guía paquetes.</li>
+<li><b>BGP:</b> comparte rutas entre grandes redes y países.</li>
+<li><b>TCP:</b> conexión fiable, ordenada, reenvía paquetes.</li>
+<li><b>UDP:</b> rápido, sin garantías (streaming/juegos).</li>
+<li><b>SSL/TLS:</b> cifran y autentican, evitan espionaje.</li>
+</ul>
+</div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+Internet nació con <b>IPv4</b>, pero pronto se quedó corto.  
+Llegó <b>IPv6</b> para soportar millones de dispositivos.  
+El protocolo <b>BGP</b> permitió que los países y proveedores compartan rutas.  
+TCP hizo posible el correo electrónico y la web.  
+UDP dio vida a videojuegos y videollamadas.  
+SSL/TLS nos permitió comprar y hacer banca online de forma segura.
+</div>
+
+<section class="novato">
+  <h3>Modo Novato</h3>
+  <div class="cols">
+    <div class="card">
+      <b>Idea simple</b>
+      <ul>
+        <li>IP = dirección.</li>
+        <li>BGP = mapa global.</li>
+        <li>TCP = fiable.</li>
+        <li>UDP = rápido.</li>
+        <li>SSL/TLS = seguro.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Si ocurre X… mira</b>
+      <ul>
+        <li>Vídeo se corta → ¿UDP saturado?</li>
+        <li>Página no carga → ¿TCP con pérdidas?</li>
+        <li>Alerta de seguridad → ¿certificado TLS caducado?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+<li>IP guía los paquetes.</li>
+<li>BGP conecta países y proveedores.</li>
+<li>TCP asegura orden y fiabilidad.</li>
+<li>UDP ofrece velocidad sin garantías.</li>
+<li>SSL/TLS protegen datos sensibles.</li>
+</ul>
+
+<h2>Resumen exprés (5 líneas)</h2>
+<div class="card">
+1. IP = direcciones globales.<br>
+2. BGP = rutas entre redes.<br>
+3. TCP = fiable.<br>
+4. UDP = rápido.<br>
+5. SSL/TLS = seguridad.
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+// Texto base
+ {text:"¿Qué hace el protocolo IP?", options:[{t:"Asigna direcciones y guía paquetes",ok:true},{t:"Cifra la información",ok:false},{t:"Verifica orden",ok:false}], hint:"Es el cartero.", explain:"IP asigna direcciones y guía el tráfico."},
+ {text:"¿Qué diferencia hay entre TCP y UDP?", options:[{t:"TCP es fiable, UDP es rápido sin garantías",ok:true},{t:"TCP es inalámbrico, UDP es con cables",ok:false},{t:"TCP es antiguo, UDP es nuevo",ok:false}], hint:"Uno revisa, otro no.", explain:"TCP asegura orden, UDP prioriza velocidad."},
+ {text:"¿Qué protocolo conecta redes de países distintos?", options:[{t:"BGP",ok:true},{t:"UDP",ok:false},{t:"DHCP",ok:false}], hint:"Se usa en Internet entre proveedores.", explain:"BGP intercambia rutas entre grandes redes."},
+ {text:"¿Qué protocolo protege comunicaciones en la banca online?", options:[{t:"SSL/TLS",ok:true},{t:"UDP",ok:false},{t:"BGP",ok:false}], hint:"Piensa en cifrado.", explain:"SSL/TLS cifran y autentican conexiones seguras."},
+ {text:"¿Por qué es importante IPv6?", options:[{t:"Permite muchas más direcciones",ok:true},{t:"Es más rápido siempre",ok:false},{t:"Reemplaza UDP",ok:false}], hint:"Piensa en millones de dispositivos.", explain:"IPv6 soporta el crecimiento de Internet."},
+ {text:"¿Qué ocurre si TCP pierde un paquete?", options:[{t:"Lo reenvía",ok:true},{t:"Se pierde para siempre",ok:false},{t:"Lo manda por UDP",ok:false}], hint:"Es fiable.", explain:"TCP retransmite los paquetes perdidos."},
+ {text:"¿Qué ocurre si UDP pierde un paquete?", options:[{t:"Se pierde y no se recupera",ok:true},{t:"TCP lo corrige",ok:false},{t:"Se encola hasta llegar",ok:false}], hint:"Streaming/juegos.", explain:"UDP no asegura reenvío."},
+ // Profesionales
+ {text:"¿Qué comando muestra rutas BGP activas en un router Cisco?", options:[{t:"show ip bgp",ok:true},{t:"ping 8.8.8.8",ok:false},{t:"traceroute",ok:false}], hint:"Comando especializado de routing.", explain:"En Cisco se usa 'show ip bgp'."},
+ {text:"¿Qué ataque se previene con SSL/TLS?", options:[{t:"Man in the Middle",ok:true},{t:"ARP spoofing",ok:false},{t:"DoS físico",ok:false}], hint:"Interceptación de datos.", explain:"TLS evita que un atacante lea o modifique datos."},
+ {text:"¿Qué protocolo revisarías si un streaming va lento?", options:[{t:"UDP",ok:true},{t:"BGP",ok:false},{t:"TLS",ok:false}], hint:"Se usa en tiempo real.", explain:"UDP gestiona streaming y juegos."},
+ {text:"¿Qué protocolo revisarías si una web no carga y parece que no responde el servidor?", options:[{t:"TCP",ok:true},{t:"UDP",ok:false},{t:"BGP",ok:false}], hint:"Se usa para la web.", explain:"TCP asegura carga fiable de páginas."},
+ {text:"¿Qué riesgo existe si un certificado TLS expira?", options:[{t:"La conexión deja de ser segura y navegadores alertan",ok:true},{t:"La web usa UDP",ok:false},{t:"El router se apaga",ok:false}], hint:"Piensa en HTTPS.", explain:"Un TLS caducado rompe confianza y seguridad."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

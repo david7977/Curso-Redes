@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extra Entiende OSI y TCPIP</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; margin: 24px; line-height: 1.45; }
+  header { border: 2px solid #e5e7eb; border-left: 8px solid var(--card); padding: 16px 18px; border-radius: 14px; margin-bottom: 22px; background: #f8fafc; }
+  h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; margin: 18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px 14px; border-radius:12px; }
+  .note { color:#334155; }
+  .nen { font-weight:700; }
+  .mnemo { background:#ecfeff; border:1px solid #bae6fd; padding:10px 12px; border-radius:12px; }
+  .layerlist { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px; margin-top:8px; }
+  .layer { background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
+  .layer b { display:block; }
+  /* Quiz */
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; padding:16px; margin:18px 0; }
+  .q { margin:14px 0 8px; }
+  label { display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; }
+  .correct { background: #dcfce7; border-color: #bbf7d0; }
+  .incorrect { background: #fee2e2; border-color: #fecaca; }
+  .explain { font-size:.95rem; color:#334155; margin-top:6px; display:none; }
+  .feedback { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--bad); background:#fff1f2; border-radius:10px; }
+  .feedback b { color:#991b1b; }
+  .success { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--ok); background:#ecfdf5; border-radius:10px; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  button { padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer; background:#111827; color:#fff; }
+  button.secondary { background:#f3f4f6; color:#111827; }
+  .score { font-weight:700; }
+  footer { margin-top:24px; color:#475569; font-size:.95rem; }
+  .muted { color:#6b7280; }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">Modelo OSI — Explicación sencilla</div>
+  <h1>Entiende las 7 capas del OSI como si tuvieras 15 años</h1>
+  <p class="note">El modelo OSI es como enviar una carta por etapas. Cada capa hace su parte para que el mensaje viaje desde tu app hasta el dispositivo del otro lado y regrese sin errores.</p>
+  <div class="layerlist">
+    <div class="layer"><b>7. Aplicación</b> Donde tú interactúas: WhatsApp, navegador, correo.</div>
+    <div class="layer"><b>6. Presentación</b> Traduce/convierte formatos (texto, cifrado, compresión) para que la app lo entienda.</div>
+    <div class="layer"><b>5. Sesión</b> Abre, mantiene y cierra “la conversación” entre aplicaciones.</div>
+    <div class="layer"><b>4. Transporte</b> Asegura entrega completa y en orden (p. ej., “reensambla” trozos).</div>
+    <div class="layer"><b>3. Red</b> Elige el camino y la dirección (enrutamiento con IP).</div>
+    <div class="layer"><b>2. Enlace de datos</b> Conexión directa sin errores entre dos dispositivos vecinos (MAC, tramas).</div>
+    <div class="layer"><b>1. Física</b> Señales, cables y Wi‑Fi: lo que mueve los bits por el medio.</div>
+  </div>
+
+  <h2>Nemotecnia</h2>
+  <div class="mnemo">
+    <p><span class="nen">De abajo a arriba:</span> <span class="mono">Físicos En Red Transportan Sesiones Presentadas Aplausos</span></p>
+    <p class="muted">(<b>F</b>ísica, <b>E</b>nlace, <b>R</b>ed, <b>T</b>ransporte, <b>S</b>esión, <b>P</b>resentación, <b>A</b>plicación)</p>
+  </div>
+
+  <h2>Historia para asociarlas</h2>
+  <div class="story">
+    <p><b>Aplicación</b>: Tú escribes a tu amiga en una app. <b>Presentación</b>: la app convierte emojis y cifra el mensaje. <b>Sesión</b>: se abre la “conversación”. <b>Transporte</b>: divide el mensaje en trozos y se asegura de que lleguen completos y en orden. <b>Red</b>: decide por qué caminos viajarán esos trozos (rutas y direcciones IP). <b>Enlace</b>: cada salto local comprueba errores entre dispositivos vecinos. <b>Física</b>: las ondas Wi‑Fi/cables llevan los bits por el aire y el cobre. ¡Mensaje entregado!</p>
+  </div>
+</header>
+
+<section class="quiz-card">
+  <h2>📝 Test del Modelo OSI (dificultad media-alta)</h2>
+  <p class="muted">Marca lo que creas correcto. Al corregir verás en verde lo correcto y en rojo lo seleccionado incorrecto. Si fallas, se mostrará la <b>respuesta correcta</b> y una <b>explicación</b>.</p>
+
+  <!-- Q1 single -->
+  <div class="q" data-q="1" data-type="single" data-explain="Elegir rutas y direcciones lógicas (IP) es función de la Capa 3: Red.">
+    <p><b>1.</b> ¿Qué capa decide el camino que siguen los paquetes por la red?</p>
+    <label><input type="checkbox" value="false"> Capa 5 — Sesión</label>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 2 — Enlace</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q2 multi -->
+  <div class="q" data-q="2" data-type="multi" data-explain="Transporte (C4) garantiza entrega completa/orden y control de errores extremo a extremo. Enlace (C2) detecta/corrige errores a nivel de trama en el enlace local.">
+    <p><b>2.</b> Selecciona todas las capas que tratan <i>control de errores</i> en algún nivel:</p>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q3 single -->
+  <div class="q" data-q="3" data-type="single" data-explain="Chrome/Firefox/Outlook viven en la Capa 7: Aplicación.">
+    <p><b>3.</b> Un navegador como Chrome pertenece a:</p>
+    <label><input type="checkbox" value="true"> Capa 7 — Aplicación</label>
+    <label><input type="checkbox" value="false"> Capa 6 — Presentación</label>
+    <label><input type="checkbox" value="false"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q4 single -->
+  <div class="q" data-q="4" data-type="single" data-explain="Traducción de formatos, cifrado y compresión es Capa 6 — Presentación.">
+    <p><b>4.</b> ¿Qué capa traduce formatos (por ejemplo, de texto a binario, cifrado, compresión)?</p>
+    <label><input type="checkbox" value="false"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="true"> Capa 6 — Presentación</label>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q5 single -->
+  <div class="q" data-q="5" data-type="single" data-explain="Señales, medios, conectores: todo eso es Capa 1 — Física.">
+    <p><b>5.</b> Cables, conectores, ondas de radio y niveles eléctricos son de:</p>
+    <label><input type="checkbox" value="true"> Capa 1 — Física</label>
+    <label><input type="checkbox" value="false"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 5 — Sesión</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q6 multi -->
+  <div class="q" data-q="6" data-type="multi" data-explain="‘Abrir/cerrar’ conversaciones es Capa 5 — Sesión. ‘Entrega ordenada’ es Capa 4 — Transporte.">
+    <p><b>6.</b> ¿Qué afirmaciones son correctas?</p>
+    <label><input type="checkbox" value="true"> La Capa 5 abre, mantiene y cierra comunicaciones.</label>
+    <label><input type="checkbox" value="true"> La Capa 4 asegura entrega completa y ordenada.</label>
+    <label><input type="checkbox" value="false"> La Capa 3 corrige errores en el enlace físico.</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q7 single -->
+  <div class="q" data-q="7" data-type="single" data-explain="Direcciones MAC y tramas pertenecen a Capa 2 — Enlace.">
+    <p><b>7.</b> ¿Dónde operan las direcciones MAC y las tramas?</p>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 6 — Presentación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q8 multi -->
+  <div class="q" data-q="8" data-type="multi" data-explain="Un ping usa ICMP (Capa 3) y siempre requiere Capa 1 (medio físico) y Capa 2 (enlace local). No es Capa 7.">
+    <p><b>8.</b> Al hacer <span class="mono">ping</span> a una IP, ¿qué capas intervienen seguro?</p>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="true"> Capa 1 — Física</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q9 single -->
+  <div class="q" data-q="9" data-type="single" data-explain="TCP/UDP son de Capa 4 — Transporte.">
+    <p><b>9.</b> TCP y UDP pertenecen a:</p>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="false"> Capa 5 — Sesión</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q10 multi -->
+  <div class="q" data-q="10" data-type="multi" data-explain="Un archivo corrupto puede ser problema de Capa 4 (extremo a extremo) o Capa 2 (errores de trama). Presentación (C6) no garantiza integridad.">
+    <p><b>10.</b> Si un archivo se recibe corrupto, ¿qué capas podrían estar implicadas?</p>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 6 — Presentación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q11 single -->
+  <div class="q" data-q="11" data-type="single" data-explain="En la visión OSI clásica, TLS/SSL se ubica en Presentación (C6), aunque en la práctica suele implementarse en la capa de aplicación.">
+    <p><b>11.</b> El cifrado TLS/SSL, en la visión OSI clásica, se asocia principalmente a:</p>
+    <label><input type="checkbox" value="false"> Capa 5 — Sesión</label>
+    <label><input type="checkbox" value="true"> Capa 6 — Presentación</label>
+    <label><input type="checkbox" value="false"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q12 multi -->
+  <div class="q" data-q="12" data-type="multi" data-explain="Para HTTPS intervienen C7 (HTTP), C6 (TLS), C4 (TCP), C3 (IP), C2 (Ethernet/Wi‑Fi) y C1 (medio).">
+    <p><b>12.</b> Para cargar una página web HTTPS, marca todas las capas que intervienen típicamente:</p>
+    <label><input type="checkbox" value="true"> Capa 7 — Aplicación</label>
+    <label><input type="checkbox" value="true"> Capa 6 — Presentación</label>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="true"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- --- Advanced 13-22 --- -->
+
+  <!-- Q13 multi: traceroute -->
+  <div class="q" data-q="13" data-type="multi" data-explain="Traceroute manipula TTL (IP, C3) y recibe ICMP Time Exceeded. Siempre necesitas C1 y C2 para transportar los bits y tramas en cada salto.">
+    <p><b>13.</b> Ejecutas <span class="mono">traceroute</span>. ¿Qué capas participan seguro?</p>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="true"> Capa 1 — Física</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q14 single: switch -->
+  <div class="q" data-q="14" data-type="single" data-explain="Un switch clásico opera en Capa 2 (MAC/tramas). Los multilayer switches también pueden hacer funciones de C3, pero el conmutador básico es C2.">
+    <p><b>14.</b> Un switch de acceso de campus opera principalmente en:</p>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q15 single: NAT -->
+  <div class="q" data-q="15" data-type="single" data-explain="NAT/PAT modifica direcciones IP (y, en PAT, puertos). Se asocia a la Capa 3 — Red (con conocimiento de puertos de C4).">
+    <p><b>15.</b> ¿En qué capa se ubica principalmente el NAT/PAT?</p>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="false"> Capa 2 — Enlace</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q16 single: HTTPS responsibility -->
+  <div class="q" data-q="16" data-type="single" data-explain="El cifrado y certificados de HTTPS corresponden a la Presentación (C6) en OSI; HTTP como tal es C7.">
+    <p><b>16.</b> En HTTPS, ¿qué capa se encarga del cifrado y manejo de certificados?</p>
+    <label><input type="checkbox" value="true"> Capa 6 — Presentación</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <label><input type="checkbox" value="false"> Capa 4 — Transporte</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q17 single: VLAN -->
+  <div class="q" data-q="17" data-type="single" data-explain="VLAN (802.1Q) añade una etiqueta a la trama Ethernet. Es Capa 2 — Enlace.">
+    <p><b>17.</b> El etiquetado VLAN 802.1Q pertenece a:</p>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q18 single: ARP -->
+  <div class="q" data-q="18" data-type="single" data-explain="ARP resuelve IP→MAC para enviar tramas en el segmento local. Se sitúa tradicionalmente en Capa 2 (enlace) aunque relaciona C3 con C2.">
+    <p><b>18.</b> ARP se ubica principalmente en:</p>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q19 single: MTU/ICMP -->
+  <div class="q" data-q="19" data-type="single" data-explain="Con DF=1 y MTU menor en el camino, un router genera ICMP Fragmentation Needed (Type 3 Code 4). Eso es Capa 3 — Red.">
+    <p><b>19.</b> Si un enlace intermedio tiene MTU menor y el bit DF está activado, ¿qué capa reporta el problema?</p>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="false"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="false"> Capa 4 — Transporte</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q20 single: broadcast domain -->
+  <div class="q" data-q="20" data-type="single" data-explain="Los routers (C3) separan dominios de broadcast; los switches (C2) no, salvo cuando usas VLANs.">
+    <p><b>20.</b> ¿Qué dispositivo separa dominios de broadcast por defecto?</p>
+    <label><input type="checkbox" value="true"> Router (Capa 3)</label>
+    <label><input type="checkbox" value="false"> Switch (Capa 2)</label>
+    <label><input type="checkbox" value="false"> Hub (Capa 1)</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q21 multi: DNS over UDP -->
+  <div class="q" data-q="21" data-type="multi" data-explain="DNS típico usa UDP (C4) sobre IP (C3), con C2 y C1 para el medio, y la lógica de DNS en C7.">
+    <p><b>21.</b> Para una consulta DNS sobre UDP, marca las capas involucradas:</p>
+    <label><input type="checkbox" value="true"> Capa 7 — Aplicación</label>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="true"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 2 — Enlace</label>
+    <label><input type="checkbox" value="true"> Capa 1 — Física</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <!-- Q22 single: 3-way handshake -->
+  <div class="q" data-q="22" data-type="single" data-explain="El 3‑way handshake (SYN, SYN‑ACK, ACK) es propio de TCP, que es Capa 4 — Transporte.">
+    <p><b>22.</b> ¿En qué capa ocurre el <span class="mono">3‑way handshake</span> (SYN, SYN‑ACK, ACK)?</p>
+    <label><input type="checkbox" value="false"> Capa 3 — Red</label>
+    <label><input type="checkbox" value="true"> Capa 4 — Transporte</label>
+    <label><input type="checkbox" value="false"> Capa 7 — Aplicación</label>
+    <div class="feedback"></div><div class="success">✅ ¡Correcto!</div>
+  </div>
+
+  <div class="controls">
+    <button type="button" id="btn-correct">Corregir</button>
+    <button type="button" id="btn-reset" class="secondary">Reiniciar</button>
+    <span class="score" id="score"></span>
+  </div>
+</section>
+
+<footer>
+  <p>Consejo: repite la nemotecnia <b>Físicos En Red Transportan Sesiones Presentadas Aplausos</b> en voz alta tres veces mirando la lista. La memoria muscular ayuda.</p>
+</footer>
+
+<script>
+(function(){
+  const qBlocks = document.querySelectorAll('.q');
+  const btnCorrect = document.getElementById('btn-correct');
+  const btnReset = document.getElementById('btn-reset');
+  const scoreEl = document.getElementById('score');
+
+  function clearStyles() {
+    document.querySelectorAll('label').forEach(l => {
+      l.classList.remove('correct','incorrect');
+    });
+    qBlocks.forEach(q => {
+      q.querySelector('.feedback').style.display = 'none';
+      q.querySelector('.feedback').innerHTML = '';
+      q.querySelector('.success').style.display = 'none';
+    });
+    scoreEl.textContent = '';
+  }
+
+  function evaluateQuestion(q) {
+    const type = q.getAttribute('data-type'); // single | multi
+    const labels = Array.from(q.querySelectorAll('label'));
+    let ok = true;
+    let correctLabels = [];
+
+    labels.forEach(label => {
+      const cb = label.querySelector('input[type="checkbox"]');
+      const isTrue = cb.value === 'true';
+      const checked = cb.checked;
+
+      // pinta correctas (siempre) y seleccionadas incorrectas
+      if (isTrue) {
+        label.classList.add('correct');
+        correctLabels.push(label.textContent.trim());
+        if (!checked) ok = false;
+      } else {
+        if (checked) {
+          label.classList.add('incorrect');
+          ok = false;
+        }
+      }
+    });
+
+    const feedback = q.querySelector('.feedback');
+    const success = q.querySelector('.success');
+    if (ok) {
+      success.style.display = 'block';
+      feedback.style.display = 'none';
+      feedback.innerHTML = '';
+    } else {
+      success.style.display = 'none';
+      // Mostrar la respuesta correcta + explicación
+      const explain = q.getAttribute('data-explain') || '';
+      const list = correctLabels.map(t => `<li>${t}</li>`).join('');
+      feedback.innerHTML = `<b>Respuesta correcta:</b><ul>${list}</ul><div>${explain}</div>`;
+      feedback.style.display = 'block';
+    }
+    return ok;
+  }
+
+  function correct() {
+    let total = qBlocks.length, right = 0;
+    qBlocks.forEach(q => { if (evaluateQuestion(q)) right++; });
+    scoreEl.textContent = `Puntuación: ${right} / ${total}`;
+  }
+
+  function reset() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    clearStyles();
+  }
+
+  btnCorrect.addEventListener('click', correct);
+  btnReset.addEventListener('click', reset);
+})();
+</script>
+</body>
+</html>

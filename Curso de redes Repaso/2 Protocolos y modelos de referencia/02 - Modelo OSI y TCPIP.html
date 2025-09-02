@@ -1,0 +1,168 @@
+<11 - Modelo OSI y TCP/IP>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 - Modelo OSI y TCP/IP</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#f8fafc; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  .pill { background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px; margin:6px 0;}
+  .story { border:1px dashed #cbd5e1; background:#fff; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin:14px 0;}
+  .novato h3{ margin-top:0;}
+  .novato .cols{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; margin:6px 0; border:1px solid #e5e7eb; border-radius:10px;}
+  .correct{background:#dcfce7;}
+  .incorrect{background:#fee2e2;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px; border-radius:10px;}
+  .feedback{background:#fff1f2; border-left:4px solid var(--bad);}
+  .success{background:#ecfdf5; border-left:4px solid var(--ok);}
+  .hint{background:#eff6ff; border-left:4px solid var(--accent);}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; border:none; cursor:pointer;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 11</div>
+<h1>Modelo OSI y TCP/IP</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+Los modelos <b>OSI</b> (7 capas) y <b>TCP/IP</b> (4 capas) organizan cómo se comunican los dispositivos en una red.  
+El OSI es un <b>modelo teórico</b> usado como guía para entender funciones de red, mientras que el TCP/IP es <b>práctico</b> y se aplica en Internet.  
+Ambos permiten que los datos fluyan de forma <b>ordenada, segura y eficiente</b>.
+</div>
+
+<h2>🧩 Conceptos Clave (10 años)</h2>
+<div class="card">
+Imagina que envías una carta:  
+<ul>
+<li>Escribes → Aplicación</li>
+<li>Traducen tu mensaje → Presentación</li>
+<li>Organizan conversación → Sesión</li>
+<li>Parten en paquetes → Transporte</li>
+<li>Eligen la ruta → Red</li>
+<li>Controlan que llegue → Enlace de Datos</li>
+<li>Carretera física → Física</li>
+</ul>
+El TCP/IP simplifica: solo 4 pasos (Aplicación, Transporte, Internet, Enlace).
+</div>
+
+<h2>📚 Desglose</h2>
+<div class="grid"><div class="card"><ul>
+<li>Modelo OSI: 7 capas → Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación.</li>
+<li>Modelo TCP/IP: 4 capas → Enlace, Internet, Transporte, Aplicación.</li>
+<li>OSI = teórico y educativo. TCP/IP = práctico y usado en Internet.</li>
+<li>Sesión y Presentación del OSI están integradas en la capa de Aplicación en TCP/IP.</li>
+<li>Ambos son esenciales para entender, diseñar y operar redes.</li>
+</ul></div></div>
+
+<h2>Historia breve</h2>
+<div class="story">
+El OSI nació como modelo académico en los 80 para <b>ordenar las comunicaciones</b>.  
+Pero en paralelo, el TCP/IP se usaba en ARPANET y demostró su eficacia.  
+Por eso, aunque OSI es vital para aprender, el TCP/IP se convirtió en el <b>estándar real de Internet</b>.
+</div>
+
+<section class="novato">
+<h3>Modo Novato</h3>
+<div class="cols">
+<div class="card"><b>Recordar fácil</b><ul>
+<li>OSI: 7 capas → más detalle, teoría.</li>
+<li>TCP/IP: 4 capas → práctico.</li>
+</ul></div>
+<div class="card"><b>En la práctica</b><ul>
+<li>Cuando navegas en Internet → usas TCP/IP.</li>
+<li>Cuando estudias cómo funciona → aprendes OSI.</li>
+</ul></div>
+</div>
+</section>
+
+<h2>Resumen</h2>
+<ul>
+<li>OSI → guía teórica de 7 capas.</li>
+<li>TCP/IP → estándar práctico de 4 capas.</li>
+<li>Ambos organizan la comunicación en red.</li>
+</ul>
+
+<h2>Resumen exprés</h2>
+<div class="card">OSI = teoría (7 capas) | TCP/IP = práctica (4 capas)</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+<button id="btn-correct" class="primary">Corregir</button>
+<button id="btn-shuffle" class="secondary">Barajar</button>
+<button id="btn-reset" class="secondary">Reiniciar</button>
+<span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const BANK=[
+// Texto
+{text:"¿Cuántas capas tiene el modelo OSI?",options:[{t:"7",ok:true},{t:"4",ok:false},{t:"10",ok:false}],hint:"Es la más detallada.",explain:"El modelo OSI tiene 7 capas."},
+{text:"¿Cuántas capas tiene el modelo TCP/IP?",options:[{t:"4",ok:true},{t:"7",ok:false},{t:"2",ok:false}],hint:"Es más simple.",explain:"El modelo TCP/IP tiene 4 capas."},
+{text:"En el modelo OSI, ¿qué capa se encarga de la traducción de datos?",options:[{t:"Presentación",ok:true},{t:"Transporte",ok:false},{t:"Internet",ok:false}],hint:"Traduce y cifra.",explain:"La capa de Presentación traduce y cifra los datos."},
+{text:"¿Qué capa OSI asegura que los datos lleguen completos y en orden?",options:[{t:"Transporte",ok:true},{t:"Red",ok:false},{t:"Física",ok:false}],hint:"Piensa en TCP.",explain:"La capa de Transporte garantiza entrega fiable y ordenada."},
+{text:"En el TCP/IP, las funciones de Sesión y Presentación están en:",options:[{t:"Aplicación",ok:true},{t:"Red",ok:false},{t:"Transporte",ok:false}],hint:"TCP/IP simplifica.",explain:"En TCP/IP, la capa de Aplicación agrupa esas funciones."},
+{text:"¿Qué capa del TCP/IP maneja el enrutamiento de paquetes?",options:[{t:"Internet",ok:true},{t:"Aplicación",ok:false},{t:"Física",ok:false}],hint:"IP vive aquí.",explain:"La capa de Internet se encarga de direccionamiento y enrutamiento."},
+{text:"¿Qué capa OSI interactúa directamente con el usuario?",options:[{t:"Aplicación",ok:true},{t:"Red",ok:false},{t:"Transporte",ok:false}],hint:"Es donde están las apps.",explain:"La capa de Aplicación permite usar navegadores, chats, etc."},
+{text:"¿Cuál es la diferencia principal entre OSI y TCP/IP?",options:[{t:"OSI es teórico, TCP/IP práctico",ok:true},{t:"Ambos tienen 7 capas",ok:false},{t:"TCP/IP es más detallado",ok:false}],hint:"Uno educa, otro se usa.",explain:"OSI es teórico; TCP/IP es práctico y usado en Internet."},
+
+// Profesionales
+{text:"¿Por qué TCP/IP se convirtió en el estándar práctico?",options:[{t:"Porque se implementó en ARPANET y funciona en Internet",ok:true},{t:"Porque es más largo",ok:false},{t:"Porque es más difícil de entender",ok:false}],hint:"Su éxito está ligado a Internet.",explain:"TCP/IP nació con ARPANET y se consolidó en Internet."},
+{text:"¿En qué situaciones se sigue usando el modelo OSI?",options:[{t:"En educación y diagnóstico de redes",ok:true},{t:"En routers modernos",ok:false},{t:"En videojuegos",ok:false}],hint:"Es más teórico.",explain:"El OSI sirve como guía educativa y de diagnóstico."}
+];
+
+let QUESTIONS=[];const quiz=document.getElementById('quiz');const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,i){
+ const w=document.createElement('div');w.className='q';
+ const p=document.createElement('p');p.innerHTML=`<b>${i+1}.</b> ${q.text}`;w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,j)=>{const id=`q${i}_opt${j}`;const label=document.createElement('label');label.setAttribute('for',id);
+ const input=document.createElement('input');input.type='radio';input.name=`q${i}`;input.id=id;input.value=o.ok?'true':'false';
+ label.appendChild(input);label.insertAdjacentText('beforeend',' '+o.t);w.appendChild(label);});
+ const hb=document.createElement('button');hb.type='button';hb.textContent='Pista';hb.className='hint-btn';
+ const hbBox=document.createElement('div');hbBox.className='hint';hbBox.innerHTML=q.hint;w.appendChild(hb);w.appendChild(hbBox);
+ const fb=document.createElement('div');fb.className='feedback';w.appendChild(fb);
+ const ok=document.createElement('div');ok.className='success';ok.textContent='✅ ¡Correcto!';w.appendChild(ok);
+ hb.addEventListener('click',()=>{hbBox.style.display='block';hb.disabled=true;});
+ return w;
+}
+function buildQuiz(){quiz.innerHTML='';QUESTIONS=shuffle(BANK.map(q=>({...q,options:q.options.map(o=>({...o}))})));QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i)));scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labs=Array.from(node.querySelectorAll('label'));let ok=false;let sel=null;let corr=null;
+ labs.forEach(l=>{l.classList.remove('correct','incorrect');const input=l.querySelector('input');if(input.value==='true') corr=l;if(input.checked){sel=l;ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback');const okBox=node.querySelector('.success');
+ if(ok){corr.classList.add('correct');okBox.style.display='block';fb.style.display='none';}
+ else{if(sel) sel.classList.add('incorrect');if(corr) corr.classList.add('correct');okBox.style.display='none';fb.innerHTML=`<b>Respuesta correcta:</b> ${corr?corr.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+.\s*/,'')).explain}</div>`;fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q');let right=0;nodes.forEach(n=>{if(evaluateQuestion(n)) right++;});scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

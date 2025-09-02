@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz IPv4 e IPv6</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0; background:#fff;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; cursor:pointer;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+
+<section class="quiz-card">
+  <div class="legend">Preguntas sobre IPv4 e IPv6</div>
+  <div class="qwrap" id="quiz"></div>
+  <div class="toolbar-bottom">
+    <button id="btn-correct" class="primary">Corregir</button>
+    <button id="btn-shuffle" class="secondary">Barajar</button>
+    <button id="btn-reset" class="secondary">Reiniciar</button>
+    <span id="score" class="score"></span>
+  </div>
+</section>
+
+<script>
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+const BANK = [
+  {text:"¿Qué es una dirección IP y para qué sirve?", options:[{t:"Es un identificador numérico único que permite localizar y comunicar dispositivos en una red, similar a una dirección postal.",ok:true},{t:"Es un cable de red.",ok:false},{t:"Es un programa de seguridad.",ok:false}], hint:"Piensa en direcciones postales.", explain:"La IP identifica dispositivos como una dirección postal digital."},
+  {text:"¿En qué año se implementó IPv4?", options:[{t:"1983",ok:true},{t:"1995",ok:false},{t:"1970",ok:false}], hint:"Década de los 80.", explain:"IPv4 se implementó en 1983."},
+  {text:"¿Cuántas direcciones posibles ofrece IPv4?", options:[{t:"Más de 4.000 millones (2³²)",ok:true},{t:"65.000",ok:false},{t:"128",ok:false}], hint:"Miles de millones.", explain:"IPv4 ofrece 2^32 direcciones."},
+  {text:"¿De cuántos bits se compone una dirección IPv4?", options:[{t:"32 bits",ok:true},{t:"16 bits",ok:false},{t:"64 bits",ok:false}], hint:"4 bloques de 8.", explain:"IPv4 usa 32 bits."},
+  {text:"¿De cuántos bits se compone una dirección IPv6?", options:[{t:"128 bits",ok:true},{t:"64 bits",ok:false},{t:"256 bits",ok:false}], hint:"Mucho más que 32.", explain:"IPv6 tiene 128 bits."},
+  {text:"¿Qué formato usan las direcciones IPv4?", options:[{t:"Decimal, 4 bloques separados por puntos (ej: 192.168.1.1)",ok:true},{t:"Hexadecimal con dos puntos",ok:false},{t:"Binario puro",ok:false}], hint:"Separado por puntos.", explain:"IPv4 se escribe en decimal con 4 octetos."},
+  {text:"¿Qué formato usan las direcciones IPv6?", options:[{t:"Hexadecimal, 8 bloques separados por dos puntos",ok:true},{t:"Decimal con puntos",ok:false},{t:"Binario puro",ok:false}], hint:"Usa hexadecimales.", explain:"IPv6 usa 8 bloques hexadecimales de 16 bits."},
+  {text:"¿Qué significa que una dirección IPv6 tenga la notación “/64”?", options:[{t:"Los primeros 64 bits son la red, el resto son hosts",ok:true},{t:"Es la velocidad de conexión",ok:false},{t:"Es un puerto especial",ok:false}], hint:"Prefijo de red.", explain:"/64 significa que 64 bits son red."},
+  {text:"¿Qué ocurre si conectas muchos dispositivos en IPv4 sin subredes?", options:[{t:"No habrá suficientes direcciones y habrá conflictos",ok:true},{t:"Funcionará más rápido",ok:false},{t:"No pasará nada",ok:false}], hint:"Choque de direcciones.", explain:"Sin subredes las direcciones se agotan."},
+  {text:"¿Qué mecanismo divide redes grandes en subredes pequeñas en IPv4?", options:[{t:"Máscara de subred",ok:true},{t:"ARP",ok:false},{t:"DNS",ok:false}], hint:"Define red/host.", explain:"La máscara de subred separa red y host."},
+  {text:"¿Qué clases de direcciones IPv4 se usaban?", options:[{t:"Clase A, B, C, D y E",ok:true},{t:"Clase X e Y",ok:false},{t:"Clase 1 y 2",ok:false}], hint:"Cinco clases.", explain:"A (grandes), B (medianas), C (pequeñas), D y E (especiales)."},
+  {text:"Si tu red usa 192.168.0.x, ¿qué clase es?", options:[{t:"Clase C",ok:true},{t:"Clase A",ok:false},{t:"Clase B",ok:false}], hint:"Común en hogares.", explain:"192.168.x.x es Clase C."},
+  {text:"¿Qué ventaja tiene IPv6 sobre IPv4 en espacio de direcciones?", options:[{t:"Casi infinito",ok:true},{t:"Menos direcciones",ok:false},{t:"Igual que IPv4",ok:false}], hint:"Mucho más grande.", explain:"IPv6 tiene 2^128 direcciones."},
+  {text:"¿Qué notación simplifica direcciones IPv6 largas?", options:[{t:"::",ok:true},{t:"...",ok:false},{t:"--",ok:false}], hint:"Doble dos puntos.", explain:":: sustituye ceros consecutivos."},
+  {text:"¿Por qué IPv4 es insuficiente hoy?", options:[{t:"Por el crecimiento de dispositivos",ok:true},{t:"Porque es más lento",ok:false},{t:"Porque no usa cables",ok:false}], hint:"Más dispositivos.", explain:"IPv4 no alcanza para todos los equipos."},
+  {text:"IPv4 como Lego: ¿cómo se representa?", options:[{t:"Mesa pequeña de 32 espacios que se llena rápido",ok:true},{t:"Mesa infinita",ok:false},{t:"Sin mesa",ok:false}], hint:"Mesa pequeña.", explain:"IPv4 = espacio limitado."},
+  {text:"IPv6 como Lego: ¿cómo se representa?", options:[{t:"Mesa enorme de 128 espacios para todos",ok:true},{t:"Mesa de 32 espacios",ok:false},{t:"Mesa vacía",ok:false}], hint:"Mesa enorme.", explain:"IPv6 = espacio muy amplio."},
+  {text:"¿Por qué IPv6 garantiza el futuro de Internet?", options:[{t:"Porque hay direcciones para todos",ok:true},{t:"Porque es más barato",ok:false},{t:"Porque no usa cables",ok:false}], hint:"Suficientes direcciones.", explain:"IPv6 asegura direcciones únicas."},
+  {text:"¿Qué similitud hay entre máscaras IPv4 y prefijos IPv6?", options:[{t:"Ambos definen red y host",ok:true},{t:"Ambos cifran datos",ok:false},{t:"Ambos son protocolos de seguridad",ok:false}], hint:"Función parecida.", explain:"Separan red y hosts."},
+  {text:"¿Qué pasaría sin direcciones IP?", options:[{t:"Los dispositivos no se comunican",ok:true},{t:"La red es más rápida",ok:false},{t:"No hace falta Internet",ok:false}], hint:"Imposible comunicarse.", explain:"La IP es esencial."},
+  {text:"Problemas de usar solo IPv4 en casa:", options:[{t:"Pocos dispositivos y necesidad de NAT",ok:true},{t:"Más velocidad",ok:false},{t:"Mejor seguridad",ok:false}], hint:"Limitaciones y NAT.", explain:"IPv4 obliga a NAT en hogares."},
+  {text:"¿Por qué IPv6 elimina la NAT?", options:[{t:"Porque da direcciones únicas suficientes",ok:true},{t:"Porque es más rápido",ok:false},{t:"Porque no usa protocolos",ok:false}], hint:"Direcciones de sobra.", explain:"IPv6 da IP única a cada dispositivo."},
+  {text:"Ventajas de IPv6 en rendimiento y seguridad:", options:[{t:"Enrutamiento simple, IPSec nativo, más eficiencia",ok:true},{t:"No necesita cables",ok:false},{t:"No usa protocolos",ok:false}], hint:"Más seguro y eficiente.", explain:"IPv6 simplifica enrutamiento y añade IPSec."},
+  {text:"Consecuencias de no migrar a IPv6 en empresa:", options:[{t:"Problemas de crecimiento y compatibilidad, dependencia de NAT",ok:true},{t:"Más velocidad",ok:false},{t:"Mejor conectividad",ok:false}], hint:"Se queda atrás.", explain:"Ignorar IPv6 limita expansión."},
+  {text:"Si quieres que tu red funcione en 10 años, ¿qué eliges?", options:[{t:"IPv6, por espacio y escalabilidad",ok:true},{t:"IPv4",ok:false},{t:"Ninguno",ok:false}], hint:"El futuro es IPv6.", explain:"IPv6 es la opción a largo plazo."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+  const w=document.createElement('div'); w.className='q';
+  const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+  const opts=shuffle(q.options.map(o=>({...o})));
+  opts.forEach((o,i)=>{
+    const id=`q${idx}_opt${i}`; const name=`q${idx}`;
+    const label=document.createElement('label'); label.setAttribute('for',id);
+    const input=document.createElement('input'); input.type='radio'; input.name=name; input.id=id; input.value=o.ok?'true':'false'; input.style.marginRight='8px';
+    label.appendChild(input); label.appendChild(document.createTextNode(o.t));
+    w.appendChild(label);
+  });
+  const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+  const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+  w.appendChild(hintBtn); w.appendChild(hintBox);
+  const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+  const okBox=document.createElement('div'); okBox.className='success'; okBox.textContent='✅ ¡Correcto!'; w.appendChild(okBox);
+  hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+  return w;
+}
+
+function buildQuiz(){
+  quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))})));
+  QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';
+}
+
+function explainForQuestionText(text){
+  const found=QUESTIONS.find(q=>q.text===text);
+  return found ? (found.explain||'') : '';
+}
+
+function evaluateQuestion(node){
+  const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+  labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+  const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+  if(ok){ if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none'; }
+  else{ if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); const qText=node.querySelector('p')?.innerText.replace(/^\d+\.\s*/,'')||''; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${explainForQuestionText(qText)}</div>`; fb.style.display='block'; okBox.style.display='none'; }
+  return ok;
+}
+
+function correctAll(){ const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`; }
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas – Prevención y Mitigación de Amenazas en Redes</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas – Prevención y Mitigación de Amenazas en Redes</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Qué función cumplen los antivirus y antimalware?", options:[{t:"Detectan, bloquean y eliminan software malicioso",ok:true},{t:"Aumentan la velocidad de Internet",ok:false},{t:"Crean contraseñas",ok:false}], hint:"Protegen contra amenazas.", explain:"Detectan, bloquean y eliminan malware."},
+ {text:"¿Qué hace un firewall en una red?", options:[{t:"Filtra tráfico y bloquea accesos no autorizados",ok:true},{t:"Sirve como antivirus",ok:false},{t:"Es un switch",ok:false}], hint:"Es una barrera de red.", explain:"Filtra tráfico entrante y saliente."},
+ {text:"¿Qué es un ataque DoS/DDoS?", options:[{t:"Sobrecarga recursos con tráfico excesivo",ok:true},{t:"Roba contraseñas",ok:false},{t:"Cifra archivos",ok:false}], hint:"Ataque de saturación.", explain:"DoS/DDoS impide acceso legítimo a servicios."},
+ {text:"¿Qué hace un IPS?", options:[{t:"Monitoriza tráfico y bloquea comportamientos sospechosos",ok:true},{t:"Solo detecta sin bloquear",ok:false},{t:"Asigna direcciones IP",ok:false}], hint:"Prevención en tiempo real.", explain:"El IPS bloquea amenazas antes de que afecten."},
+ {text:"¿Qué significa MFA?", options:[{t:"Método con dos o más verificaciones",ok:true},{t:"Una sola contraseña",ok:false},{t:"Un firewall especial",ok:false}], hint:"Es autenticación reforzada.", explain:"Combina contraseña, código y biometría."},
+ {text:"¿Cómo reduce el antivirus actualizado el riesgo?", options:[{t:"Detecta amenazas recientes y patrones nuevos",ok:true},{t:"Aumenta RAM",ok:false},{t:"Evita contraseñas",ok:false}], hint:"Depende de firmas recientes.", explain:"Un antivirus actualizado detecta nuevas amenazas."},
+ {text:"¿Qué medida mitiga ataques DoS con firewall?", options:[{t:"Reglas que limiten conexiones y filtren tráfico",ok:true},{t:"Desactivar firewall",ok:false},{t:"Usar Wi-Fi público",ok:false}], hint:"Limitar conexiones excesivas.", explain:"Se configuran reglas en el firewall."},
+ {text:"¿Cómo ayudan balanceadores de carga contra DoS?", options:[{t:"Distribuyen tráfico entre varios servidores",ok:true},{t:"Bloquean virus",ok:false},{t:"Crean VLANs",ok:false}], hint:"Evitan saturación de un servidor.", explain:"Distribuyen tráfico entre varios servidores."},
+ {text:"¿Qué es RBAC?", options:[{t:"Política que asigna permisos según roles",ok:true},{t:"Un tipo de firewall",ok:false},{t:"Un sistema de cifrado",ok:false}], hint:"Basado en roles.", explain:"RBAC asigna permisos según el rol del usuario."},
+ {text:"¿Diferencia entre RBAC y ABAC?", options:[{t:"RBAC = roles, ABAC = atributos como tiempo o ubicación",ok:true},{t:"RBAC es más seguro siempre",ok:false},{t:"Son lo mismo",ok:false}], hint:"ABAC incluye contexto.", explain:"RBAC usa roles; ABAC incluye atributos."},
+ {text:"¿Por qué contraseñas robustas son esenciales?", options:[{t:"Dificultan accesos no autorizados y ataques de fuerza bruta",ok:true},{t:"Hacen Internet más rápido",ok:false},{t:"Eliminan malware",ok:false}], hint:"Refuerzan seguridad.", explain:"Contraseñas fuertes evitan accesos indebidos."},
+ {text:"¿Riesgo de no aplicar políticas de sesión?", options:[{t:"Sesiones abiertas pueden ser aprovechadas por atacantes",ok:true},{t:"Los equipos se apagan",ok:false},{t:"No hay impacto",ok:false}], hint:"Piensa en sesiones abiertas.", explain:"Podrían ser usadas por atacantes."},
+ {text:"¿Por qué combinar firewalls con IPS?", options:[{t:"Porque firewall filtra básico y IPS bloquea avanzado",ok:true},{t:"Porque aumentan velocidad",ok:false},{t:"Porque crean VLANs",ok:false}], hint:"Se complementan.", explain:"El firewall controla accesos; IPS bloquea ataques avanzados."},
+ {text:"¿Qué pasos incluye un plan de respuesta?", options:[{t:"Detección, notificación, contención, recuperación y análisis",ok:true},{t:"Reiniciar PCs",ok:false},{t:"Ignorar el ataque",ok:false}], hint:"Es un ciclo de respuesta.", explain:"Plan: detectar, contener, recuperar y analizar."},
+ {text:"¿Cómo ayudan protocolos en incidentes?", options:[{t:"Aseguran comunicación precisa y coordinada",ok:true},{t:"Evitan malware",ok:false},{t:"Dan más ancho de banda",ok:false}], hint:"Piensa en coordinación.", explain:"Garantizan coordinación durante ataques."},
+ {text:"¿Qué hacer ante ransomware?", options:[{t:"Aislar equipos, restaurar backups y notificar seguridad",ok:true},{t:"Pagar de inmediato",ok:false},{t:"Ignorarlo",ok:false}], hint:"Acciones inmediatas.", explain:"Se aíslan equipos y se restauran copias seguras."},
+ {text:"¿Qué combinación previene accesos no autorizados?", options:[{t:"MFA, RBAC/ABAC, contraseñas fuertes y políticas",ok:true},{t:"Usar Wi-Fi abierto",ok:false},{t:"Dejar sesiones abiertas",ok:false}], hint:"Medidas técnicas y organizativas.", explain:"Combina MFA, políticas y formación."},
+ {text:"¿Por qué educación de usuarios es importante?", options:[{t:"Porque ataques como phishing dependen de errores humanos",ok:true},{t:"Porque aumenta velocidad de red",ok:false},{t:"Porque elimina antivirus",ok:false}], hint:"El usuario es clave.", explain:"La concienciación evita ataques de ingeniería social."},
+ {text:"¿Impacto de no tener plan de recuperación?", options:[{t:"Mayor inactividad, pérdida de datos y confianza",ok:true},{t:"Mejor rendimiento",ok:false},{t:"Más velocidad de red",ok:false}], hint:"Consecuencias graves.", explain:"Sin plan, hay más pérdidas y tiempo de inactividad."},
+ {text:"¿Qué tres medidas implementarías primero?", options:[{t:"Respuesta abierta: firewall, MFA y plan de respuesta",ok:true},{t:"Desactivar firewalls",ok:false},{t:"Compartir contraseñas",ok:false}], hint:"Prioriza lo más crítico.", explain:"Firewall, MFA y respuesta a incidentes son clave."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

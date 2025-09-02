@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz – Clases de IP y CIDR</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0; background:#fff;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; cursor:pointer;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+
+<section class="quiz-card">
+  <div class="legend">Preguntas sobre Clases de Direcciones IP y CIDR</div>
+  <div class="qwrap" id="quiz"></div>
+  <div class="toolbar-bottom">
+    <button id="btn-correct" class="primary">Corregir</button>
+    <button id="btn-shuffle" class="secondary">Barajar</button>
+    <button id="btn-reset" class="secondary">Reiniciar</button>
+    <span id="score" class="score"></span>
+  </div>
+</section>
+
+<script>
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+const BANK = [{"text": "¿Qué función cumplen las direcciones IP en una red?", "options": [{"t": "Identificar de manera única a cada dispositivo para que pueda comunicarse y recibir datos correctamente.", "ok": true}, {"t": "Cifrar automáticamente todo el tráfico de red.", "ok": false}, {"t": "Aumentar la velocidad del Wi‑Fi.", "ok": false}], "hint": "Piensa en direcciones postales.", "explain": "La IP es como la dirección postal digital que permite localizar y comunicar dispositivos."}, {"text": "¿En qué se inspiran las direcciones IP en el texto?", "options": [{"t": "En las calles y direcciones postales de una ciudad.", "ok": true}, {"t": "En las matrículas de los coches.", "ok": false}, {"t": "En los números de serie de los dispositivos.", "ok": false}], "hint": "Analogía con carteros y direcciones.", "explain": "Las direcciones IP se comparan con direcciones postales que guían al 'cartero' de la red."}, {"text": "¿Cuáles son las cinco clases principales de direcciones IP?", "options": [{"t": "A, B, C, D y E", "ok": true}, {"t": "A, B y C", "ok": false}, {"t": "I, II y III", "ok": false}], "hint": "Cinco letras consecutivas desde A.", "explain": "El sistema por clases definía A, B, C, y reservaba D y E para usos especiales."}, {"text": "¿Qué clases de IP se usan para redes comunes de dispositivos?", "options": [{"t": "Clases A, B y C", "ok": true}, {"t": "Clases D y E", "ok": false}, {"t": "Clases A, D y E", "ok": false}], "hint": "Las tres primeras.", "explain": "A, B y C eran las clases destinadas a unicast convencional."}, {"text": "¿Qué clases se reservan para usos especiales?", "options": [{"t": "Clase D (multicast) y Clase E (experimentación)", "ok": true}, {"t": "Clase A y B", "ok": false}, {"t": "Clase C y D", "ok": false}], "hint": "Multicast y experimentación.", "explain": "Clase D está destinada a multicast; Clase E se reservó para investigación."}, {"text": "¿Cuál es el rango de direcciones de la clase A?", "options": [{"t": "1.0.0.0 a 126.255.255.255", "ok": true}, {"t": "0.0.0.0 a 127.255.255.255", "ok": false}, {"t": "10.0.0.0 a 10.255.255.255", "ok": false}], "hint": "Excluye 0.0.0.0 y 127.0.0.0/8.", "explain": "La clase A útil se considera 1.0.0.0–126.255.255.255."}, {"text": "¿Qué tamaño máximo de hosts permite una red de clase A?", "options": [{"t": "Aproximadamente 16 millones de dispositivos por red", "ok": true}, {"t": "Hasta 65.536", "ok": false}, {"t": "Hasta 256", "ok": false}], "hint": "Piensa en 2^24.", "explain": "En clase A hay ~2^24 direcciones por red (≈16,7 millones, sin contar red/broadcast)."}, {"text": "¿Qué organizaciones suelen usar clase A?", "options": [{"t": "Gobiernos o corporaciones enormes", "ok": true}, {"t": "Pequeñas oficinas", "ok": false}, {"t": "Redes domésticas típicas", "ok": false}], "hint": "Muy grandes.", "explain": "La clase A se asignaba a entidades muy grandes por su tamaño."}, {"text": "¿Cuál es el rango de la clase B?", "options": [{"t": "128.0.0.0 a 191.255.255.255", "ok": true}, {"t": "172.16.0.0 a 172.31.255.255", "ok": false}, {"t": "192.0.0.0 a 223.255.255.255", "ok": false}], "hint": "Empieza en 128.", "explain": "La clase B cubre 128.0.0.0–191.255.255.255 (privado 172.16/12 es solo un subconjunto)."}, {"text": "¿Cuántas direcciones por red ofrece la clase B?", "options": [{"t": "Hasta 65.536", "ok": true}, {"t": "Hasta 256", "ok": false}, {"t": "Aproximadamente 16 millones", "ok": false}], "hint": "Piensa en 2^16.", "explain": "Clase B: 2^16 direcciones por red (usables ≈65.534)."}, {"text": "¿Qué organizaciones suelen usar clase B?", "options": [{"t": "Universidades y empresas medianas", "ok": true}, {"t": "ISP residenciales", "ok": false}, {"t": "Dispositivos IoT domésticos", "ok": false}], "hint": "Tamaño intermedio.", "explain": "Clase B se ajustaba a organizaciones medianas como campus universitarios."}, {"text": "¿Cuál es el rango de la clase C?", "options": [{"t": "192.0.0.0 a 223.255.255.255", "ok": true}, {"t": "224.0.0.0 a 239.255.255.255", "ok": false}, {"t": "192.168.0.0 a 192.168.255.255", "ok": false}], "hint": "Empieza en 192 y termina antes de 224.", "explain": "La clase C es 192.0.0.0–223.255.255.255 (192.168/16 es un subconjunto privado)."}, {"text": "¿Cuántos hosts admite una red de clase C?", "options": [{"t": "Hasta 256", "ok": true}, {"t": "Hasta 65.536", "ok": false}, {"t": "Aproximadamente 16 millones", "ok": false}], "hint": "Piensa en 2^8.", "explain": "Clase C: 2^8 direcciones por red (usables ≈254)."}, {"text": "¿Qué organizaciones suelen usar clase C?", "options": [{"t": "Pequeñas empresas y oficinas", "ok": true}, {"t": "Gobiernos nacionales", "ok": false}, {"t": "Grandes campus universitarios", "ok": false}], "hint": "Escala pequeña.", "explain": "Clase C se adapta a redes pequeñas por su tamaño."}, {"text": "¿Cuál es el rango de la clase D?", "options": [{"t": "224.0.0.0 a 239.255.255.255", "ok": true}, {"t": "240.0.0.0 a 255.255.255.255", "ok": false}, {"t": "200.0.0.0 a 223.255.255.255", "ok": false}], "hint": "Empieza en 224.", "explain": "Clase D abarca 224.0.0.0–239.255.255.255 para multicast."}, {"text": "¿Para qué se utiliza la clase D?", "options": [{"t": "Transmisiones multicast (streaming, videoconferencias)", "ok": true}, {"t": "Unicast convencional", "ok": false}, {"t": "Broadcast de capa 2", "ok": false}], "hint": "No es para hosts unicast.", "explain": "Clase D es para grupos multicast (no asignable como IP de host)."}, {"text": "¿Cuál es el rango de la clase E?", "options": [{"t": "240.0.0.0 a 255.255.255.255", "ok": true}, {"t": "224.0.0.0 a 239.255.255.255", "ok": false}, {"t": "1.0.0.0 a 126.255.255.255", "ok": false}], "hint": "El tramo final.", "explain": "La clase E abarca 240.0.0.0–255.255.255.255 y se reserva para investigación."}, {"text": "¿Para qué se utiliza la clase E?", "options": [{"t": "Usos experimentales y de investigación", "ok": true}, {"t": "IoT doméstico", "ok": false}, {"t": "VPN comerciales", "ok": false}], "hint": "No para producción.", "explain": "La clase E está reservada, no se usa en redes comerciales."}, {"text": "¿Qué impacto tiene la elección de la clase de dirección en una red?", "options": [{"t": "Capacidad de hosts, número de subredes y eficiencia de recursos", "ok": true}, {"t": "Color de los cables y tipo de conectores", "ok": false}, {"t": "Sistema operativo de los equipos", "ok": false}], "hint": "Efectos sobre tamaño y eficiencia.", "explain": "Elegir clase incide en capacidad y uso eficiente de direcciones."}, {"text": "¿Por qué la clase A puede resultar ineficiente para una pequeña empresa?", "options": [{"t": "Porque asigna muchísimas direcciones que no se usarían, desperdiciando recursos", "ok": true}, {"t": "Porque no soporta DHCP", "ok": false}, {"t": "Porque no funciona con Wi‑Fi", "ok": false}], "hint": "Demasiado grande para pocos hosts.", "explain": "La clase A sobredimensiona el espacio de direcciones para redes pequeñas."}, {"text": "¿Qué ventaja tiene la clase C para redes pequeñas?", "options": [{"t": "Ofrece un número justo de direcciones (256), evitando desperdicio", "ok": true}, {"t": "Genera rutas más cortas automáticamente", "ok": false}, {"t": "Es inherentemente más segura", "ok": false}], "hint": "Ajuste de tamaño.", "explain": "Clase C se adapta al tamaño típico de redes pequeñas."}, {"text": "¿Por qué la clase D no sirve para subnetting convencional?", "options": [{"t": "Porque está diseñada solo para multicast, no para asignar direcciones individuales", "ok": true}, {"t": "Porque pertenece a IPv6", "ok": false}, {"t": "Porque no se puede configurar en routers", "ok": false}], "hint": "No se usa como IP de host.", "explain": "Clase D no se subnettea para hosts; identifica grupos multicast."}, {"text": "¿Por qué la clase E no se usa en redes comerciales?", "options": [{"t": "Porque está reservada para investigación y pruebas", "ok": true}, {"t": "Porque es más lenta", "ok": false}, {"t": "Porque requiere fibra óptica", "ok": false}], "hint": "Reservada.", "explain": "Clase E está reservada por diseño, no es para producción."}, {"text": "¿Qué problema presentaba el sistema basado en clases?", "options": [{"t": "Asignación rígida e ineficiente de direcciones, contribuyendo a la escasez de IPv4", "ok": true}, {"t": "Incompatibilidad con Wi‑Fi", "ok": false}, {"t": "Falta de cifrado", "ok": false}], "hint": "Granularidad limitada.", "explain": "Las clases grandes provocaban desperdicio y agotamiento del espacio IPv4."}, {"text": "¿Qué solución introdujo CIDR?", "options": [{"t": "Máscaras de subred de longitud variable para asignación flexible y eficiente", "ok": true}, {"t": "Direcciones de 128 bits", "ok": false}, {"t": "Nuevas categorías A+, B+, C+", "ok": false}], "hint": "Flexibilidad de prefijos.", "explain": "CIDR usa prefijos variables (VLSM) para ajustar tamaños de redes."}, {"text": "¿Qué ventaja trae CIDR al enrutamiento en Internet?", "options": [{"t": "Reduce el tamaño de las tablas al permitir agregación de rutas", "ok": true}, {"t": "Aumenta la latencia de los paquetes", "ok": false}, {"t": "Evita la necesidad de VLANs", "ok": false}], "hint": "Rutas agregadas.", "explain": "CIDR permite sumarizar prefijos, disminuyendo entradas de enrutamiento."}, {"text": "¿Por qué CIDR optimiza el uso de direcciones IP públicas?", "options": [{"t": "Porque ajusta el tamaño de las subredes a las necesidades reales", "ok": true}, {"t": "Porque usa IPv6 por defecto", "ok": false}, {"t": "Porque duplica automáticamente las direcciones", "ok": false}], "hint": "Tamaño a medida.", "explain": "Con VLSM se asigna justo lo necesario, evitando desperdicio."}, {"text": "¿Qué complicaciones tendría una pequeña empresa si usara una red de clase A en lugar de clase C?", "options": [{"t": "Sobrasignación de direcciones, administración difícil y desperdicio de recursos", "ok": true}, {"t": "Mejor rendimiento y menores costes", "ok": false}, {"t": "Ahorro de direcciones públicas", "ok": false}], "hint": "Demasiado grande para su necesidad.", "explain": "Asignar un espacio enorme complica gestión y desaprovecha recursos."}];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+  const w=document.createElement('div'); w.className='q';
+  const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+  const opts=shuffle(q.options.map(o=>({...o})));
+  opts.forEach((o,i)=>{
+    const id=`q${idx}_opt${i}`; const name=`q${idx}`;
+    const label=document.createElement('label'); label.setAttribute('for',id);
+    const input=document.createElement('input'); input.type='radio'; input.name=name; input.id=id; input.value=o.ok?'true':'false'; input.style.marginRight='8px';
+    label.appendChild(input); label.appendChild(document.createTextNode(o.t));
+    w.appendChild(label);
+  });
+  const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+  const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint||'Sin pista.';
+  w.appendChild(hintBtn); w.appendChild(hintBox);
+  const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+  const okBox=document.createElement('div'); okBox.className='success'; okBox.textContent='✅ ¡Correcto!'; w.appendChild(okBox);
+  hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+  return w;
+}
+
+function buildQuiz(){
+  quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))})));
+  QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';
+}
+
+function explainForQuestionText(text){
+  const found=QUESTIONS.find(q=>q.text===text);
+  return found ? (found.explain||'') : '';
+}
+
+function evaluateQuestion(node){
+  const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+  labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+  const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+  if(ok){ if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none'; }
+  else{ if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); const qText=node.querySelector('p')?.innerText.replace(/^\d+\.\s*/,'')||''; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${explainForQuestionText(qText)}</div>`; fb.style.display='block'; okBox.style.display='none'; }
+  return ok;
+}
+
+function correctAll(){ const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`; }
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

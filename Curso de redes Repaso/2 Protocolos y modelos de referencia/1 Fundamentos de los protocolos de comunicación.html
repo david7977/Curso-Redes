@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test práctico: Protocolos de Comunicación – TCP/IP, HTTP, FTP, SMTP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --ok:#c8f7c5; --err:#f8d7da; --fg:#222; --muted:#666; }
+    body { font-family: Arial, system-ui, sans-serif; margin:0; padding:32px; background:#f9f9f9; color:var(--fg); }
+    h1 { margin:0 0 8px; }
+    p.lead { margin:0 0 20px; color:var(--muted); }
+    .question { background:#fff; border-radius:12px; padding:16px; margin:12px 0; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .question h3 { margin:0 0 8px; font-size:16px; }
+    .question label { display:block; padding:6px 10px; border-radius:8px; margin:6px 0; cursor:pointer; }
+    .correcta { background: var(--ok); }
+    .incorrecta { background: var(--err); }
+    .controls { display:flex; gap:10px; margin-top:16px; }
+    button { padding:10px 16px; font-size:15px; border-radius:10px; border:0; cursor:pointer; }
+    button.primary { background:#111; color:#fff; }
+    button.ghost { background:#eee; }
+    #resultado { font-weight:700; margin-top:14px; }
+    .foot { color:var(--muted); font-size:13px; margin-top:24px; }
+    details { margin:10px 0; }
+    summary { cursor:pointer; color:#111; }
+    ul.checks { margin:6px 0 0 18px; }
+  </style>
+</head>
+<body>
+  <h1>Test práctico: 1 Fundamentos de los protocolos de comunicación</h1>
+  <p class="lead">Basado exclusivamente en tu texto: qué son los protocolos, por qué son críticos, y funciones de TCP/IP, HTTP, FTP y SMTP (con mención de IMAP/POP para recepción). Aciertos en verde ✅ y errores en rojo ❌.</p>
+
+  <details>
+    <summary>📌 Recordatorio rápido (del propio texto)</summary>
+    <ul class="checks">
+      <li><b>Protocolos</b> = reglas para que dispositivos distintos se entiendan y coordinen (enrutamiento, acceso, errores, seguridad).</li>
+      <li><b>TCP/IP</b>: base de Internet. TCP ➝ segmenta, asegura orden y control de flujo; IP ➝ direcciona cada paquete al destino.</li>
+      <li><b>HTTP</b>: modelo solicitud/respuesta entre navegador y servidor; entrega HTML para mostrar páginas y navegar (hipertexto).</li>
+      <li><b>FTP</b>: transferencia de archivos; <i>dos conexiones</i> (control y datos); útil para subir/descargar; alternativas seguras: SFTP/FTPS.</li>
+      <li><b>SMTP</b>: envía correos entre servidores; para <i>recibir/leer</i> se emplean <b>IMAP</b> o <b>POP</b>.</li>
+    </ul>
+  </details>
+
+  <div id="quiz"></div>
+  <div class="controls">
+    <button class="primary" onclick="corregir()">Corregir</button>
+    <button class="ghost" onclick="reiniciar()">Reiniciar</button>
+  </div>
+  <p id="resultado"></p>
+  <p class="foot">Preguntas creadas solo a partir del texto proporcionado. 🧠</p>
+
+  <script>
+    const preguntas = [
+      // Concepto general
+      { t: "🌍 Sin protocolos, ¿qué ocurriría según el texto?", o: ["La coordinación sería caótica y los mensajes se perderían", "Internet funcionaría igual", "Los servidores no serían necesarios"], c: 0 },
+      { t: "🧭 ¿Qué son los protocolos de comunicación?", o: ["Conjunto de reglas y procedimientos estandarizados para transmitir datos", "Un tipo de hardware de red", "Un lenguaje de programación"], c: 0 },
+      { t: "🛡️ Funciones que facilitan los protocolos (según el texto)", o: ["Enrutamiento, control de acceso, gestión de errores y seguridad", "Solo diseño de páginas web", "Exclusivamente compresión de imágenes"], c: 0 },
+
+      // TCP/IP
+      { t: "🧩 TCP/IP es…", o: ["Un protocolo para imágenes", "El conjunto fundamental que rige Internet", "Solo un cable especial"], c: 1 },
+      { t: "📦 Rol de TCP (según el texto)", o: ["Dirigir paquetes a su destino", "Descomponer mensajes, asegurar entrega correcta y en orden, y controlar el flujo", "Mostrar HTML en el navegador"], c: 1 },
+      { t: "🗺️ Rol de IP (según el texto)", o: ["Cifrar mensajes", "Dirigir cada paquete al destino correcto", "Hacer copias de seguridad"], c: 1 },
+
+      // HTTP
+      { t: "🌐 HTTP opera con un modelo…", o: ["Token y anillo", "Solicitud del navegador y respuesta del servidor", "Difusión a todos los dispositivos"], c: 1 },
+      { t: "🧱 ¿Qué suele contener la respuesta HTTP descrita en el texto?", o: ["Código HTML de la página solicitada", "Solo imágenes", "Datos binarios sin formato"], c: 0 },
+      { t: "🔗 El término ‘hipertexto’ en el texto se refiere a…", o: ["Documentos con enlaces a otros documentos", "Texto en mayúsculas", "Archivos comprimidos"], c: 0 },
+
+      // FTP
+      { t: "📁 FTP se usa para…", o: ["Transferencia de archivos entre computadoras en una red TCP/IP", "Enviar correos entre servidores", "Navegar páginas web"], c: 0 },
+      { t: "🛤️ Estructura de conexiones en FTP (según el texto)", o: ["Una única conexión", "Dos conexiones: una de control y otra de datos", "Tres conexiones simultáneas"], c: 1 },
+      { t: "🔐 Según el texto, alternativas más seguras a FTP son…", o: ["SFTP o FTPS", "SMTP o IMAP", "HTTP o POP"], c: 0 },
+
+      // SMTP e IMAP/POP
+      { t: "✉️ SMTP se encarga de…", o: ["Recibir correos en el cliente", "Enviar mensajes de correo entre servidores", "Transferir archivos grandes"], c: 1 },
+      { t: "📥 Para <i>recibir y leer</i> correos, el texto indica que SMTP trabaja con…", o: ["IMAP o POP", "FTP o FTPS", "HTTP solamente"], c: 0 },
+
+      // Escenarios prácticos
+      { t: "🧪 Escenario: escribes una URL en el navegador y pulsas Enter. ¿Qué protocolo media la solicitud y la respuesta?", o: ["FTP", "HTTP", "SMTP"], c: 1 },
+      { t: "🚀 Escenario: debes subir imágenes y actualizaciones a tu servidor web. ¿Qué protocolo usarías según el texto?", o: ["FTP", "SMTP", "POP"], c: 0 },
+      { t: "📨 Escenario: envías un correo desde tu cliente (Gmail/Outlook). ¿Qué protocolo lo envía al servidor de destino?", o: ["SMTP", "IMAP", "FTP"], c: 0 },
+      { t: "📬 Escenario: quieres <i>leer</i> los correos que están en el servidor. ¿Qué usarías?", o: ["IMAP o POP", "SMTP", "SFTP"], c: 0 },
+      { t: "🧠 Escenario global: ¿qué conjunto sostiene la comunicación de red subyacente en Internet?", o: ["TCP/IP", "HTTP", "FTP"], c: 0 }
+    ];
+
+    const quiz = document.getElementById('quiz');
+    preguntas.forEach((q, i) => {
+      const box = document.createElement('div');
+      box.className = 'question';
+      const h = document.createElement('h3');
+      h.textContent = `${i + 1}. ${q.t}`;
+      box.appendChild(h);
+      q.o.forEach((op, j) => {
+        const lb = document.createElement('label');
+        lb.classList.add(`q${i}`);
+        const ip = document.createElement('input');
+        ip.type = 'radio'; ip.name = `q${i}`; ip.value = j;
+        lb.appendChild(ip); lb.appendChild(document.createTextNode(' ' + op));
+        box.appendChild(lb);
+      });
+      quiz.appendChild(box);
+    });
+
+    function corregir(){
+      let total = 0;
+      preguntas.forEach((q, i) => {
+        const sel = document.querySelector(`input[name=\"q${i}\"]:checked`);
+        const labels = document.querySelectorAll(`label.q${i}`);
+        labels.forEach((lb, j) => {
+          lb.classList.remove('correcta','incorrecta');
+          if (j === q.c) lb.classList.add('correcta');
+        });
+        if (sel) {
+          if (parseInt(sel.value) === q.c) total++; else {
+            labels[parseInt(sel.value)].classList.add('incorrecta');
+          }
+        }
+      });
+      const answered = document.querySelectorAll('input[type=\"radio\"]:checked').length;
+      const res = document.getElementById('resultado');
+      if (answered < preguntas.length) { res.textContent = 'Por favor, responde todas las preguntas.'; res.style.color = 'red'; return; }
+      res.textContent = `Tu puntuación: ${total} / ${preguntas.length}`;
+      res.style.color = total >= preguntas.length * 0.85 ? 'green' : total >= preguntas.length * 0.6 ? 'orange' : 'red';
+    }
+
+    function reiniciar(){
+      document.getElementById('resultado').textContent = '';
+      document.querySelectorAll('input[type=\"radio\"]').forEach(i => i.checked = false);
+      document.querySelectorAll('label').forEach(lb => lb.classList.remove('correcta','incorrecta'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

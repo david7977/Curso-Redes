@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Direccionamiento IP Público</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background: #f9f9f9; }
+    h1 { color: #2c3e50; }
+    h2 { color: #34495e; }
+    .explicacion, .conceptos, .desglose, .resumen, .resumen-express, .quiz { 
+      background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+    .correct { color: green; font-weight: bold; }
+    .incorrect { color: red; font-weight: bold; }
+    button { margin: 5px; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .btn-corr { background: #27ae60; color: white; }
+    .btn-rein { background: #c0392b; color: white; }
+    .btn-bar { background: #2980b9; color: white; }
+  </style>
+</head>
+<body>
+  <h1>📘 Direccionamiento IP Público</h1>
+
+  <div class="explicacion">
+    <h2>🧾 Explicación General</h2>
+    <p>
+      Las direcciones IP públicas son como los números de casa en una ciudad: identifican de forma única a cada dispositivo en Internet. 
+      Sin ellas, los datos no sabrían a dónde llegar. Son gestionadas por la IANA y los registros regionales, 
+      garantizando que no existan duplicados y que la comunicación global sea confiable. 
+      IPv4 permitió 4.300 millones de direcciones, pero hoy resulta insuficiente. 
+      IPv6 y el uso de NAT surgieron como soluciones para la expansión masiva de dispositivos.
+    </p>
+  </div>
+
+  <div class="conceptos">
+    <h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+    <ul>
+      <li>Una IP pública es como tu dirección postal en Internet.</li>
+      <li>IANA = oficina central que reparte bloques de direcciones.</li>
+      <li>Registros regionales (ARIN, LACNIC, etc.) = oficinas locales que entregan direcciones en cada zona.</li>
+      <li>IPv4 = calle pequeña con pocos asientos.</li>
+      <li>IPv6 = ciudad enorme con espacio de sobra para todos.</li>
+      <li>NAT = compartir una misma dirección como si varios vivieran en el mismo edificio.</li>
+    </ul>
+  </div>
+
+  <div class="desglose">
+    <h2>📚 Desglose Técnico</h2>
+    <ul>
+      <li><b>IP Pública:</b> Identificador único para un dispositivo conectado a Internet.</li>
+      <li><b>IANA:</b> Autoridad central que asigna bloques de direcciones IP.</li>
+      <li><b>Registros Regionales (RIR):</b>
+        <ul>
+          <li>ARIN → Norteamérica</li>
+          <li>LACNIC → Latinoamérica y Caribe</li>
+          <li>RIPE NCC → Europa, Oriente Medio, Asia Central</li>
+          <li>APNIC → Asia y Pacífico</li>
+          <li>AFRINIC → África</li>
+        </ul>
+      </li>
+      <li><b>IPv4:</b> 32 bits, ~4.300 millones de direcciones.</li>
+      <li><b>IPv6:</b> 128 bits, espacio prácticamente ilimitado.</li>
+      <li><b>NAT:</b> Traducción de direcciones, permite que varios dispositivos usen la misma IP pública.</li>
+    </ul>
+  </div>
+
+  <div class="resumen">
+    <h2>📝 Resumen Completo</h2>
+    <p>
+      Cada dispositivo en Internet necesita una IP pública única para identificarse y comunicarse. 
+      La IANA supervisa su distribución global, delegando en registros regionales como ARIN y LACNIC. 
+      IPv4 ya no basta por la explosión de dispositivos, por lo que se recurre a IPv6 y a NAT para garantizar continuidad. 
+      Las IP públicas son la base que permite el correo, la navegación web, videollamadas y todos los servicios en línea.
+    </p>
+  </div>
+
+  <div class="resumen-express">
+    <h2>⚡ Resumen Express</h2>
+    <ul>
+      <li>IP pública = dirección única en Internet.</li>
+      <li>IANA asigna, RIR distribuyen por regiones.</li>
+      <li>IPv4 → 32 bits, insuficiente.</li>
+      <li>IPv6 → 128 bits, solución de futuro.</li>
+      <li>NAT → compartir IP pública en redes privadas.</li>
+      <li>Garantizan conectividad global.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <h2>❓ Preguntas de Autoevaluación</h2>
+    <form id="quizForm">
+      <ol>
+        <li>
+          ¿Qué es una dirección IP pública?<br>
+          <input type="radio" name="q1" value="a"> Una dirección solo interna para una red local.<br>
+          <input type="radio" name="q1" value="b"> Un identificador único para un dispositivo en Internet.<br>
+          <input type="radio" name="q1" value="c"> Un protocolo de seguridad.<br>
+        </li><br>
+
+        <li>
+          ¿Quién supervisa la asignación global de direcciones IP?<br>
+          <input type="radio" name="q2" value="a"> Los gobiernos locales.<br>
+          <input type="radio" name="q2" value="b"> La IANA.<br>
+          <input type="radio" name="q2" value="c"> Los usuarios de Internet.<br>
+        </li><br>
+
+        <li>
+          ¿Qué problema enfrenta IPv4?<br>
+          <input type="radio" name="q3" value="a"> Velocidad de transmisión.<br>
+          <input type="radio" name="q3" value="b"> Escasez de direcciones.<br>
+          <input type="radio" name="q3" value="c"> Incompatibilidad con NAT.<br>
+        </li><br>
+
+        <li>
+          ¿Qué técnica permite que varios dispositivos compartan una sola IP pública?<br>
+          <input type="radio" name="q4" value="a"> DNS.<br>
+          <input type="radio" name="q4" value="b"> NAT.<br>
+          <input type="radio" name="q4" value="c"> DHCP.<br>
+        </li><br>
+
+        <li>
+          ¿Cuál es la principal ventaja de IPv6?<br>
+          <input type="radio" name="q5" value="a"> Mayor velocidad de cable.<br>
+          <input type="radio" name="q5" value="b"> Espacio prácticamente ilimitado de direcciones.<br>
+          <input type="radio" name="q5" value="c"> No necesita routers.<br>
+        </li><br>
+
+        <li>
+          (Profesional) Como administrador de red, ¿qué ventaja ofrece NAT además de ahorrar IPs públicas?<br>
+          <input type="radio" name="q6" value="a"> Simplifica la comunicación directa con todos los dispositivos externos.<br>
+          <input type="radio" name="q6" value="b"> Añade una capa de seguridad ocultando IPs internas.<br>
+          <input type="radio" name="q6" value="c"> Reemplaza completamente IPv6.<br>
+        </li>
+      </ol>
+    </form>
+    <button class="btn-corr" onclick="corregir()">Corregir</button>
+    <button class="btn-bar" onclick="barajar()">Barajar</button>
+    <button class="btn-rein" onclick="reiniciar()">Reiniciar</button>
+    <p id="resultado"></p>
+  </div>
+
+  <script>
+    const respuestasCorrectas = {
+      q1: "b",
+      q2: "b",
+      q3: "b",
+      q4: "b",
+      q5: "b",
+      q6: "b"
+    };
+
+    const explicaciones = {
+      q1: "La IP pública identifica de forma única a un dispositivo en Internet.",
+      q2: "La IANA asigna bloques de direcciones a los registros regionales.",
+      q3: "IPv4 se quedó sin direcciones debido al crecimiento de Internet.",
+      q4: "NAT permite que varios dispositivos compartan una única IP pública.",
+      q5: "IPv6 tiene un espacio prácticamente ilimitado de direcciones.",
+      q6: "NAT también oculta las IPs internas, añadiendo seguridad."
+    };
+
+    function corregir() {
+      let form = document.forms["quizForm"];
+      let resultado = "";
+      let correctas = 0;
+      let total = Object.keys(respuestasCorrectas).length;
+
+      for (let q in respuestasCorrectas) {
+        let respuesta = form[q].value;
+        if (respuesta === respuestasCorrectas[q]) {
+          resultado += `<p class='correct'>Pregunta ${q.slice(1)} correcta ✔️</p>`;
+          correctas++;
+        } else {
+          resultado += `<p class='incorrect'>Pregunta ${q.slice(1)} incorrecta ❌. Respuesta correcta: ${respuestasCorrectas[q]} → ${explicaciones[q]}</p>`;
+        }
+      }
+      document.getElementById("resultado").innerHTML = 
+        `<b>Resultado: ${correctas} de ${total} correctas</b><br>` + resultado;
+    }
+
+    function reiniciar() {
+      document.getElementById("quizForm").reset();
+      document.getElementById("resultado").innerHTML = "";
+    }
+
+    function barajar() {
+      let ol = document.querySelector("ol");
+      for (let i = ol.children.length; i >= 0; i--) {
+        ol.appendChild(ol.children[Math.random() * i | 0]);
+      }
+    }
+  </script>
+</body>
+</html>

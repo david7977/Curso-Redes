@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Modelo OSI (versión tren): Explicación + Nemotecnia + Test con pistas</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; }
+  body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans'; margin: 24px; line-height: 1.45; }
+  header { border: 2px solid #e5e7eb; border-left: 8px solid var(--card); padding: 16px 18px; border-radius: 14px; margin-bottom: 22px; background: #f8fafc; }
+  h1 { margin: 0 0 6px 0; font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; margin: 18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px 14px; border-radius:12px; }
+  .layerlist { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:10px; margin-top:8px; }
+  .layer { background:#ffffff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; }
+  .layer b { display:block; }
+  .mnemo { background:#ecfeff; border:1px solid #bae6fd; padding:10px 12px; border-radius:12px; }
+  .muted { color:#6b7280; }
+
+  /* Quiz */
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; padding:0; margin:18px 0; background:#fff; overflow:hidden; }
+  .toolbar { position: sticky; top: 0; z-index: 50; display:flex; gap:10px; align-items:center; justify-content:flex-start; padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; }
+  .legend { padding: 8px 16px; font-size:.95rem; color:#475569; border-bottom:1px solid #e5e7eb; }
+  .qwrap { padding:16px; }
+  .q { border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:14px 0 12px; background:#fff; }
+  .q p { margin: 0 0 8px 0; }
+  label { display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0; }
+  .correct { background: #dcfce7; border-color: #bbf7d0; }
+  .incorrect { background: #fee2e2; border-color: #fecaca; }
+  .controls { display:flex; gap:10px; flex-wrap:wrap; margin-left:auto; }
+  button { padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer; background:#111827; color:#fff; }
+  button.secondary { background:#f3f4f6; color:#111827; }
+  .score { font-weight:700; margin-left: auto; }
+  .feedback { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--bad); background:#fff1f2; border-radius:10px; }
+  .success { display:none; margin-top:8px; padding:10px 12px; border-left:4px solid var(--ok); background:#ecfdf5; border-radius:10px; }
+  .hint { display:none; margin-top:8px; padding:8px 10px; border-left:4px solid #2563eb; background:#eff6ff; border-radius:10px; color:#1e3a8a; }
+  .hint-btn { background:#1f2937; }
+  footer { margin-top:24px; color:#475569; font-size:.95rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="pill">Modelo OSI — Clase estilo “tren”</div>
+  <h1>3  Estructura y componentes OSI</h1>
+  <p>En una videollamada, todo ocurre en milisegundos, pero pasa por etapas: como un <b>tren</b> que sale de una estación y llega a otra.</p>
+  <div class="layerlist">
+    <div class="layer"><b>1. Física</b> Vías y locomotora: cables, fibra, Wi-Fi, voltajes y conectores.</div>
+    <div class="layer"><b>2. Enlace</b> Control de tráfico local para evitar colisiones (MAC/LLC, tramas).</div>
+    <div class="layer"><b>3. Red</b> GPS del tren: elige rutas y direcciones (IP, enrutamiento, fragmentación).</div>
+    <div class="layer"><b>4. Transporte</b> Logística de vagones: entrega completa y ordenada (TCP/UDP, flujo).</div>
+    <div class="layer"><b>5. Sesión</b> Jefe de estación: abre, mantiene y cierra conversaciones.</div>
+    <div class="layer"><b>6. Presentación</b> Traductor y balanza: formatos, cifrado y compresión.</div>
+    <div class="layer"><b>7. Aplicación</b> Terminal: donde tú usas HTTP, FTP, SMTP, etc.</div>
+  </div>
+
+  <h2>Nemotecnia</h2>
+  <div class="mnemo">
+    <p><b>De abajo a arriba:</b> <span class="mono">Físicos En Red Transportan Sesiones Presentadas Aplausos</span></p>
+    <p class="muted">(Física, Enlace, Red, Transporte, Sesión, Presentación, Aplicación)</p>
+  </div>
+
+  <h2>Historia breve</h2>
+  <div class="story">
+    <p>Tu app (<b>Aplicación</b>) prepara el mensaje; un traductor (<b>Presentación</b>) lo cifra y comprime; el jefe de estación (<b>Sesión</b>) abre la vía; la logística (<b>Transporte</b>) reparte los datos en vagones; el GPS (<b>Red</b>) elige la ruta; el controlador (<b>Enlace</b>) evita choques; y las vías y locomotora (<b>Física</b>) mueven los bits. Fin.</p>
+  </div>
+</header>
+
+<section class="quiz-card">
+  <div class="toolbar">
+    <div class="controls">
+      <button id="btn-correct">Corregir</button>
+      <button id="btn-reset" class="secondary">Reiniciar y barajar</button>
+    </div>
+    <span class="score" id="score"></span>
+  </div>
+  <div class="legend">Consejo: usa las <b>pistas</b> antes de corregir. Cada pregunta tiene una.</div>
+  <div class="qwrap" id="quiz"></div>
+</section>
+
+<footer>
+  <p>Tip: si dudas, vuelve a la <b>historia del tren</b> y a la nemotecnia.</p>
+</footer>
+
+<script>
+// Utilidad: barajar (Fisher–Yates)
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Banco de preguntas
+const BANK = [
+  { type: "single", text: "Se congela tu videollamada por caída de potencia Wi-Fi (señal débil y ruido). ¿Qué capa es la más afectada?",
+    options: [{ t:"Capa 1 — Física", ok:true },{ t:"Capa 3 — Red", ok:false },{ t:"Capa 5 — Sesión", ok:false }],
+    hint: "Piensa en ondas, voltajes y el medio de transmisión.",
+    explain: "La calidad de la señal Wi‑Fi pertenece a la <b>Capa 1 (Física)</b>: es el medio que mueve los bits." },
+  { type: "single", text: "¿En qué capa se gestionan colisiones y acceso al medio (CSMA/CA/CSMA/CD)?",
+    options: [{ t:"Capa 2 — Enlace (MAC/LLC)", ok:true },{ t:"Capa 4 — Transporte", ok:false },{ t:"Capa 1 — Física", ok:false }],
+    hint: "Subcapa MAC.", explain: "El acceso al medio y colisiones es <b>Capa 2 (Enlace)</b>, subcapa MAC." },
+  { type: "multi", text: "Selecciona los elementos propios de la Capa 2 (Enlace).",
+    options: [{ t:"Direcciones MAC y tramas", ok:true },{ t:"LLC (Logical Link Control)", ok:true },{ t:"TTL y enrutamiento IP", ok:false },{ t:"Voltajes y conectores", ok:false }],
+    hint: "Todo lo que sea local al enlace y a la trama.", explain: "Enlace maneja <b>MAC</b>, <b>tramas</b> y <b>LLC</b>; TTL/IP es Red; voltajes es Física." },
+  { type: "single", text: "Elegir la mejor ruta entre redes y manejar direcciones lógicas corresponde a:",
+    options: [{ t:"Capa 3 — Red", ok:true },{ t:"Capa 4 — Transporte", ok:false },{ t:"Capa 7 — Aplicación", ok:false }],
+    hint: "Piensa en el GPS del tren.", explain: "El enrutamiento y direccionamiento lógico (IP) es de <b>Capa 3 (Red)</b>." },
+  { type: "single", text: "Si el MTU del camino es menor y hay que fragmentar paquetes, ¿qué capa actúa?",
+    options: [{ t:"Capa 3 — Red", ok:true },{ t:"Capa 2 — Enlace", ok:false },{ t:"Capa 6 — Presentación", ok:false }],
+    hint: "Fragmentación IP.", explain: "La <b>fragmentación</b> pertenece a <b>Capa 3 (Red)</b>." },
+  { type: "multi", text: "Funciones típicas de Capa 4 (Transporte):",
+    options: [{ t:"Control de flujo y congestión", ok:true },{ t:"Entrega ordenada y fiable (TCP)", ok:true },{ t:"Asignar direcciones MAC", ok:false },{ t:"Elegir rutas entre redes", ok:false }],
+    hint: "Logística de vagones y orden.", explain: "<b>Transporte</b> se ocupa de <b>flujo</b> y <b>fiabilidad</b>; MAC es C2, rutas C3." },
+  { type: "single", text: "Perdiste algunos segmentos y se reenvían automáticamente. ¿Qué capa lo maneja?",
+    options: [{ t:"Capa 4 — Transporte (TCP)", ok:true },{ t:"Capa 2 — Enlace", ok:false },{ t:"Capa 5 — Sesión", ok:false }],
+    hint: "Retransmisión y ACK.", explain: "Las <b>retransmisiones</b> y <b>ACK</b> son de <b>TCP</b> en <b>Capa 4</b>." },
+  { type: "single", text: "Abrir, mantener y cerrar una videollamada entre apps se asocia a:",
+    options: [{ t:"Capa 5 — Sesión", ok:true },{ t:"Capa 7 — Aplicación", ok:false },{ t:"Capa 3 — Red", ok:false }],
+    hint: "Jefe de estación.", explain: "La coordinación del diálogo entre aplicaciones es <b>Capa 5 (Sesión)</b>." },
+  { type: "multi", text: "Selecciona acciones propias de Capa 6 (Presentación):",
+    options: [{ t:"Cifrado/descifrado (visión OSI)", ok:true },{ t:"Compresión de datos", ok:true },{ t:"Conversión de formatos/charset", ok:true },{ t:"Reensamblado de segmentos", ok:false }],
+    hint: "Traductor y balanza.", explain: "Presentación hace <b>cifrado</b>, <b>compresión</b> y <b>formateo</b>; reensamblar es C4." },
+  { type: "multi", text: "Protocolos y servicios típicos de Capa 7 (Aplicación):",
+    options: [{ t:"HTTP / HTTPS", ok:true },{ t:"FTP / SMTP", ok:true },{ t:"DNS (lógica de nombres)", ok:true },{ t:"ICMP/TTL", ok:false }],
+    hint: "Terminal del tren.", explain: "HTTP/HTTPS, FTP, SMTP y lógica de <b>DNS</b> están en <b>Capa 7</b>; ICMP/TTL es C3." },
+  { type: "single", text: "¿En qué capa se definen voltajes, conectores y tipo de medio (cobre/fibra/ondas)?",
+    options: [{ t:"Capa 1 — Física", ok:true },{ t:"Capa 2 — Enlace", ok:false },{ t:"Capa 6 — Presentación", ok:false }],
+    hint: "Pura infraestructura.", explain: "Aspectos eléctricos/ópticos/inalámbricos: <b>Capa 1 (Física)</b>." },
+  { type: "single", text: "El controlador ferroviario que evita choques en el tramo local corresponde a:",
+    options: [{ t:"Capa 2 — Enlace", ok:true },{ t:"Capa 3 — Red", ok:false },{ t:"Capa 4 — Transporte", ok:false }],
+    hint: "CSMA/CA / CSMA/CD.", explain: "El control local del acceso al medio es <b>Capa 2 (Enlace)</b>." },
+  { type: "single", text: "En la analogía del tren, el “GPS que elige la ruta” es:",
+    options: [{ t:"Capa 3 — Red", ok:true },{ t:"Capa 5 — Sesión", ok:false },{ t:"Capa 7 — Aplicación", ok:false }],
+    hint: "Direcciones IP y rutas.", explain: "El <b>enrutamiento</b> es función de <b>Capa 3 (Red)</b>." },
+  { type: "single", text: "Si los datos llegan desordenados al receptor, ¿qué capa debe corregirlo?",
+    options: [{ t:"Capa 4 — Transporte", ok:true },{ t:"Capa 2 — Enlace", ok:false },{ t:"Capa 1 — Física", ok:false }],
+    hint: "Orden extremo a extremo.", explain: "La entrega ordenada es de <b>Capa 4</b>." },
+  { type: "single", text: "Reducir el tamaño de los datos para transmitirlos más rápido (sin cambiar su significado) es de:",
+    options: [{ t:"Capa 6 — Presentación (compresión)", ok:true },{ t:"Capa 3 — Red", ok:false },{ t:"Capa 7 — Aplicación", ok:false }],
+    hint: "Balanza del equipaje.", explain: "La <b>compresión</b> se ubica en <b>Presentación</b> (visión OSI)." },
+  { type: "single", text: "“Abrir las puertas de la estación, recibir y despedir trenes” equivale a:",
+    options: [{ t:"Capa 5 — Sesión", ok:true },{ t:"Capa 1 — Física", ok:false },{ t:"Capa 4 — Transporte", ok:false }],
+    hint: "Control del diálogo.", explain: "Sesión <b>inicia</b>, <b>mantiene</b> y <b>termina</b> conversaciones." },
+  { type: "single", text: "“Terminal donde el pasajero entra en contacto con el servicio” corresponde a:",
+    options: [{ t:"Capa 7 — Aplicación", ok:true },{ t:"Capa 6 — Presentación", ok:false },{ t:"Capa 2 — Enlace", ok:false }],
+    hint: "Ahí viven HTTP/FTP/SMTP.", explain: "La interacción usuario-servicio es <b>Capa 7 (Aplicación)</b>." },
+  { type: "multi", text: "Diagnóstico: no puedes cargar una web y recibes “Fragmentation Needed (DF set)”. ¿Qué capas están implicadas?",
+    options: [{ t:"Capa 3 — Red (ICMP/MTU/fragmentación)", ok:true },{ t:"Capa 1 — Física", ok:false },{ t:"Capa 4 — Transporte", ok:false }],
+    hint: "Mensaje ICMP de un router.", explain: "El aviso ICMP de fragmentación es de <b>Capa 3</b>." },
+  { type: "multi", text: "Para resolver un nombre DNS (p. ej., ejemplo.com) y abrir la web, marca las capas del <i>proceso completo</i>:",
+    options: [{ t:"Capa 7 — Aplicación (DNS/HTTP)", ok:true },{ t:"Capa 4 — Transporte (UDP/TCP)", ok:true },{ t:"Capa 3 — Red (IP/ICMP)", ok:true },{ t:"Capa 2 — Enlace (Ethernet/Wi‑Fi)", ok:true },{ t:"Capa 1 — Física", ok:true }],
+    hint: "Extremo a extremo: app→medio.", explain: "La resolución DNS y la carga HTTP/HTTPS usan desde <b>C7 a C1</b>." }
+];
+
+let QUESTIONS = [];
+const quiz = document.getElementById('quiz');
+const btnCorrect = document.getElementById('btn-correct');
+const btnReset = document.getElementById('btn-reset');
+const scoreEl = document.getElementById('score');
+
+function createQuestionEl(q, idx) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'q';
+  wrapper.dataset.type = q.type;
+
+  const p = document.createElement('p');
+  p.innerHTML = `<b>${idx + 1}.</b> ${q.text}`;
+  wrapper.appendChild(p);
+
+  // Opciones (barajadas)
+  const opts = shuffle(q.options.map(o => ({...o})));
+  opts.forEach(o => {
+    const label = document.createElement('label');
+    const input = document.createElement('input');
+    input.type = 'checkbox'; // validamos reglas según type
+    input.value = o.ok ? 'true' : 'false';
+    label.appendChild(input);
+    label.insertAdjacentText('beforeend', ' ' + o.t);
+    wrapper.appendChild(label);
+  });
+
+  // Pista
+  const hintBtn = document.createElement('button');
+  hintBtn.type = 'button';
+  hintBtn.textContent = 'Pista';
+  hintBtn.className = 'hint-btn secondary';
+  const hintBox = document.createElement('div');
+  hintBox.className = 'hint';
+  hintBox.innerHTML = q.hint;
+  wrapper.appendChild(hintBtn);
+  wrapper.appendChild(hintBox);
+
+  // Feedback / Correcto
+  const fb = document.createElement('div');
+  fb.className = 'feedback';
+  wrapper.appendChild(fb);
+  const ok = document.createElement('div');
+  ok.className = 'success';
+  ok.textContent = '✅ ¡Correcto!';
+  wrapper.appendChild(ok);
+
+  hintBtn.addEventListener('click', () => {
+    hintBox.style.display = 'block';
+    hintBtn.disabled = true;
+  });
+
+  return wrapper;
+}
+
+function buildQuiz() {
+  quiz.innerHTML = '';
+  QUESTIONS = shuffle(BANK.map(q => ({...q, options: q.options.map(o => ({...o}))})));
+  QUESTIONS.forEach((q, i) => quiz.appendChild(createQuestionEl(q, i)));
+  scoreEl.textContent = '';
+  window.scrollTo({ top: 0 });
+}
+
+function evaluateQuestion(node) {
+  const type = node.dataset.type;
+  const labels = Array.from(node.querySelectorAll('label'));
+  let ok = true;
+  let correctTexts = [];
+
+  labels.forEach(label => {
+    label.classList.remove('correct', 'incorrect');
+    const cb = label.querySelector('input[type="checkbox"]');
+    const isTrue = cb.value === 'true';
+    const checked = cb.checked;
+    if (isTrue) {
+      label.classList.add('correct'); // se marcan en verde al corregir
+      correctTexts.push(label.textContent.trim());
+      if (!checked) ok = false;
+    } else {
+      if (checked) {
+        label.classList.add('incorrect'); // seleccionadas erróneas en rojo
+        ok = false;
+      }
+    }
+  });
+
+  // Regla para 'single': debe haber exactamente 1 marcada y que sea correcta
+  if (type === 'single') {
+    const checkedCount = labels.filter(l => l.querySelector('input').checked).length;
+    const correctChecked = labels.some(l => l.querySelector('input').checked && l.querySelector('input').value === 'true');
+    if (!(checkedCount === 1 && correctChecked)) ok = false;
+  }
+
+  const fb = node.querySelector('.feedback');
+  const okBox = node.querySelector('.success');
+  if (ok) {
+    fb.style.display = 'none';
+    fb.innerHTML = '';
+    okBox.style.display = 'block';
+  } else {
+    okBox.style.display = 'none';
+    const qText = node.querySelector('p').innerText.replace(/^\d+\.\s*/, '');
+    const match = QUESTIONS.find(q => q.text === qText);
+    const explanation = match ? match.explain : '';
+    const correctList = correctTexts.map(t => `<li>${t}</li>`).join('');
+    fb.innerHTML = `<b>Respuesta correcta:</b><ul>${correctList}</ul><div>${explanation}</div>`;
+    fb.style.display = 'block';
+  }
+  return ok;
+}
+
+function correctAll() {
+  const qNodes = Array.from(document.querySelectorAll('.q'));
+  let right = 0;
+  qNodes.forEach(node => { if (evaluateQuestion(node)) right++; });
+  scoreEl.textContent = `Puntuación: ${right} / ${qNodes.length}`;
+  // Llevar la atención al inicio de la tarjeta para ver los botones
+  document.querySelector('.quiz-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  buildQuiz(); // reconstruye y baraja
+}
+
+document.getElementById('btn-correct').addEventListener('click', correctAll);
+document.getElementById('btn-reset').addEventListener('click', resetAll);
+
+// Inicial
+buildQuiz();
+</script>
+</body>
+</html>

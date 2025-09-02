@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 - Tipos de software de red</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#f8fafc; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  .pill { background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px; margin:6px 0;}
+  .story { border:1px dashed #cbd5e1; background:#fff; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin:14px 0;}
+  .novato h3{ margin-top:0;}
+  .novato .cols{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; margin:6px 0; border:1px solid #e5e7eb; border-radius:10px;}
+  .correct{background:#dcfce7;}
+  .incorrect{background:#fee2e2;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px; border-radius:10px;}
+  .feedback{background:#fff1f2; border-left:4px solid var(--bad);}
+  .success{background:#ecfdf5; border-left:4px solid var(--ok);}
+  .hint{background:#eff6ff; border-left:4px solid var(--accent);}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; border:none; cursor:pointer;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 5</div>
+<h1>Tipos de software de red</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+El software de red controla, protege y optimiza la comunicación entre dispositivos. Incluye <b>sistemas operativos especializados</b> (Cisco IOS, Juniper Junos, Cumulus Linux), <b>protocolos clave</b> como TCP/IP, <b>herramientas de análisis</b> (Wireshark, tcpdump) y <b>plataformas de monitoreo</b> (Nagios, Zabbix, OpenNMS). Todo esto permite redes <b>eficientes, seguras y confiables</b>.
+</div>
+
+<h2>🧩 Conceptos Clave (10 años)</h2>
+<div class="card">
+Imagina que tu red es una <b>ciudad</b>:
+<ul>
+<li>Los sistemas operativos son <b>alcaldes</b> que organizan el tráfico.</li>
+<li>TCP/IP son las <b>carreteras y señales</b> de tránsito.</li>
+<li>Wireshark es un <b>detective</b> que observa qué pasa.</li>
+<li>Nagios/Zabbix/OpenNMS son los <b>policías</b> que vigilan la ciudad.</li>
+</ul>
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid"><div class="card"><ul>
+<li><b>Sistemas operativos de red:</b> Cisco IOS (QoS, roles, cifrado), Juniper Junos (modular, aislamiento de procesos), Cumulus Linux (Linux estándar, VXLAN, segregación de tráfico).</li>
+<li><b>Protocolos base:</b> TCP (fiabilidad, orden), IP (direcciones y rutas).</li>
+<li><b>Herramientas de análisis:</b> Wireshark (gráfico, cientos de protocolos, ver paquetes), tcpdump (consola, scripting, filtros).</li>
+<li><b>Plataformas de monitoreo:</b> Nagios (servidores y servicios), Zabbix (VMs y cloud), OpenNMS (detección automática, arquitectura por eventos).</li>
+<li><b>Tecnologías avanzadas:</b> QoS, MPLS, VPNs.</li>
+</ul></div></div>
+
+<h2>Historia breve</h2>
+<div class="story">
+Antes los equipos de red eran “cajas tontas”. Con IOS, Junos y Cumulus pasaron a ser <b>inteligentes y seguros</b>. Hoy, junto con TCP/IP y herramientas como Wireshark o Nagios, hacen posible que internet funcione sin que lo notemos.
+</div>
+
+<section class="novato">
+<h3>Modo Novato</h3>
+<div class="cols">
+<div class="card"><b>Idea simple</b><ul>
+<li>El software hace que los routers y switches tengan “cerebro”.</li>
+<li>TCP/IP asegura que los datos no se pierdan.</li>
+<li>Wireshark/tcpdump permiten ver qué ocurre en la red.</li>
+</ul></div>
+<div class="card"><b>Recordatorio</b><ul>
+<li>IOS = seguridad + protocolos.</li>
+<li>Junos = modular + seguro.</li>
+<li>Cumulus = Linux + flexibilidad.</li>
+<li>Nagios/Zabbix/OpenNMS = vigilancia total.</li>
+</ul></div>
+</div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+<li>IOS, Junos, Cumulus → gestionan equipos.</li>
+<li>TCP/IP → base de la comunicación.</li>
+<li>Wireshark/tcpdump → analizan tráfico.</li>
+<li>Nagios/Zabbix/OpenNMS → monitorizan y alertan.</li>
+<li>QoS/MPLS/VPN → optimizan y protegen redes.</li>
+</ul>
+
+<h2>Resumen exprés</h2>
+<div class="card">
+SO (IOS/Junos/Cumulus) = control<br>
+TCP/IP = base<br>
+Wireshark/tcpdump = análisis<br>
+Nagios/Zabbix/OpenNMS = monitoreo<br>
+QoS/MPLS/VPN = nivel profesional
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+<button id="btn-correct" class="primary">Corregir</button>
+<button id="btn-shuffle" class="secondary">Barajar</button>
+<button id="btn-reset" class="secondary">Reiniciar</button>
+<span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const BANK=[
+// IOS
+{text:"¿Qué sistema operativo usa Cisco en routers y switches?",options:[{t:"Cisco IOS",ok:true},{t:"Windows Server",ok:false},{t:"Linux Mint",ok:false}],hint:"Es el más famoso.",explain:"Cisco IOS es el SO más usado en routers y switches Cisco."},
+{text:"¿Qué funciones avanzadas ofrece Cisco IOS?",options:[{t:"QoS, roles de acceso, cifrado",ok:true},{t:"Solo reproduce música",ok:false},{t:"Sirve de antivirus",ok:false}],hint:"Piensa en seguridad y tráfico.",explain:"IOS soporta QoS, control de acceso y cifrado."},
+
+// Junos
+{text:"¿Qué caracteriza a Juniper Junos?",options:[{t:"Arquitectura modular y aislamiento de procesos",ok:true},{t:"Basado en Android",ok:false},{t:"Es un antivirus",ok:false}],hint:"Muy usado en grandes redes.",explain:"Junos es modular, seguro y evita que un proceso afecte al resto."},
+
+// Cumulus
+{text:"¿Qué ventaja clave tiene Cumulus Linux?",options:[{t:"Basado en Linux, soporta VXLAN y segregación de tráfico",ok:true},{t:"Solo funciona en Windows",ok:false},{t:"No soporta protocolos modernos",ok:false}],hint:"Piensa en Linux y virtualización.",explain:"Cumulus Linux soporta VXLAN y segregación nativa de tráfico."},
+
+// Protocolos
+{text:"¿Qué hace TCP en TCP/IP?",options:[{t:"Asegura datos completos y ordenados",ok:true},{t:"Define direcciones IP",ok:false},{t:"Analiza tráfico",ok:false}],hint:"Fiabilidad.",explain:"TCP asegura entrega ordenada."},
+{text:"¿Qué hace el protocolo IP?",options:[{t:"Direccionar y enrutar paquetes",ok:true},{t:"Guardar contraseñas",ok:false},{t:"Cifrar VPNs",ok:false}],hint:"Como GPS.",explain:"IP gestiona direcciones y rutas."},
+
+// Análisis
+{text:"¿Qué herramienta gráfica analiza paquetes?",options:[{t:"Wireshark",ok:true},{t:"tcpdump",ok:false},{t:"Nagios",ok:false}],hint:"Tiene interfaz.",explain:"Wireshark soporta cientos de protocolos y analiza paquetes."},
+{text:"¿Qué herramienta de consola captura tráfico rápido?",options:[{t:"tcpdump",ok:true},{t:"Photoshop",ok:false},{t:"Cumulus",ok:false}],hint:"Modo texto.",explain:"tcpdump captura paquetes y se integra en scripts."},
+
+// Monitoreo
+{text:"¿Qué monitoriza Nagios?",options:[{t:"Servidores, switches, apps y servicios",ok:true},{t:"Solo impresoras",ok:false},{t:"Solo PCs",ok:false}],hint:"Supervisión completa.",explain:"Nagios vigila toda la infraestructura IT."},
+{text:"¿Qué añade Zabbix frente a Nagios?",options:[{t:"Supervisión de VMs, cloud y reportes",ok:true},{t:"Nada, es igual",ok:false},{t:"Es un router",ok:false}],hint:"Más funciones.",explain:"Zabbix añade cloud, VMs y reportes visuales."},
+{text:"¿Qué destaca de OpenNMS?",options:[{t:"Detección automática y arquitectura por eventos",ok:true},{t:"Es un firewall",ok:false},{t:"Solo LAN pequeñas",ok:false}],hint:"Escalabilidad.",explain:"OpenNMS gestiona redes grandes con eventos y detección."},
+
+// Profesional extra
+{text:"¿Qué es QoS?",options:[{t:"Quality of Service, prioriza tráfico",ok:true},{t:"Quick OS",ok:false},{t:"Query of Systems",ok:false}],hint:"Calidad.",explain:"QoS gestiona prioridad de tráfico en redes."},
+{text:"¿Qué es MPLS?",options:[{t:"Multiprotocol Label Switching, optimiza rutas",ok:true},{t:"Microsoft Layer Service",ok:false},{t:"Modo de Bluetooth",ok:false}],hint:"Tecnología avanzada.",explain:"MPLS acelera tráfico con rutas virtuales."},
+{text:"¿Para qué sirve una VPN?",options:[{t:"Crear conexiones seguras y cifradas",ok:true},{t:"Reemplazar routers",ok:false},{t:"Acelerar música",ok:false}],hint:"Privacidad.",explain:"VPN crea túneles cifrados entre redes."}
+];
+
+let QUESTIONS=[];const quiz=document.getElementById('quiz');const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,i){
+ const w=document.createElement('div');w.className='q';
+ const p=document.createElement('p');p.innerHTML=`<b>${i+1}.</b> ${q.text}`;w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,j)=>{const id=`q${i}_opt${j}`;const label=document.createElement('label');label.setAttribute('for',id);
+ const input=document.createElement('input');input.type='radio';input.name=`q${i}`;input.id=id;input.value=o.ok?'true':'false';
+ label.appendChild(input);label.insertAdjacentText('beforeend',' '+o.t);w.appendChild(label);});
+ const hb=document.createElement('button');hb.type='button';hb.textContent='Pista';hb.className='hint-btn';
+ const hbBox=document.createElement('div');hbBox.className='hint';hbBox.innerHTML=q.hint;w.appendChild(hb);w.appendChild(hbBox);
+ const fb=document.createElement('div');fb.className='feedback';w.appendChild(fb);
+ const ok=document.createElement('div');ok.className='success';ok.textContent='✅ ¡Correcto!';w.appendChild(ok);
+ hb.addEventListener('click',()=>{hbBox.style.display='block';hb.disabled=true;});
+ return w;
+}
+function buildQuiz(){quiz.innerHTML='';QUESTIONS=shuffle(BANK.map(q=>({...q,options:q.options.map(o=>({...o}))})));QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i)));scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labs=Array.from(node.querySelectorAll('label'));let ok=false;let sel=null;let corr=null;
+ labs.forEach(l=>{l.classList.remove('correct','incorrect');const input=l.querySelector('input');if(input.value==='true') corr=l;if(input.checked){sel=l;ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback');const okBox=node.querySelector('.success');
+ if(ok){corr.classList.add('correct');okBox.style.display='block';fb.style.display='none';}
+ else{if(sel) sel.classList.add('incorrect');if(corr) corr.classList.add('correct');okBox.style.display='none';fb.innerHTML=`<b>Respuesta correcta:</b> ${corr?corr.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+.\s*/,'')).explain}</div>`;fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q');let right=0;nodes.forEach(n=>{if(evaluateQuestion(n)) right++;});scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

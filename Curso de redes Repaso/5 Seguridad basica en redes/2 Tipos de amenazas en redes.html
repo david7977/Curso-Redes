@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24 - Tipos de amenazas en redes</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border:1px solid #e5e7eb; border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin: 14px 0;}
+  .novato .cols {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 24</div>
+<h1>Tipos de amenazas en redes</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+Las redes modernas enfrentan múltiples <b>amenazas</b>:  
+- <b>Malware:</b> virus, gusanos, troyanos, ransomware.  
+- <b>Phishing:</b> engaños para robar credenciales.  
+- <b>DoS/DDoS:</b> ataques de denegación de servicio.  
+- <b>Accesos no autorizados:</b> intrusos en sistemas.  
+- <b>Exploits:</b> aprovechamiento de fallos en software.  
+Comprenderlas es esencial para implementar defensas eficaces.
+</div>
+
+<h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+<div class="card">
+Piensa en tu red como una <b>ciudad</b>:  
+- <b>Virus:</b> ladrones que se esconden en paquetes.  
+- <b>Gusanos:</b> plagas que se multiplican sin control.  
+- <b>Ransomware:</b> secuestradores que bloquean casas y piden rescate.  
+- <b>Phishing:</b> cartas falsas que engañan al cartero.  
+- <b>DoS:</b> un atasco que bloquea todas las calles.  
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid">
+  <div class="card">
+    <ul>
+      <li><b>Malware:</b> virus, gusanos, ransomware → dañan o secuestran datos.</li>
+      <li><b>Phishing:</b> engaños con correos falsos o webs falsas.</li>
+      <li><b>DoS/DDoS:</b> saturación de red y recursos.</li>
+      <li><b>Accesos no autorizados:</b> intrusos rompen la seguridad.</li>
+      <li><b>Exploits:</b> aprovechan vulnerabilidades del software.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+Desde los primeros virus como <i>ILOVEYOU</i>, las amenazas han crecido en número y sofisticación.  
+Hoy, el ransomware es uno de los ataques más rentables y peligrosos.  
+Los ataques DDoS han tumbado grandes empresas y gobiernos.  
+El phishing sigue siendo efectivo porque aprovecha la confianza y el error humano.  
+</div>
+
+<section class="novato">
+  <h3>Modo Novato</h3>
+  <div class="cols">
+    <div class="card">
+      <b>Pasos básicos para defenderse</b>
+      <ul>
+        <li>1. Usar antivirus actualizado.</li>
+        <li>2. No abrir correos sospechosos.</li>
+        <li>3. Configurar firewall y reglas.</li>
+        <li>4. Actualizar software con parches.</li>
+        <li>5. Hacer copias de seguridad.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Errores comunes</b>
+      <ul>
+        <li>Confiar en correos sin verificar remitente.</li>
+        <li>No aplicar actualizaciones.</li>
+        <li>Ignorar alertas de seguridad.</li>
+        <li>No tener backup de datos críticos.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+  <li>Malware = software malicioso (virus, gusanos, ransomware).</li>
+  <li>Phishing = ingeniería social para robar datos.</li>
+  <li>DoS/DDoS = saturación de recursos y caída de servicios.</li>
+  <li>Accesos no autorizados = intrusiones en sistemas.</li>
+  <li>Exploits = ataques que aprovechan vulnerabilidades.</li>
+</ul>
+
+<h2>Resumen exprés (5 líneas)</h2>
+<div class="card">
+1. Malware daña o secuestra datos.<br>
+2. Phishing roba credenciales con engaños.<br>
+3. DoS/DDoS saturan redes y servicios.<br>
+4. Accesos no autorizados vulneran sistemas.<br>
+5. Exploits usan fallos en software.
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ // Básicas
+ {text:"¿Qué tipo de amenaza cifra archivos y pide rescate?",options:[{t:"Ransomware",ok:true},{t:"Gusano",ok:false}],hint:"Secuestro digital.",explain:"El ransomware cifra datos y exige pago."},
+ {text:"¿Qué ataque inunda un servidor con tráfico falso?",options:[{t:"DoS/DDoS",ok:true},{t:"Phishing",ok:false}],hint:"Denegación de servicio.",explain:"DoS/DDoS saturan recursos hasta bloquearlos."},
+ {text:"¿Qué técnica engaña con correos o webs falsas?",options:[{t:"Phishing",ok:true},{t:"Exploit",ok:false}],hint:"Pesca de datos.",explain:"Phishing busca robar credenciales con engaños."},
+ {text:"¿Qué amenaza se replica sola a través de la red?",options:[{t:"Gusano",ok:true},{t:"Troyano",ok:false}],hint:"Se multiplica.",explain:"El gusano se propaga sin interacción del usuario."},
+ {text:"¿Qué amenaza aprovecha fallos de software?",options:[{t:"Exploit",ok:true},{t:"Firewall",ok:false}],hint:"Vulnerabilidad usada.",explain:"Un exploit ataca un fallo en software o sistema."},
+ // Profesionales
+ {text:"¿Qué error humano es clave en ataques de phishing?",options:[{t:"Confiar en correos falsos",ok:true},{t:"Actualizar software",ok:false}],hint:"Factor humano.",explain:"El phishing funciona gracias al descuido humano."},
+ {text:"¿Qué práctica reduce impacto de ransomware?",options:[{t:"Hacer copias de seguridad",ok:true},{t:"Desactivar firewall",ok:false}],hint:"Recuperación de datos.",explain:"Un backup permite restaurar información sin pagar."},
+ {text:"¿Qué diferencia principal hay entre virus y gusano?",options:[{t:"El virus necesita acción del usuario, el gusano no",ok:true},{t:"El gusano requiere abrir un archivo",ok:false}],hint:"Interacción humana.",explain:"Virus = requiere abrir archivo. Gusano = se propaga solo."},
+ {text:"¿Qué impacto generan los ataques DoS en empresas?",options:[{t:"Pérdida de servicio y daños económicos",ok:true},{t:"Mejora del ancho de banda",ok:false}],hint:"Bloqueo total.",explain:"DoS interrumpe operaciones y genera pérdidas."},
+ {text:"¿Qué medida previene exploits de vulnerabilidades?",options:[{t:"Actualizar y parchear software",ok:true},{t:"Ignorar actualizaciones",ok:false}],hint:"Gestión de parches.",explain:"Mantener software actualizado bloquea exploits."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

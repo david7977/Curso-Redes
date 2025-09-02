@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test práctico: Protocolos y Modelos de Red</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --ok:#c8f7c5; --err:#f8d7da; --fg:#222; --muted:#666; }
+    body { font-family: Arial, system-ui, sans-serif; margin:0; padding:32px; background:#f9f9f9; color:var(--fg); }
+    h1 { margin:0 0 8px; }
+    p.lead { margin:0 0 20px; color:var(--muted); }
+    .question { background:#fff; border-radius:12px; padding:16px; margin:12px 0; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+    .question h3 { margin:0 0 8px; font-size:16px; }
+    .question label { display:block; padding:6px 10px; border-radius:8px; margin:6px 0; cursor:pointer; }
+    .correcta { background: var(--ok); }
+    .incorrecta { background: var(--err); }
+    .controls { display:flex; gap:10px; margin-top:16px; }
+    button { padding:10px 16px; font-size:15px; border-radius:10px; border:0; cursor:pointer; }
+    button.primary { background:#111; color:#fff; }
+    button.ghost { background:#eee; }
+    #resultado { font-weight:700; margin-top:14px; }
+    .foot { color:var(--muted); font-size:13px; margin-top:24px; }
+    details { margin:10px 0; }
+    summary { cursor:pointer; color:#111; }
+    ul.layers { margin:6px 0 0 18px; }
+  </style>
+</head>
+<body>
+  <h1>Test práctico: Protocolos y Modelos de Red</h1>
+  <p class="lead">Basado en el texto de la <b>Unidad 2</b>: protocolos de comunicación fundamentales, modelos OSI y TCP/IP, y su aplicación en redes locales y globales.</p>
+
+  <details>
+    <summary>📌 Recordatorio rápido (del propio texto)</summary>
+    <ul class="layers">
+      <li><b>Protocolos de comunicación</b>: reglas que permiten la interacción entre dispositivos a través de diferentes plataformas y tecnologías.</li>
+      <li><b>Modelo OSI</b>: 7 capas (Física ⚡, Enlace de Datos 🔗, Red 🌍, Transporte 🚚, Sesión 🪟, Presentación 🎭, Aplicación 📱).</li>
+      <li><b>Modelo TCP/IP</b>: estándar práctico usado en internet, 4 capas (Enlace, Internet, Transporte, Aplicación).</li>
+      <li><b>Importancia</b>: sirven de pilar fundamental para diseñar, implementar y gestionar redes eficaces.</li>
+      <li><b>Aplicación</b>: desde redes locales (LAN) hasta globales (WAN), afectando eficiencia y seguridad.</li>
+    </ul>
+  </details>
+
+  <div id="quiz"></div>
+  <div class="controls">
+    <button class="primary" onclick="corregir()">Corregir</button>
+    <button class="ghost" onclick="reiniciar()">Reiniciar</button>
+  </div>
+  <p id="resultado"></p>
+  <p class="foot">Aciertos en verde ✅ · Errores en rojo ❌ · Preguntas creadas solo a partir del texto proporcionado.</p>
+
+  <script>
+    const preguntas = [
+      { t: "📡 ¿Qué son los protocolos de comunicación?", o: ["Reglas que permiten la interacción entre dispositivos", "Un tipo de hardware de red", "Programas para edición de texto"], c: 0 },
+      { t: "📖 ¿Qué modelo divide la comunicación en 7 capas?", o: ["Modelo OSI", "Modelo TCP/IP", "Modelo LAN"], c: 0 },
+      { t: "⚡ Capa Física del OSI", o: ["Transmite bits a través de medios físicos", "Establece sesiones entre aplicaciones", "Traduce formatos de datos"], c: 0 },
+      { t: "🔗 Capa de Enlace de Datos del OSI", o: ["Gestiona acceso al medio y control de errores", "Selecciona aplicaciones de usuario", "Cifra datos"], c: 0 },
+      { t: "🌍 Capa de Red del OSI", o: ["Determina rutas y direcciones IP", "Controla sesiones", "Presenta la información al usuario"], c: 0 },
+      { t: "🚚 Capa de Transporte del OSI", o: ["Entrega de datos de extremo a extremo de forma fiable", "Traduce y cifra datos", "Envía señales físicas"], c: 0 },
+      { t: "🪟 Capa de Sesión del OSI", o: ["Gestiona el diálogo entre aplicaciones", "Define direcciones IP", "Reenvía paquetes"], c: 0 },
+      { t: "🎭 Capa de Presentación del OSI", o: ["Traduce, comprime y cifra datos", "Transporta paquetes IP", "Gestiona acceso al medio"], c: 0 },
+      { t: "📱 Capa de Aplicación del OSI", o: ["Interfaz con programas de usuario (correo, web)", "Decide la ruta de los datos", "Codifica bits en el cable"], c: 0 },
+      { t: "🛠️ ¿Cuál es el modelo realmente usado en internet?", o: ["Modelo TCP/IP", "Modelo OSI", "Modelo LAN"], c: 0 },
+      { t: "🔄 ¿Cuántas capas tiene el modelo TCP/IP?", o: ["4", "7", "5"], c: 0 },
+      { t: "🌐 ¿Qué hace la capa de Internet en TCP/IP?", o: ["Define rutas y direcciones IP", "Gestiona sesiones", "Traduce y cifra datos"], c: 0 },
+      { t: "📦 ¿Qué describe el encapsulamiento en redes?", o: ["Cada capa añade su información de control antes de transmitir", "Eliminar datos innecesarios", "Duplicar los paquetes"], c: 0 },
+      { t: "⚖️ OSI vs TCP/IP", o: ["OSI es conceptual (7 capas), TCP/IP práctico (4 capas)", "Ambos son idénticos", "TCP/IP es solo teórico"], c: 0 },
+      { t: "🏠 ¿Dónde se aplican estos protocolos?", o: ["En redes locales y globales", "Solo en redes domésticas", "Exclusivamente en satélites"], c: 0 },
+      { t: "💡 ¿Por qué son importantes estos modelos para profesionales de TI?", o: ["Porque proporcionan un marco para diseñar, implementar y gestionar redes", "Porque sustituyen el hardware de red", "Solo sirven para exámenes"], c: 0 },
+      { t: "🤔 Reflexión final: Piensa en un dispositivo o aplicación que uses diariamente (ej. WhatsApp, correo, navegador). ¿Qué protocolos crees que utiliza?", o: ["TCP/IP y protocolos de aplicación como HTTP, SMTP, etc.", "Ningún protocolo, funcionan mágicamente", "Solo señales eléctricas"], c: 0 }
+    ];
+
+    const quiz = document.getElementById('quiz');
+    preguntas.forEach((q, i) => {
+      const box = document.createElement('div');
+      box.className = 'question';
+      const h = document.createElement('h3');
+      h.textContent = `${i + 1}. ${q.t}`;
+      box.appendChild(h);
+      q.o.forEach((op, j) => {
+        const lb = document.createElement('label');
+        lb.classList.add(`q${i}`);
+        const ip = document.createElement('input');
+        ip.type = 'radio'; ip.name = `q${i}`; ip.value = j;
+        lb.appendChild(ip); lb.appendChild(document.createTextNode(' ' + op));
+        box.appendChild(lb);
+      });
+      quiz.appendChild(box);
+    });
+
+    function corregir(){
+      let total = 0;
+      preguntas.forEach((q, i) => {
+        const sel = document.querySelector(`input[name="q${i}"]:checked`);
+        const labels = document.querySelectorAll(`label.q${i}`);
+        labels.forEach((lb, j) => {
+          lb.classList.remove('correcta','incorrecta');
+          if (j === q.c) lb.classList.add('correcta');
+        });
+        if (sel) {
+          if (parseInt(sel.value) === q.c) total++; else {
+            labels[parseInt(sel.value)].classList.add('incorrecta');
+          }
+        }
+      });
+      const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+      const res = document.getElementById('resultado');
+      if (answered < preguntas.length) { res.textContent = 'Por favor, responde todas las preguntas.'; res.style.color = 'red'; return; }
+      res.textContent = `Tu puntuación: ${total} / ${preguntas.length}`;
+      res.style.color = total >= preguntas.length * 0.85 ? 'green' : total >= preguntas.length * 0.6 ? 'orange' : 'red';
+    }
+
+    function reiniciar(){
+      document.getElementById('resultado').textContent = '';
+      document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
+      document.querySelectorAll('label').forEach(lb => lb.classList.remove('correcta','incorrecta'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>22 - Seguridad en redes</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border:1px solid #e5e7eb; border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin: 14px 0;}
+  .novato .cols {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Unidad 5</div>
+<h1>Seguridad en redes</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+La seguridad en redes protege <b>datos, dispositivos e infraestructuras</b> contra accesos no autorizados y ataques.  
+En esta unidad aprenderás:  
+- Amenazas comunes: virus, malware, ataques DoS.  
+- Principios de seguridad: confidencialidad, integridad, disponibilidad.  
+- Firewalls y filtrado de tráfico.  
+- Implementación práctica de seguridad en Packet Tracer.  
+</div>
+
+<h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+<div class="card">
+Imagina tu casa:  
+- Una <b>puerta con llave</b> = firewall (decide quién entra).  
+- Un <b>portero</b> = filtrado de tráfico (solo deja pasar a los autorizados).  
+- <b>Ladrones</b> = virus, malware, ataques DoS.  
+- <b>Tu familia segura</b> = tus datos y dispositivos protegidos.  
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid">
+  <div class="card">
+    <ul>
+      <li><b>Amenazas:</b> virus, malware, ataques de denegación de servicio.</li>
+      <li><b>Principios:</b> proteger la red asegura datos y continuidad.</li>
+      <li><b>Firewalls:</b> barrera que filtra tráfico entre redes.</li>
+      <li><b>Filtrado:</b> reglas que permiten o bloquean tráfico.</li>
+      <li><b>Práctica:</b> simulaciones en Packet Tracer para configurar firewalls y filtros.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+En los años 90, las redes eran abiertas: cualquiera podía entrar.  
+Con los ataques crecientes, nacieron los <b>firewalls</b> como muros digitales.  
+Hoy, además del firewall, se aplican múltiples capas de seguridad: antivirus, IDS, VPNs.  
+La seguridad en red evoluciona igual que los ataques.  
+</div>
+
+<section class="novato">
+  <h3>Modo Novato</h3>
+  <div class="cols">
+    <div class="card">
+      <b>Pasos básicos de seguridad</b>
+      <ul>
+        <li>1. Instala un firewall.</li>
+        <li>2. Configura reglas de filtrado.</li>
+        <li>3. Mantén contraseñas seguras.</li>
+        <li>4. Haz copias de seguridad.</li>
+        <li>5. Actualiza software y firmware.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Errores comunes</b>
+      <ul>
+        <li>No usar firewall.</li>
+        <li>Permitir todo el tráfico sin filtros.</li>
+        <li>Usar contraseñas débiles.</li>
+        <li>No actualizar dispositivos.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+  <li>La seguridad en redes protege contra amenazas.</li>
+  <li>Virus, malware y ataques DoS son comunes.</li>
+  <li>Firewalls y filtrado son la primera barrera.</li>
+  <li>Simulaciones ayudan a practicar seguridad en Packet Tracer.</li>
+</ul>
+
+<h2>Resumen exprés (5 líneas)</h2>
+<div class="card">
+1. La seguridad en redes es vital.<br>
+2. Existen amenazas como virus, malware y DoS.<br>
+3. Firewalls bloquean accesos no autorizados.<br>
+4. Filtrado de tráfico define reglas de paso.<br>
+5. Packet Tracer permite practicar seguridad básica.
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ // Básicas
+ {text:"¿Qué amenaza busca saturar un servidor hasta que deje de responder?",options:[{t:"Ataque DoS",ok:true},{t:"Malware",ok:false}],hint:"Denegación de servicio.",explain:"Un ataque DoS inunda un servidor con peticiones."},
+ {text:"¿Qué herramienta es la primera barrera de protección en una red?",options:[{t:"Firewall",ok:true},{t:"Switch",ok:false}],hint:"Es como una muralla.",explain:"El firewall controla el tráfico entrante y saliente."},
+ {text:"¿Qué es el filtrado de tráfico?",options:[{t:"Reglas para permitir o bloquear paquetes",ok:true},{t:"Un tipo de virus",ok:false}],hint:"Son reglas.",explain:"El filtrado decide qué tráfico pasa o no."},
+ {text:"¿Qué principio de seguridad asegura que los datos no sean alterados?",options:[{t:"Integridad",ok:true},{t:"Disponibilidad",ok:false}],hint:"Piensa en datos íntegros.",explain:"La integridad asegura que los datos no se modifican."},
+ {text:"¿Qué principio de seguridad garantiza que solo usuarios autorizados accedan?",options:[{t:"Confidencialidad",ok:true},{t:"Disponibilidad",ok:false}],hint:"Solo para los autorizados.",explain:"La confidencialidad protege la privacidad de datos."},
+ // Profesionales
+ {text:"¿Qué comando básico usarías en Packet Tracer para probar un firewall?",options:[{t:"ping",ok:true},{t:"paint",ok:false}],hint:"Prueba de conectividad.",explain:"Ping ayuda a validar reglas de firewall."},
+ {text:"¿Qué medida reduciría riesgos de acceso remoto inseguro?",options:[{t:"Usar SSH en lugar de Telnet",ok:true},{t:"Usar contraseñas '1234'",ok:false}],hint:"Piensa en cifrado.",explain:"SSH cifra conexiones, Telnet no."},
+ {text:"Si permites 'todo el tráfico' en un firewall, ¿qué ocurre?",options:[{t:"La red queda expuesta",ok:true},{t:"Más segura",ok:false}],hint:"Sin filtros no hay seguridad.",explain:"El firewall debe tener reglas restrictivas."},
+ {text:"¿Qué herramienta detecta tráfico sospechoso además del firewall?",options:[{t:"IDS/IPS",ok:true},{t:"Switch",ok:false}],hint:"Monitorea intrusos.",explain:"IDS/IPS detectan ataques y anomalías."},
+ {text:"¿Qué medida de seguridad aplicarías en un router doméstico?",options:[{t:"Cambiar la contraseña por defecto",ok:true},{t:"Dejar la contraseña 'admin'",ok:false}],hint:"Nunca dejar la de fábrica.",explain:"La primera medida es cambiar credenciales por defecto."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

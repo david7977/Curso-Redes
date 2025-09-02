@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas Switches, VLANs y Administración remota</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas sobre Switches, VLANs y Administración remota</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Qué es una VLAN?", options:[{t:"Una red local virtual que segmenta tráfico en un switch",ok:true},{t:"Un protocolo de enrutamiento",ok:false},{t:"Un software de seguridad",ok:false}], hint:"Separa redes lógicas.", explain:"Una VLAN crea redes virtuales dentro de un switch."},
+ {text:"¿Qué beneficios ofrecen las VLANs?", options:[{t:"Seguridad, optimización y gestión eficiente",ok:true},{t:"Más cables físicos",ok:false},{t:"Evitan el uso de switches",ok:false}], hint:"Piensa en segmentación.", explain:"Las VLANs mejoran seguridad y reducen dominios de broadcast."},
+ {text:"¿Qué comando crea una VLAN en un switch?", options:[{t:"vlan <número> y name <nombre>",ok:true},{t:"ip vlan add",ok:false},{t:"create vlan",ok:false}], hint:"Se define ID y nombre.", explain:"Se usa vlan X seguido de name Y."},
+ {text:"¿Cómo sabe un switch qué VLAN asignar?", options:[{t:"Por configuración del puerto",ok:true},{t:"Por dirección MAC",ok:false},{t:"Por protocolo ARP",ok:false}], hint:"Depende del puerto.", explain:"El puerto se asigna a una VLAN concreta."},
+ {text:"¿Qué IP se asigna al switch para administración remota?", options:[{t:"Una IP en la interfaz VLAN",ok:true},{t:"La del router",ok:false},{t:"No necesita IP",ok:false}], hint:"Es en interface vlan 1.", explain:"Se configura IP en la VLAN de gestión."},
+ {text:"¿Cómo segmentar dos departamentos en un switch?", options:[{t:"Creando dos VLANs y asignando puertos",ok:true},{t:"Instalando otro switch",ok:false},{t:"Usando contraseñas distintas",ok:false}], hint:"Piensa en VLANs.", explain:"Cada VLAN corresponde a un departamento."},
+ {text:"¿Qué pasa si un PC de VLAN10 quiere hablar con VLAN15?", options:[{t:"No hay comunicación directa",ok:true},{t:"Sí, siempre se comunican",ok:false},{t:"Depende del switch",ok:false}], hint:"Son redes separadas.", explain:"Las VLANs no se comunican sin router."},
+ {text:"¿Qué necesita un switch para administración remota?", options:[{t:"IP en VLAN, máscara, gateway y Telnet/SSH",ok:true},{t:"Una contraseña BIOS",ok:false},{t:"Conexión Wi-Fi",ok:false}], hint:"Piensa en acceso remoto.", explain:"Se configura IP, máscara y protocolo de acceso."},
+ {text:"¿Qué protocolo se usó para administrar el switch remotamente?", options:[{t:"Telnet",ok:true},{t:"HTTP",ok:false},{t:"FTP",ok:false}], hint:"Texto plano.", explain:"Telnet fue el usado en el ejemplo."},
+ {text:"¿Qué comando activa una interfaz VLAN tras asignar IP?", options:[{t:"no shutdown",ok:true},{t:"enable ip",ok:false},{t:"ifup",ok:false}], hint:"Piensa en activación.", explain:"no shutdown habilita la interfaz."},
+ {text:"¿Por qué las VLANs reducen dominios de broadcast?", options:[{t:"Aíslan tráfico entre VLANs",ok:true},{t:"Usan más routers",ok:false},{t:"Deshabilitan ARP",ok:false}], hint:"Aíslan difusión.", explain:"Cada VLAN contiene su propio broadcast."},
+ {text:"¿Qué riesgo hay sin segmentar tráfico?", options:[{t:"Acceso indebido y congestión",ok:true},{t:"Mejor rendimiento",ok:false},{t:"Más seguridad",ok:false}], hint:"Piensa en seguridad.", explain:"Sin VLANs hay más congestión y riesgo de accesos indebidos."},
+ {text:"Diferencia entre administración local y remota", options:[{t:"Local = consola directa; Remota = Telnet/SSH con IP",ok:true},{t:"Local = Wi-Fi; Remota = cable",ok:false},{t:"Son lo mismo",ok:false}], hint:"Depende del modo de acceso.", explain:"Local es por consola física; remota por IP con Telnet/SSH."},
+ {text:"Comando para definir contraseña en VTY", options:[{t:"line vty 0 4 | password <clave> | login",ok:true},{t:"set password vty",ok:false},{t:"enable secret",ok:false}], hint:"Es en la línea VTY.", explain:"Se configuran líneas VTY con password y login."},
+ {text:"¿Por qué usar SSH en vez de Telnet?", options:[{t:"SSH cifra, Telnet es texto plano",ok:true},{t:"SSH es más rápido",ok:false},{t:"Telnet es más seguro",ok:false}], hint:"Piensa en cifrado.", explain:"SSH protege la comunicación frente a ataques."},
+ {text:"Pasos generales para VLANs en 4 departamentos", options:[{t:"Crear VLANs, asignar puertos, IP gestión, gateway",ok:true},{t:"Comprar routers adicionales",ok:false},{t:"Instalar antivirus",ok:false}], hint:"Son 4 VLANs.", explain:"Cada VLAN para cada departamento y gestión."},
+ {text:"¿Qué pasa si no se asigna gateway al switch?", options:[{t:"No puede comunicarse fuera de su subred",ok:true},{t:"Deja de funcionar",ok:false},{t:"Pierde VLANs",ok:false}], hint:"Piensa en acceso remoto.", explain:"Sin gateway, no hay acceso desde otras redes."},
+ {text:"Cómo mejorar seguridad de un switch", options:[{t:"Usar SSH, restringir IPs y control de puertos",ok:true},{t:"Usar solo Telnet",ok:false},{t:"Dejar puertos abiertos",ok:false}], hint:"Más allá de contraseñas.", explain:"SSH, ACLs y políticas mejoran la seguridad."},
+ {text:"Impacto de red sin VLANs vs con VLANs", options:[{t:"Sin VLANs = congestión y menos seguridad",ok:true},{t:"Sin VLANs = más rendimiento",ok:false},{t:"Con VLANs = menos eficiencia",ok:false}], hint:"Piensa en broadcast.", explain:"VLANs reducen congestión y aumentan seguridad."},
+ {text:"Ventajas de la administración remota de switches", options:[{t:"Permite gestión desde cualquier lugar, ahorra tiempo y mejora eficiencia",ok:true},{t:"Solo sirve para apagar puertos",ok:false},{t:"Evita configurar VLANs",ok:false}], hint:"Piensa en comodidad.", explain:"La administración remota mejora la eficiencia en gestión de red."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧾 Banco de Preguntas – Configuración y Gestión de Firewalls</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; background:#f8fafc; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin:0; }
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧾 Banco de Preguntas y Respuestas – Configuración y Gestión de Firewalls</h1>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ {text:"¿Cuál es el papel de un firewall en la seguridad de una red?", options:[{t:"Primera línea de defensa filtrando tráfico",ok:true},{t:"Reemplazar antivirus",ok:false},{t:"Aumentar velocidad de Internet",ok:false}], hint:"Es la barrera inicial.", explain:"Filtra tráfico entrante y saliente según reglas."},
+ {text:"¿Qué es una ACL en un router Cisco?", options:[{t:"Conjunto de reglas que permiten o deniegan tráfico",ok:true},{t:"Una contraseña de acceso",ok:false},{t:"Un tipo de firewall físico",ok:false}], hint:"Son listas de control.", explain:"Las ACL permiten o deniegan tráfico según criterios."},
+ {text:"¿Rango de ACL extendidas en Cisco?", options:[{t:"100-199",ok:true},{t:"1-99",ok:false},{t:"200-299",ok:false}], hint:"No son las estándar.", explain:"Las ACL extendidas usan rango 100-199."},
+ {text:"¿Comando para crear ACL extendida en Cisco?", options:[{t:"access-list <número> <permit|deny> ...",ok:true},{t:"enable secret <clave>",ok:false},{t:"ip route <destino>",ok:false}], hint:"Se usa 'access-list'.", explain:"Se crea con access-list <número> permit|deny protocolo origen wildcard destino wildcard."},
+ {text:"¿Qué significa máscara wildcard en ACL?", options:[{t:"Indica qué partes de la IP deben coincidir",ok:true},{t:"Define la máscara de subred",ok:false},{t:"Una clave secreta",ok:false}], hint:"Control de coincidencias.", explain:"La wildcard especifica qué bits deben coincidir."},
+ {text:"¿Cómo impedir acceso de edición a sistemas?", options:[{t:"deny ip 192.168.2.0 0.0.0.255 192.168.1.0 0.0.0.255",ok:true},{t:"permit ip any any",ok:false},{t:"ip access-group 1 out",ok:false}], hint:"Se usa deny con rangos IP.", explain:"Se debe denegar tráfico entre subredes especificadas."},
+ {text:"¿Cómo aplicar ACL a interfaz de router?", options:[{t:"ip access-group <número> in|out",ok:true},{t:"ip route",ok:false},{t:"enable password",ok:false}], hint:"Se usa en configuración de interfaz.", explain:"El comando ip access-group asocia la ACL a una interfaz."},
+ {text:"Diferencia entre aplicar ACL 'in' y 'out'?", options:[{t:"in = tráfico entrante, out = saliente",ok:true},{t:"in = tráfico saliente, out = entrante",ok:false},{t:"No hay diferencia",ok:false}], hint:"Depende de dirección de tráfico.", explain:"in filtra tráfico que entra, out el que sale."},
+ {text:"¿Cómo verificar ACL aplicada?", options:[{t:"Probar conectividad con pings",ok:true},{t:"Cambiar contraseñas",ok:false},{t:"Reiniciar router",ok:false}], hint:"Prueba conectividad.", explain:"Se verifica con pruebas de ping entre dispositivos."},
+ {text:"Buenas prácticas de mantenimiento de firewalls?", options:[{t:"Actualizar reglas, monitorear registros y adaptarlas",ok:true},{t:"Nunca cambiarlas",ok:false},{t:"Ignorarlas",ok:false}], hint:"Se deben revisar regularmente.", explain:"Actualizar reglas y registros mantiene seguridad vigente."},
+ {text:"¿Por qué ACL debe permitir tráfico no denegado explícitamente?", options:[{t:"Para no bloquear comunicación legítima",ok:true},{t:"Para denegar todo",ok:false},{t:"No importa",ok:false}], hint:"Evita bloqueos accidentales.", explain:"Si no, bloquearía tráfico legítimo."},
+ {text:"¿Qué pasa si ACL no se aplica a interfaz?", options:[{t:"No tiene efecto",ok:true},{t:"Bloquea todo",ok:false},{t:"Mejora velocidad",ok:false}], hint:"Debe asociarse a interfaz.", explain:"Sin aplicación, la ACL no actúa."},
+ {text:"¿Por qué probar cambios de firewall antes de producción?", options:[{t:"Para verificar sin afectar servicios",ok:true},{t:"Porque es obligatorio",ok:false},{t:"Para aumentar velocidad",ok:false}], hint:"Evita errores en producción.", explain:"Permite validar configuración antes de implementarla."},
+ {text:"¿Riesgo de no actualizar firewall?", options:[{t:"Permite amenazas modernas o bloquea servicios legítimos",ok:true},{t:"No hay riesgo",ok:false},{t:"Aumenta velocidad",ok:false}], hint:"Amenazas cambian.", explain:"Un firewall desactualizado expone la red."},
+ {text:"Ventaja de ACL extendidas frente a estándar?", options:[{t:"Mayor granularidad filtrando por origen, destino, puertos y protocolos",ok:true},{t:"Menos seguras",ok:false},{t:"Solo bloquean todo",ok:false}], hint:"Más opciones de filtrado.", explain:"ACL extendidas permiten filtrado avanzado."},
+ {text:"Cambios en firewall por trabajo remoto?", options:[{t:"Permitir VPN seguras y restringir accesos externos",ok:true},{t:"Abrir todos los puertos",ok:false},{t:"Eliminar firewall",ok:false}], hint:"Debe asegurar teletrabajo.", explain:"Se habilitan VPN y accesos controlados."},
+ {text:"¿Cómo balancear accesibilidad y seguridad en teletrabajo?", options:[{t:"Protocolos seguros, limitar IPs y MFA",ok:true},{t:"Abrir todo",ok:false},{t:"Eliminar reglas",ok:false}], hint:"Debe ser seguro y accesible.", explain:"Solo accesos seguros y limitados."},
+ {text:"Impacto de acceso remoto sin restricciones?", options:[{t:"Aumenta exposición a ataques externos",ok:true},{t:"Mejora seguridad",ok:false},{t:"No tiene impacto",ok:false}], hint:"Exposición total.", explain:"Sin restricciones se incrementan riesgos."},
+ {text:"Papel de logs en gestión de firewalls?", options:[{t:"Identificar accesos indebidos y ajustar reglas",ok:true},{t:"Reducir RAM",ok:false},{t:"Aumentar ancho de banda",ok:false}], hint:"Permite análisis.", explain:"Logs permiten detectar patrones sospechosos."},
+ {text:"¿Argumentos para justificar firewall ante gerencia?", options:[{t:"Protege confidencialidad, reduce ataques y asegura continuidad",ok:true},{t:"Sirve como impresora",ok:false},{t:"No aporta nada",ok:false}], hint:"Enfócate en seguridad empresarial.", explain:"Firewall protege datos y continuidad operativa."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

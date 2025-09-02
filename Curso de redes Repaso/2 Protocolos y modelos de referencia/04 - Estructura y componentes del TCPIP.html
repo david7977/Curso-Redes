@@ -1,0 +1,167 @@
+<13 - Estructura y componentes del TCP/IP>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13 - Estructura y componentes del TCP/IP</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; }
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#f8fafc; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  .pill { background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px; margin:6px 0;}
+  .story { border:1px dashed #cbd5e1; background:#fff; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin:14px 0;}
+  .novato h3{ margin-top:0;}
+  .novato .cols{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; margin:6px 0; border:1px solid #e5e7eb; border-radius:10px;}
+  .correct{background:#dcfce7;}
+  .incorrect{background:#fee2e2;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px; border-radius:10px;}
+  .feedback{background:#fff1f2; border-left:4px solid var(--bad);}
+  .success{background:#ecfdf5; border-left:4px solid var(--ok);}
+  .hint{background:#eff6ff; border-left:4px solid var(--accent);}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; border:none; cursor:pointer;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 13</div>
+<h1>Estructura y componentes del TCP/IP</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+El modelo <b>TCP/IP</b> organiza cómo viajan los datos en Internet.  
+Está formado por 4 capas: <b>Enlace</b>, <b>Internet</b>, <b>Transporte</b> y <b>Aplicación</b>.  
+Cada capa tiene un rol específico: desde mover señales físicas hasta mostrar la web en tu navegador.  
+Su éxito se debe a que es <b>eficiente, seguro y práctico</b>, usado en todas las redes modernas.
+</div>
+
+<h2>🧩 Conceptos Clave (10 años)</h2>
+<div class="card">
+Imagina que envías un paquete:  
+<ul>
+<li><b>Enlace</b>: el camión lo recoge en tu casa.</li>
+<li><b>Internet</b>: el GPS decide la ruta hasta la ciudad de destino.</li>
+<li><b>Transporte</b>: el centro logístico revisa que no falte nada.</li>
+<li><b>Aplicación</b>: el repartidor te entrega el paquete en la puerta.</li>
+</ul>
+Así trabajan juntas las capas para que tus datos lleguen bien.
+</div>
+
+<h2>📚 Desglose</h2>
+<div class="grid"><div class="card"><ul>
+<li><b>Capa de Enlace</b>: transmisión física entre dispositivos (cables, WiFi).</li>
+<li><b>Capa de Internet</b>: direccionamiento y enrutamiento (IP).</li>
+<li><b>Capa de Transporte</b>: asegura entrega ordenada (TCP) o rápida sin garantías (UDP).</li>
+<li><b>Capa de Aplicación</b>: protocolos visibles al usuario (HTTP, SMTP, FTP).</li>
+<li>Protocolos principales: <b>IP, TCP, UDP, HTTP</b>.</li>
+</ul></div></div>
+
+<h2>Historia breve</h2>
+<div class="story">
+El TCP/IP fue desarrollado en los 70 para ARPANET y se convirtió en el <b>lenguaje universal de Internet</b>.  
+Su diseño modular (capas) lo hace resistente y flexible.  
+Por eso es el estándar que conecta <b>millones de dispositivos</b> hoy en día.
+</div>
+
+<section class="novato">
+<h3>Modo Novato</h3>
+<div class="cols">
+<div class="card"><b>Recordar fácil</b><ul>
+<li>4 capas: Enlace → Internet → Transporte → Aplicación.</li>
+<li>TCP asegura, UDP acelera.</li>
+<li>HTTP es lo que usas al navegar.</li>
+</ul></div>
+<div class="card"><b>En la práctica</b><ul>
+<li>Cuando ves Netflix: TCP mantiene los datos en orden.</li>
+<li>Cuando juegas online: UDP da rapidez aunque se pierdan paquetes.</li>
+</ul></div>
+</div>
+</section>
+
+<h2>Resumen</h2>
+<ul>
+<li>TCP/IP = 4 capas prácticas y eficientes.</li>
+<li>Enlace, Internet, Transporte, Aplicación.</li>
+<li>Protocolos principales: IP, TCP, UDP, HTTP.</li>
+</ul>
+
+<h2>Resumen exprés</h2>
+<div class="card">TCP/IP = El estándar de Internet (4 capas)</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+<button id="btn-correct" class="primary">Corregir</button>
+<button id="btn-shuffle" class="secondary">Barajar</button>
+<button id="btn-reset" class="secondary">Reiniciar</button>
+<span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+const BANK=[
+// Texto
+{text:"¿Cuántas capas tiene el modelo TCP/IP?",options:[{t:"4",ok:true},{t:"7",ok:false},{t:"3",ok:false}],hint:"Es más simple que OSI.",explain:"El modelo TCP/IP tiene 4 capas."},
+{text:"¿Qué capa del TCP/IP maneja la transmisión física de datos?",options:[{t:"Enlace",ok:true},{t:"Transporte",ok:false},{t:"Aplicación",ok:false}],hint:"Es la primera capa.",explain:"La capa de Enlace transmite los datos físicamente."},
+{text:"¿Qué protocolo se usa en la capa de Internet?",options:[{t:"IP",ok:true},{t:"HTTP",ok:false},{t:"TCP",ok:false}],hint:"Identifica origen y destino.",explain:"El protocolo IP se encarga de direccionamiento y enrutamiento."},
+{text:"¿Qué protocolo asegura entrega ordenada y confiable de datos?",options:[{t:"TCP",ok:true},{t:"UDP",ok:false},{t:"HTTP",ok:false}],hint:"Es la base de la web, email, etc.",explain:"TCP asegura que los datos lleguen completos y en orden."},
+{text:"¿Qué protocolo se usa cuando importa más la velocidad que la fiabilidad?",options:[{t:"UDP",ok:true},{t:"TCP",ok:false},{t:"FTP",ok:false}],hint:"Se usa en videojuegos online.",explain:"UDP transmite rápido pero sin garantizar entrega ordenada."},
+{text:"¿Qué capa del TCP/IP usan HTTP, SMTP y FTP?",options:[{t:"Aplicación",ok:true},{t:"Transporte",ok:false},{t:"Internet",ok:false}],hint:"Es la capa más cercana al usuario.",explain:"La capa de Aplicación gestiona protocolos como HTTP, SMTP, FTP."},
+{text:"En la analogía del camión, ¿qué representa la capa de Internet?",options:[{t:"El GPS que marca la ruta",ok:true},{t:"El repartidor",ok:false},{t:"El almacén",ok:false}],hint:"Decide la ruta del paquete.",explain:"La capa de Internet elige la mejor ruta para el paquete."},
+
+// Profesionales
+{text:"¿Qué protocolo se usa para streaming en tiempo real cuando la velocidad es prioritaria?",options:[{t:"UDP",ok:true},{t:"TCP",ok:false},{t:"HTTP",ok:false}],hint:"Se usa en videollamadas.",explain:"UDP es usado en streaming en vivo y videollamadas por su rapidez."},
+{text:"¿Qué ventaja principal ofrece TCP frente a UDP?",options:[{t:"Entrega fiable y en orden",ok:true},{t:"Mayor velocidad",ok:false},{t:"Menos consumo de CPU",ok:false}],hint:"Piensa en seguridad de datos.",explain:"TCP asegura que los datos se reciban correctamente y en orden."},
+{text:"¿Cuál es la función principal de HTTP?",options:[{t:"Transferir páginas web y datos en la web",ok:true},{t:"Direccionar paquetes",ok:false},{t:"Asegurar entrega confiable",ok:false}],hint:"Lo usas al navegar.",explain:"HTTP permite transferir archivos y páginas web en la capa de Aplicación."}
+];
+
+let QUESTIONS=[];const quiz=document.getElementById('quiz');const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,i){
+ const w=document.createElement('div');w.className='q';
+ const p=document.createElement('p');p.innerHTML=`<b>${i+1}.</b> ${q.text}`;w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,j)=>{const id=`q${i}_opt${j}`;const label=document.createElement('label');label.setAttribute('for',id);
+ const input=document.createElement('input');input.type='radio';input.name=`q${i}`;input.id=id;input.value=o.ok?'true':'false';
+ label.appendChild(input);label.insertAdjacentText('beforeend',' '+o.t);w.appendChild(label);});
+ const hb=document.createElement('button');hb.type='button';hb.textContent='Pista';hb.className='hint-btn';
+ const hbBox=document.createElement('div');hbBox.className='hint';hbBox.innerHTML=q.hint;w.appendChild(hb);w.appendChild(hbBox);
+ const fb=document.createElement('div');fb.className='feedback';w.appendChild(fb);
+ const ok=document.createElement('div');ok.className='success';ok.textContent='✅ ¡Correcto!';w.appendChild(ok);
+ hb.addEventListener('click',()=>{hbBox.style.display='block';hb.disabled=true;});
+ return w;
+}
+function buildQuiz(){quiz.innerHTML='';QUESTIONS=shuffle(BANK.map(q=>({...q,options:q.options.map(o=>({...o}))})));QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i)));scoreEl.textContent='';}
+function evaluateQuestion(node){
+ const labs=Array.from(node.querySelectorAll('label'));let ok=false;let sel=null;let corr=null;
+ labs.forEach(l=>{l.classList.remove('correct','incorrect');const input=l.querySelector('input');if(input.value==='true') corr=l;if(input.checked){sel=l;ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback');const okBox=node.querySelector('.success');
+ if(ok){corr.classList.add('correct');okBox.style.display='block';fb.style.display='none';}
+ else{if(sel) sel.classList.add('incorrect');if(corr) corr.classList.add('correct');okBox.style.display='none';fb.innerHTML=`<b>Respuesta correcta:</b> ${corr?corr.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+.\s*/,'')).explain}</div>`;fb.style.display='block';}
+ return ok;
+}
+function correctAll(){const nodes=document.querySelectorAll('.q');let right=0;nodes.forEach(n=>{if(evaluateQuestion(n)) right++;});scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+buildQuiz();
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 - Dispositivos de red y su configuración</title>
+<style>
+  :root { --ok:#16a34a; --bad:#dc2626; --muted:#6b7280; --card:#0ea5e9; --accent:#2563eb; }
+  body { font-family: system-ui, Arial, sans-serif; margin: 24px; line-height:1.45; background:#f8fafc;}
+  header { border:2px solid #e5e7eb; border-left:8px solid var(--card); padding:16px; border-radius:14px; background:#fff; margin-bottom:24px;}
+  h1 { margin-top:0; }
+  h2 { margin:18px 0 8px; }
+  .pill { display:inline-block; background:#e0f2fe; color:#0369a1; padding:2px 10px; border-radius:999px; font-size:.9rem; margin-bottom:8px;}
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .story { background:#fff; border:1px dashed #cbd5e1; padding:12px; border-radius:12px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:10px; }
+  .novato { border:1px solid #e5e7eb; border-left:6px solid var(--accent); background:#eff6ff; padding:14px; border-radius:12px; margin: 14px 0;}
+  .novato .cols {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;}
+  .quiz-card { border:1px solid #e5e7eb; border-radius:14px; background:#fff; margin:24px 0; }
+  .legend{padding:12px 16px; border-bottom:1px solid #e5e7eb; background:#f9fafb; color:#475569;}
+  .qwrap{padding:16px;}
+  .q{border:1px solid #e5e7eb; border-radius:12px; padding:12px; margin:12px 0;}
+  label{display:block; padding:6px 10px; border-radius:10px; border:1px solid #e5e7eb; margin:6px 0;}
+  .correct{background:#dcfce7; border-color:#bbf7d0;}
+  .incorrect{background:#fee2e2; border-color:#fecaca;}
+  .feedback,.success,.hint{display:none; margin-top:8px; padding:8px 10px; border-radius:10px;}
+  .feedback{border-left:4px solid var(--bad); background:#fff1f2;}
+  .success{border-left:4px solid var(--ok); background:#ecfdf5;}
+  .hint{border-left:4px solid var(--accent); background:#eff6ff; color:#1e3a8a;}
+  .hint-btn{margin-top:4px; padding:6px 10px; border-radius:10px; background:#1f2937; color:#fff; cursor:pointer; border:none;}
+  .toolbar-bottom{display:flex; gap:10px; padding:12px 16px; border-top:1px solid #e5e7eb; background:#f9fafb;}
+  .toolbar-bottom button{padding:10px 14px; border-radius:12px; border:1px solid #e5e7eb; cursor:pointer;}
+  .primary{background:#111827; color:#fff;}
+  .secondary{background:#f3f4f6; color:#111827;}
+  .score{margin-left:auto; font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<div class="pill">Capítulo 17</div>
+<h1>Dispositivos de red y su configuración</h1>
+
+<h2>🧾 Explicación General</h2>
+<div class="card">
+Los <b>dispositivos de red</b> son los pilares que permiten crear, mantener y proteger una red.  
+Aprender a configurarlos (routers, switches y puntos de acceso) es clave para asegurar una red eficiente y segura.  
+En este capítulo conocerás sus funciones y la configuración básica necesaria para garantizar rendimiento y estabilidad.
+</div>
+
+<h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+<div class="card">
+Imagina que tu red es como una ciudad:  
+- El <b>router</b> es el alcalde: conecta tu ciudad con otras.  
+- El <b>switch</b> es el guardia de tráfico que ordena los coches en cada cruce.  
+- El <b>punto de acceso</b> es una plaza pública donde todos se conectan al WiFi.  
+Si cada uno hace bien su trabajo, todo funciona en orden.
+</div>
+
+<h2>📚 Desglose del texto</h2>
+<div class="grid">
+  <div class="card">
+    <ul>
+      <li>Routers → conectan redes diferentes, gestionan tráfico y seguridad.</li>
+      <li>Switches → conectan dispositivos dentro de la misma red.</li>
+      <li>Puntos de acceso (AP) → permiten conectividad inalámbrica.</li>
+      <li>Configuración básica = afecta rendimiento y seguridad.</li>
+      <li>Se aprende con clases, guías paso a paso, y prácticas reales.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Historia breve</h2>
+<div class="story">
+Hace años las redes eran solo cables y hubs. Hoy usamos routers inteligentes, switches gestionables y puntos de acceso WiFi.  
+Con su correcta configuración se puede dar servicio a hogares, oficinas e incluso empresas enteras.  
+La práctica es lo que convierte la teoría en habilidad real.
+</div>
+
+<section class="novato">
+  <h3>Modo Novato</h3>
+  <div class="cols">
+    <div class="card">
+      <b>Idea simple</b>
+      <ul>
+        <li>Router: conecta a Internet.</li>
+        <li>Switch: conecta tus dispositivos.</li>
+        <li>AP: da WiFi.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <b>Si ocurre X… mira</b>
+      <ul>
+        <li>No tienes Internet → revisar router.</li>
+        <li>No funciona impresora → revisar switch.</li>
+        <li>No hay WiFi → revisar punto de acceso.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<h2>Resumen para repaso</h2>
+<ul>
+  <li>Routers, switches y AP son esenciales.</li>
+  <li>Su configuración impacta seguridad y rendimiento.</li>
+  <li>Práctica y casos reales consolidan las habilidades.</li>
+</ul>
+
+<h2>Resumen exprés (5 líneas)</h2>
+<div class="card">
+1. Router conecta redes externas.<br>
+2. Switch conecta dispositivos locales.<br>
+3. Punto de acceso da WiFi.<br>
+4. Configuración correcta = seguridad + rendimiento.<br>
+5. Se aprende practicando en casos reales.
+</div>
+</header>
+
+<section class="quiz-card">
+<div class="legend">Preguntas de una sola respuesta. Usa <b>Pista</b> antes de corregir.</div>
+<div class="qwrap" id="quiz"></div>
+<div class="toolbar-bottom">
+  <button id="btn-correct" class="primary">Corregir</button>
+  <button id="btn-shuffle" class="secondary">Barajar</button>
+  <button id="btn-reset" class="secondary">Reiniciar</button>
+  <span id="score" class="score"></span>
+</div>
+</section>
+
+<script>
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+
+const BANK=[
+ // Preguntas del texto
+ {text:"¿Qué dispositivo conecta tu red local con Internet?",options:[{t:"Router",ok:true},{t:"Switch",ok:false},{t:"Hub",ok:false}],hint:"Es el alcalde de la ciudad.",explain:"El router conecta redes diferentes."},
+ {text:"¿Qué dispositivo organiza el tráfico dentro de una red local?",options:[{t:"Switch",ok:true},{t:"Router",ok:false}],hint:"Está dentro de la red.",explain:"El switch conecta dispositivos en la LAN."},
+ {text:"¿Qué dispositivo da acceso WiFi a los usuarios?",options:[{t:"Punto de acceso",ok:true},{t:"Switch",ok:false}],hint:"Se conecta sin cables.",explain:"El AP permite conectividad inalámbrica."},
+ {text:"¿Qué ocurre si el router está mal configurado?",options:[{t:"No hay conexión a Internet",ok:true},{t:"No funciona el teclado",ok:false}],hint:"Es la puerta de salida.",explain:"El router mal configurado rompe el acceso externo."},
+ {text:"¿Por qué la configuración básica es importante?",options:[{t:"Afecta rendimiento y seguridad",ok:true},{t:"Solo cambia colores",ok:false}],hint:"Es clave para estabilidad.",explain:"Una mala configuración afecta a toda la red."},
+ // Preguntas de refuerzo laboral
+ {text:"En un entorno empresarial, ¿qué parámetro configuras primero en un router?",options:[{t:"Dirección IP y gateway",ok:true},{t:"Fondo de pantalla",ok:false}],hint:"Piensa en conectividad.",explain:"IP y gateway son la base de la conexión."},
+ {text:"¿Qué dispositivo revisarías si varias impresoras no reciben trabajos en red?",options:[{t:"Switch",ok:true},{t:"Router",ok:false}],hint:"Está dentro de la LAN.",explain:"El switch distribuye tráfico entre equipos."},
+ {text:"¿Qué protocolo suele configurarse en un punto de acceso WiFi?",options:[{t:"WPA2/WPA3 para seguridad",ok:true},{t:"FTP",ok:false}],hint:"Piensa en contraseñas.",explain:"Los AP deben usar protocolos de seguridad WiFi."},
+ {text:"¿Qué diferencia principal hay entre un switch y un hub?",options:[{t:"El switch envía solo al destinatario correcto",ok:true},{t:"Ambos hacen broadcast siempre",ok:false}],hint:"Eficiencia.",explain:"El switch usa tablas MAC para optimizar tráfico."},
+ {text:"¿Qué herramienta profesional usarías para comprobar conectividad en switches y routers?",options:[{t:"Ping y traceroute",ok:true},{t:"Paint",ok:false}],hint:"Diagnóstico de red.",explain:"Comandos de red permiten verificar conectividad."}
+];
+
+let QUESTIONS=[];
+const quiz=document.getElementById('quiz');
+const scoreEl=document.getElementById('score');
+
+function createQuestionEl(q,idx){
+ const w=document.createElement('div'); w.className='q';
+ const p=document.createElement('p'); p.innerHTML=`<b>${idx+1}.</b> ${q.text}`; w.appendChild(p);
+ const opts=shuffle(q.options.map(o=>({...o})));
+ opts.forEach((o,i)=>{
+   const id=`q${idx}_opt${i}`;
+   const label=document.createElement('label'); label.setAttribute('for',id);
+   const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.id=id; input.value=o.ok?'true':'false';
+   label.appendChild(input); label.insertAdjacentText('beforeend',' '+o.t); w.appendChild(label);
+ });
+ const hintBtn=document.createElement('button'); hintBtn.type='button'; hintBtn.textContent='Pista'; hintBtn.className='hint-btn';
+ const hintBox=document.createElement('div'); hintBox.className='hint'; hintBox.innerHTML=q.hint;
+ w.appendChild(hintBtn); w.appendChild(hintBox);
+ const fb=document.createElement('div'); fb.className='feedback'; w.appendChild(fb);
+ const ok=document.createElement('div'); ok.className='success'; ok.textContent='✅ ¡Correcto!'; w.appendChild(ok);
+ hintBtn.addEventListener('click',()=>{hintBox.style.display='block'; hintBtn.disabled=true;});
+ return w;
+}
+
+function buildQuiz(){quiz.innerHTML=''; QUESTIONS=shuffle(BANK.map(q=>({...q, options:q.options.map(o=>({...o}))}))); QUESTIONS.forEach((q,i)=>quiz.appendChild(createQuestionEl(q,i))); scoreEl.textContent='';}
+
+function evaluateQuestion(node){
+ const labels=Array.from(node.querySelectorAll('label')); let ok=false; let selected=null; let correct=null;
+ labels.forEach(l=>{l.classList.remove('correct','incorrect'); const input=l.querySelector('input'); if(input.value==='true') correct=l; if(input.checked){selected=l; ok=(input.value==='true');}});
+ const fb=node.querySelector('.feedback'); const okBox=node.querySelector('.success');
+ if(ok){if(correct) correct.classList.add('correct'); okBox.style.display='block'; fb.style.display='none';}
+ else{if(selected) selected.classList.add('incorrect'); if(correct) correct.classList.add('correct'); okBox.style.display='none'; fb.innerHTML=`<b>Respuesta correcta:</b> ${correct?correct.textContent.trim():''}<div>${QUESTIONS.find(q=>q.text===node.querySelector('p').innerText.replace(/^\d+\.\s*/,'')).explain}</div>`; fb.style.display='block';}
+ return ok;
+}
+
+function correctAll(){const nodes=document.querySelectorAll('.q'); let right=0; nodes.forEach(n=>{if(evaluateQuestion(n)) right++;}); scoreEl.textContent=`Puntuación: ${right} / ${nodes.length}`;}
+function resetQuiz(){buildQuiz();}
+
+document.getElementById('btn-correct').addEventListener('click',correctAll);
+document.getElementById('btn-shuffle').addEventListener('click',buildQuiz);
+document.getElementById('btn-reset').addEventListener('click',resetQuiz);
+
+buildQuiz();
+</script>
+</body>
+</html>

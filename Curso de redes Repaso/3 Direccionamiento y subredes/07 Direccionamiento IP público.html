@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Test Interactivo: Direccionamiento IP Público, IANA/RIRs, IPv4 vs IPv6 y NAT</title>
+<style>
+  :root{
+    --ok:#16a34a;
+    --bad:#dc2626;
+    --info:#0ea5e9;
+    --bg:#0b1220;
+    --card:#121a2a;
+    --muted:#8aa0b4;
+    --accent:#6366f1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+    background: var(--bg); color: #e6edf3; line-height:1.5;
+  }
+  header{
+    padding:28px 16px; text-align:center; background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    border-bottom:1px solid #1f2937;
+  }
+  h1{margin:0; font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing:.3px}
+  p.lead{margin:.35rem auto 0; max-width:980px; color: var(--muted); font-size: .98rem}
+  main{max-width: 1040px; margin: 28px auto; padding: 0 16px 60px;}
+  .panel{
+    background: var(--card); border:1px solid #1f2937; border-radius:16px; padding:18px 16px; margin-bottom:16px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  }
+  .meta{display:flex; gap:8px; flex-wrap:wrap; font-size:.84rem; color:var(--muted); margin:.25rem 0 .75rem}
+  .badge{border:1px solid #334155; border-radius:999px; padding:2px 10px}
+  h2{font-size:1.05rem; margin:.2rem 0 .7rem}
+  ol{margin:.2rem 0 .5rem; padding-left: 1.1rem}
+  .q{border-top:1px dashed #243041; padding-top:12px; margin-top:12px}
+  .q:first-child{border-top:none; padding-top:0; margin-top:0}
+  .opt{display:block; margin:.45rem 0; padding:10px 12px; border:1px solid #243041; border-radius:12px; cursor:pointer}
+  .opt:hover{border-color:#374151}
+  .opt input{margin-right:8px; transform: translateY(1px)}
+  .feedback{font-size:.92rem; margin-top:6px; display:none}
+  .feedback.ok{color:var(--ok)}
+  .feedback.bad{color:var(--bad)}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  button{
+    background:#111827; color:#e6edf3; border:1px solid #374151; border-radius:10px; padding:10px 14px; cursor:pointer;
+  }
+  button.primary{background: var(--accent); border-color:transparent}
+  .score{font-weight:600; color:#e6edf3}
+  .hint{color:var(--info); font-size:.9rem; display:none; margin-top:6px}
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); margin-top:10px}
+  .pill{display:inline-block; padding:2px 8px; border-radius:999px; background:#0f172a; border:1px solid #243041; color:#cbd5e1; font-size:.8rem}
+  code, .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size:.95em}
+  footer{color:#8aa0b4; text-align:center; padding:30px 12px; border-top:1px solid #1f2937}
+</style>
+</head>
+<body>
+<header>
+  <h1>Direcciones IP públicas — IANA, RIRs, IPv4 vs IPv6 y NAT</h1>
+  <p class="lead">Desde la cadena IANA→RIR→ISP→organización hasta la escasez IPv4, la transición a IPv6, NAT/CGNAT y un caso multi‑campus.</p>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="meta">
+      <span class="badge">Nivel: Básico → Avanzado</span>
+      <span class="badge">Preguntas: 30</span>
+      <span class="badge">Tiempo recomendado: 20–25 min</span>
+    </div>
+    <h2>Instrucciones</h2>
+    <ol>
+      <li>Responde cada pregunta y pulsa <strong>Corregir</strong> para ver aciertos y explicación.</li>
+      <li>Usa <strong>Pista</strong> si lo necesitas (no resta puntos).</li>
+      <li><strong>Reiniciar</strong> limpia tus respuestas para repetir el test.</li>
+    </ol>
+    <div class="actions">
+      <button class="primary" onclick="gradeAll()">Corregir</button>
+      <button onclick="showAllHints()">Mostrar todas las pistas</button>
+      <button onclick="resetAll()">Reiniciar</button>
+      <span class="score" id="scoreBox"></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque A — Conceptos de IP pública</h2>
+
+    <div class="q" data-q="1" data-ans="a">
+      <div><strong>A1.</strong> Una dirección IP pública sirve para…</div>
+      <label class="opt"><input type="radio" name="q1" value="a"> Identificar de forma única un dispositivo en Internet</label>
+      <label class="opt"><input type="radio" name="q1" value="b"> Identificar solo dentro de una LAN</label>
+      <label class="opt"><input type="radio" name="q1" value="c"> Cifrar el contenido de los paquetes</label>
+      <div class="feedback">Explicación: la IP pública es enrutable globalmente.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“Número de casa” en Internet.</div>
+    </div>
+
+    <div class="q" data-q="2" data-ans="b">
+      <div><strong>A2.</strong> ¿Cuál NO es un rango privado RFC1918?</div>
+      <label class="opt"><input type="radio" name="q2" value="a"> 10.0.0.0/8</label>
+      <label class="opt"><input type="radio" name="q2" value="b"> 172.32.0.0/12</label>
+      <label class="opt"><input type="radio" name="q2" value="c"> 192.168.0.0/16</label>
+      <div class="feedback">Explicación: privado 172.16.0.0–172.31.255.255; 172.32/12 no es privado.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">172.<strong>16–31</strong>.*.*</div>
+    </div>
+
+    <div class="q" data-q="3" data-ans="c">
+      <div><strong>A3.</strong> La IP 127.0.0.1 es…</div>
+      <label class="opt"><input type="radio" name="q3" value="a"> Pública</label>
+      <label class="opt"><input type="radio" name="q3" value="b"> Privada</label>
+      <label class="opt"><input type="radio" name="q3" value="c"> Loopback</label>
+      <div class="feedback">Explicación: 127.0.0.0/8 se reserva para loopback.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“Esta máquina”.</div>
+    </div>
+
+    <div class="q" data-q="4" data-ans="a">
+      <div><strong>A4.</strong> ¿Qué entidad global coordina los espacios de direcciones?</div>
+      <label class="opt"><input type="radio" name="q4" value="a"> IANA</label>
+      <label class="opt"><input type="radio" name="q4" value="b"> ICANN exclusivamente</label>
+      <label class="opt"><input type="radio" name="q4" value="c"> IEEE</label>
+      <div class="feedback">Explicación: IANA gestiona la asignación global de recursos numéricos.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Autoridad de Números Asignados de Internet.</div>
+    </div>
+
+    <div class="q" data-q="5" data-ans="b">
+      <div><strong>A5.</strong> ¿Qué afirmación es correcta?</div>
+      <label class="opt"><input type="radio" name="q5" value="a"> Las IP públicas se eligen al azar por cada empresa</label>
+      <label class="opt"><input type="radio" name="q5" value="b"> Las IP públicas se delegan jerárquicamente (IANA→RIR→ISP/organización)</label>
+      <label class="opt"><input type="radio" name="q5" value="c"> Cualquier IP privada es enrutable en Internet</label>
+      <div class="feedback">Explicación: existe una cadena de delegación para evitar duplicidades globales.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Evitar solapes.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque B — RIRs y distribución</h2>
+
+    <div class="q" data-q="6" data-ans="a">
+      <div><strong>B6.</strong> RIR para América del Norte:</div>
+      <label class="opt"><input type="radio" name="q6" value="a"> ARIN</label>
+      <label class="opt"><input type="radio" name="q6" value="b"> RIPE NCC</label>
+      <label class="opt"><input type="radio" name="q6" value="c"> LACNIC</label>
+      <div class="feedback">Explicación: ARIN opera en Norteamérica.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“American Registry for Internet Numbers”.</div>
+    </div>
+
+    <div class="q" data-q="7" data-ans="c">
+      <div><strong>B7.</strong> RIR para América Latina y el Caribe:</div>
+      <label class="opt"><input type="radio" name="q7" value="a"> APNIC</label>
+      <label class="opt"><input type="radio" name="q7" value="b"> AFRINIC</label>
+      <label class="opt"><input type="radio" name="q7" value="c"> LACNIC</label>
+      <div class="feedback">Explicación: LACNIC gestiona Latinoamérica y Caribe.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“LA” de LatAm.</div>
+    </div>
+
+    <div class="q" data-q="8" data-ans="b">
+      <div><strong>B8.</strong> RIR para Europa, Oriente Medio y partes de Asia Central:</div>
+      <label class="opt"><input type="radio" name="q8" value="a"> ARIN</label>
+      <label class="opt"><input type="radio" name="q8" value="b"> RIPE NCC</label>
+      <label class="opt"><input type="radio" name="q8" value="c"> APNIC</label>
+      <div class="feedback">Explicación: RIPE NCC opera en esa región.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Europa → RIPE.</div>
+    </div>
+
+    <div class="q" data-q="9" data-ans="c">
+      <div><strong>B9.</strong> RIR para Asia-Pacífico:</div>
+      <label class="opt"><input type="radio" name="q9" value="a"> AFRINIC</label>
+      <label class="opt"><input type="radio" name="q9" value="b"> LACNIC</label>
+      <label class="opt"><input type="radio" name="q9" value="c"> APNIC</label>
+      <div class="feedback">Explicación: APNIC = Asia Pacific Network Information Centre.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Asia-Pacífico.</div>
+    </div>
+
+    <div class="q" data-q="10" data-ans="a">
+      <div><strong>B10.</strong> RIR para África:</div>
+      <label class="opt"><input type="radio" name="q10" value="a"> AFRINIC</label>
+      <label class="opt"><input type="radio" name="q10" value="b"> ARIN</label>
+      <label class="opt"><input type="radio" name="q10" value="c"> RIPE NCC</label>
+      <div class="feedback">Explicación: AFRINIC gestiona África.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">AFR → África.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque C — Escasez de IPv4, IPv6 y direccionamiento</h2>
+
+    <div class="q" data-q="11" data-ans="b">
+      <div><strong>C11.</strong> Número de direcciones aproximado en IPv4:</div>
+      <label class="opt"><input type="radio" name="q11" value="a"> 1 × 10<sup>12</sup></label>
+      <label class="opt"><input type="radio" name="q11" value="b"> 4,3 × 10<sup>9</sup></label>
+      <label class="opt"><input type="radio" name="q11" value="c"> 3,4 × 10<sup>38</sup></label>
+      <div class="feedback">Explicación: 2^32 ≈ 4,29 mil millones.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">32 bits.</div>
+    </div>
+
+    <div class="q" data-q="12" data-ans="c">
+      <div><strong>C12.</strong> Número de direcciones aproximado en IPv6:</div>
+      <label class="opt"><input type="radio" name="q12" value="a"> 1 × 10<sup>18</sup></label>
+      <label class="opt"><input type="radio" name="q12" value="b"> 4,3 × 10<sup>9</sup></label>
+      <label class="opt"><input type="radio" name="q12" value="c"> 3,4 × 10<sup>38</sup></label>
+      <div class="feedback">Explicación: 2^128 ≈ 3,4×10^38.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">128 bits.</div>
+    </div>
+
+    <div class="q" data-q="13" data-ans="a">
+      <div><strong>C13.</strong> ¿Qué técnica permitió “estirar” IPv4?</div>
+      <label class="opt"><input type="radio" name="q13" value="a"> NAT</label>
+      <label class="opt"><input type="radio" name="q13" value="b"> STP</label>
+      <label class="opt"><input type="radio" name="q13" value="c"> ARP</label>
+      <div class="feedback">Explicación: NAT traduce privadas↔públicas en borde.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Traducción de direcciones.</div>
+    </div>
+
+    <div class="q" data-q="14" data-ans="b">
+      <div><strong>C14.</strong> ¿Qué ventaja clave aporta IPv6 frente a IPv4?</div>
+      <label class="opt"><input type="radio" name="q14" value="a"> Necesita NAT obligatorio</label>
+      <label class="opt"><input type="radio" name="q14" value="b"> Espacio masivo de direcciones y mejor agregación</label>
+      <label class="opt"><input type="radio" name="q14" value="c"> Direcciones más cortas</label>
+      <div class="feedback">Explicación: resuelve escasez y mejora enrutamiento.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Más prefijos, menos NAT.</div>
+    </div>
+
+    <div class="q" data-q="15" data-ans="c">
+      <div><strong>C15.</strong> ¿Qué formato de notación es correcto para IPv6?</div>
+      <label class="opt"><input type="radio" name="q15" value="a"> 192.168.1.1</label>
+      <label class="opt"><input type="radio" name="q15" value="b"> 2001-db8-0-0-0-0-0-1</label>
+      <label class="opt"><input type="radio" name="q15" value="c"> 2001:db8::1</label>
+      <div class="feedback">Explicación: hexadecimal con “:”; “::” comprime ceros.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">No guiones.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque D — NAT, CGNAT y políticas</h2>
+
+    <div class="q" data-q="16" data-ans="a">
+      <div><strong>D16.</strong> ¿Qué describe mejor NAT en hogares/empresas?</div>
+      <label class="opt"><input type="radio" name="q16" value="a"> Varios hosts privados comparten una IP pública</label>
+      <label class="opt"><input type="radio" name="q16" value="b"> Cada host privado tiene su IP pública</label>
+      <label class="opt"><input type="radio" name="q16" value="c"> NAT cifra el tráfico extremo a extremo</label>
+      <div class="feedback">Explicación: PAT/mascaramiento multiplexa muchos‑a‑uno.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Puertos.</div>
+    </div>
+
+    <div class="q" data-q="17" data-ans="b">
+      <div><strong>D17.</strong> Rango reservado para CGNAT (RFC 6598):</div>
+      <label class="opt"><input type="radio" name="q17" value="a"> 169.254.0.0/16</label>
+      <label class="opt"><input type="radio" name="q17" value="b"> 100.64.0.0/10</label>
+      <label class="opt"><input type="radio" name="q17" value="c"> 192.0.2.0/24</label>
+      <div class="feedback">Explicación: /10 para redes internas de los ISPs (NAT a gran escala).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Carrier‑Grade.</div>
+    </div>
+
+    <div class="q" data-q="18" data-ans="c">
+      <div><strong>D18.</strong> ¿Qué implicación tiene CGNAT para servicios entrantes?</div>
+      <label class="opt"><input type="radio" name="q18" value="a"> Facilita abrir puertos</label>
+      <label class="opt"><input type="radio" name="q18" value="b"> No afecta a P2P</label>
+      <label class="opt"><input type="radio" name="q18" value="c"> Dificulta/impide recibir conexiones desde Internet</label>
+      <div class="feedback">Explicación: múltiples clientes comparten la misma IP pública del ISP.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Port‑forwarding limitado.</div>
+    </div>
+
+    <div class="q" data-q="19" data-ans="a">
+      <div><strong>D19.</strong> ¿Cuál es una solución típica para exponer servicios detrás de CGNAT?</div>
+      <label class="opt"><input type="radio" name="q19" value="a"> Túneles/relés (VPN, reverse proxy) o IP pública dedicada</label>
+      <label class="opt"><input type="radio" name="q19" value="b"> Usar 127.0.0.1</label>
+      <label class="opt"><input type="radio" name="q19" value="c"> Desactivar el firewall</label>
+      <div class="feedback">Explicación: necesitas una ruta pública directa o túnel saliente.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">VPN, cloud relay, ISP.</div>
+    </div>
+
+    <div class="q" data-q="20" data-ans="b">
+      <div><strong>D20.</strong> ¿Cuál afirmación es correcta sobre IPv6 y NAT?</div>
+      <label class="opt"><input type="radio" name="q20" value="a"> IPv6 requiere NAT para funcionar</label>
+      <label class="opt"><input type="radio" name="q20" value="b"> IPv6 reduce la necesidad de NAT gracias al espacio de direcciones</label>
+      <label class="opt"><input type="radio" name="q20" value="c"> IPv6 prohíbe cualquier forma de traducción</label>
+      <div class="feedback">Explicación: cada host puede tener IP global; la seguridad se hace con firewall, no NAT.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Enrutamiento extremo a extremo.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque E — BGP, ASNs y asignaciones</h2>
+
+    <div class="q" data-q="21" data-ans="c">
+      <div><strong>E21.</strong> Un ASN identifica…</div>
+      <label class="opt"><input type="radio" name="q21" value="a"> Un router dentro de una LAN</label>
+      <label class="opt"><input type="radio" name="q21" value="b"> Un switch de core</label>
+      <label class="opt"><input type="radio" name="q21" value="c"> Un sistema autónomo que anuncia rutas BGP</label>
+      <div class="feedback">Explicación: BGP usa ASNs para políticas de enrutamiento interdominio.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Inter‑AS.</div>
+    </div>
+
+    <div class="q" data-q="22" data-ans="a">
+      <div><strong>E22.</strong> ¿Qué es un bloque PI (Provider‑Independent)?</div>
+      <label class="opt"><input type="radio" name="q22" value="a"> Espacio asignado a una organización, no ligado a un ISP concreto</label>
+      <label class="opt"><input type="radio" name="q22" value="b"> Direcciones prestadas por DHCP</label>
+      <label class="opt"><input type="radio" name="q22" value="c"> Rango que solo funciona con CGNAT</label>
+      <div class="feedback">Explicación: PI permite cambiar de ISP sin renumerar (con BGP).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Independiente del proveedor.</div>
+    </div>
+
+    <div class="q" data-q="23" data-ans="b">
+      <div><strong>E23.</strong> ¿Qué se necesita para anunciar un bloque propio a Internet?</div>
+      <label class="opt"><input type="radio" name="q23" value="a"> DHCP y NAT</label>
+      <label class="opt"><input type="radio" name="q23" value="b"> Conectividad con uno o más ISPs y BGP con ASN</label>
+      <label class="opt"><input type="radio" name="q23" value="c"> STP en todos los switches</label>
+      <div class="feedback">Explicación: se requiere BGP (intercambio de rutas) y acuerdos con ISPs.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">BGP + peering.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque F — Escenarios y verificación</h2>
+
+    <div class="q" data-q="24" data-ans="a">
+      <div><strong>F24.</strong> Universidad multi‑campus quiere unificar direccionamiento y seguridad. Opción sólida:</div>
+      <label class="opt"><input type="radio" name="q24" value="a"> Solicitar bloque PI (IPv4/IPv6) y ASN, interconectar con BGP entre campus/ISPs</label>
+      <label class="opt"><input type="radio" name="q24" value="b"> Usar solo IP dinámicas residenciales</label>
+      <label class="opt"><input type="radio" name="q24" value="c"> Abrir todos los puertos en NAT</label>
+      <div class="feedback">Explicación: PI + ASN permite política uniforme, redundancia y control.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">PI + BGP.</div>
+    </div>
+
+    <div class="q" data-q="25" data-ans="c">
+      <div><strong>F25.</strong> Para acceso remoto seguro y segmentación entre campus:</div>
+      <label class="opt"><input type="radio" name="q25" value="a"> Desactivar firewall</label>
+      <label class="opt"><input type="radio" name="q25" value="b"> Permitir CGNAT en todos</label>
+      <label class="opt"><input type="radio" name="q25" value="c"> VPN/MPLS/SD‑WAN con políticas y prefijos sumarizables</label>
+      <div class="feedback">Explicación: túneles/SD‑WAN con control centralizado y sumarización.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Túneles seguros.</div>
+    </div>
+
+    <div class="q" data-q="26" data-ans="b">
+      <div><strong>F26.</strong> ¿Cuál dirección indica probable CGNAT en el CPE?</div>
+      <label class="opt"><input type="radio" name="q26" value="a"> 192.168.1.1</label>
+      <label class="opt"><input type="radio" name="q26" value="b"> 100.70.15.9</label>
+      <label class="opt"><input type="radio" name="q26" value="c"> 203.0.113.5</label>
+      <div class="feedback">Explicación: 100.64.0.0/10 es rango CGNAT (no público enrutado).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">RFC 6598.</div>
+    </div>
+
+    <div class="q" data-q="27" data-ans="a">
+      <div><strong>F27.</strong> Bloques “documentación/ejemplo” no deben usarse en producción. Elige uno:</div>
+      <label class="opt"><input type="radio" name="q27" value="a"> 203.0.113.0/24</label>
+      <label class="opt"><input type="radio" name="q27" value="b"> 8.8.8.0/24</label>
+      <label class="opt"><input type="radio" name="q27" value="c"> 1.1.1.0/24</label>
+      <div class="feedback">Explicación: 203.0.113.0/24 (RFC 5737) para documentación.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">También 198.51.100.0/24 y 192.0.2.0/24.</div>
+    </div>
+
+    <div class="q" data-q="28" data-ans="c">
+      <div><strong>F28.</strong> ¿Qué afirmación es correcta sobre geolocalización por IP?</div>
+      <label class="opt"><input type="radio" name="q28" value="a"> Es precisa al nivel de calle por diseño del protocolo</label>
+      <label class="opt"><input type="radio" name="q28" value="b"> Es parte obligatoria de BGP</label>
+      <label class="opt"><input type="radio" name="q28" value="c"> Es estimada por bases de datos y puede ser inexacta</label>
+      <div class="feedback">Explicación: la IP no codifica ubicación; se infiere por registros y mediciones.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">No hay GPS en IP.</div>
+    </div>
+
+    <div class="q" data-q="29" data-ans="b">
+      <div><strong>F29.</strong> Política recomendable para publicar servicios propios:</div>
+      <label class="opt"><input type="radio" name="q29" value="a"> Exponerlos con IP dinámica residencial</label>
+      <label class="opt"><input type="radio" name="q29" value="b"> IP(s) públicas estáticas, DNS, certificados y firewall</label>
+      <label class="opt"><input type="radio" name="q29" value="c"> Solo NAT sin reglas</label>
+      <div class="feedback">Explicación: dirección estable, nombres, TLS y control de acceso.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Buenas prácticas.</div>
+    </div>
+
+    <div class="q" data-q="30" data-ans="a">
+      <div><strong>F30.</strong> En un campus con IPv6, ¿qué ayuda a prescindir de NAT?</div>
+      <label class="opt"><input type="radio" name="q30" value="a"> Prefijos globales /64 por VLAN y firewall perimetral</label>
+      <label class="opt"><input type="radio" name="q30" value="b"> Direcciones link‑local únicamente</label>
+      <label class="opt"><input type="radio" name="q30" value="c"> CGNAT IPv4</label>
+      <div class="feedback">Explicación: direccionamiento global + políticas de filtrado.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">/64 por segmento.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Resumen rápido</h2>
+    <div class="grid">
+      <div>
+        <div class="pill">Cadena de delegación</div>
+        <ul>
+          <li>IANA → RIR (ARIN, RIPE NCC, APNIC, LACNIC, AFRINIC)</li>
+          <li>RIR → ISP/LIR → Organizaciones</li>
+          <li>Evita duplicidades globales</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pill">IPv4 vs IPv6</div>
+        <ul>
+          <li>IPv4 ≈ 4,3×10^9; IPv6 ≈ 3,4×10^38</li>
+          <li>IPv6 reduce necesidad de NAT y mejora agregación</li>
+          <li>Notación IPv6: <span class="mono">2001:db8::/32</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="pill">NAT/CGNAT</div>
+        <ul>
+          <li>NAT/PAT: muchos‑a‑uno</li>
+          <li>CGNAT: 100.64.0.0/10</li>
+          <li>Para servicios: IP dedicada o túneles</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pill">Multi‑campus</div>
+        <ul>
+          <li>Bloques PI + ASN + BGP</li>
+          <li>VPN/MPLS/SD‑WAN entre sedes</li>
+          <li>Firewall y segmentación</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Test generado para práctica educativa. Abre el archivo en tu navegador. Sin dependencias externas.
+</footer>
+
+<script>
+function gradeAll(){
+  const qs = document.querySelectorAll('.q');
+  let ok = 0;
+  qs.forEach(q=>{
+    const name = 'q'+q.dataset.q;
+    const ans = q.dataset.ans;
+    const chosen = document.querySelector('input[name="'+name+'"]:checked');
+    const fb = q.querySelector('.feedback');
+    if(!fb) return;
+    fb.style.display = 'block';
+    if(chosen && chosen.value === ans){
+      fb.classList.remove('bad'); fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + fb.textContent.replace(/^✔ Correcto\.\s*/,'').replace(/^✘ Incorrecto\.\s*/,'');
+      ok++;
+    }else{
+      fb.classList.remove('ok'); fb.classList.add('bad');
+      const correctLabel = q.querySelector('input[value="'+ans+'"]').parentElement.textContent.trim();
+      fb.textContent = '✘ Incorrecto. Respuesta correcta: ' + correctLabel + '. ' + fb.textContent.replace(/^✔ Correcto\.\s*/,'').replace(/^✘ Incorrecto\.\s*/,'');
+    }
+  });
+  document.getElementById('scoreBox').textContent = 'Puntuación: ' + ok + ' / ' + qs.length;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function toggleHint(btn){
+  const hint = btn.nextElementSibling;
+  if(!hint) return;
+  hint.style.display = (hint.style.display==='block') ? 'none' : 'block';
+}
+function showAllHints(){
+  document.querySelectorAll('.hint').forEach(h=>h.style.display='block');
+}
+function resetAll(){
+  document.querySelectorAll('input[type="radio"]').forEach(i=> i.checked=false);
+  document.querySelectorAll('.feedback').forEach(f=>{f.style.display='none'; f.classList.remove('ok','bad');});
+  document.querySelectorAll('.hint').forEach(h=>h.style.display='none');
+  document.getElementById('scoreBox').textContent='';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

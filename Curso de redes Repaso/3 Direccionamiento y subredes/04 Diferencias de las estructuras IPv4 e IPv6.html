@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Test Interactivo: IPv4 vs IPv6 — Evolución, Tipos de Direcciones y Ventajas</title>
+<style>
+  :root{
+    --ok:#16a34a;
+    --bad:#dc2626;
+    --info:#0ea5e9;
+    --bg:#0b1220;
+    --card:#121a2a;
+    --muted:#8aa0b4;
+    --accent:#6366f1;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+    background: var(--bg); color: #e6edf3; line-height:1.5;
+  }
+  header{
+    padding:28px 16px; text-align:center; background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    border-bottom:1px solid #1f2937;
+  }
+  h1{margin:0; font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing:.3px}
+  p.lead{margin:.35rem auto 0; max-width:850px; color: var(--muted); font-size: .98rem}
+  main{max-width: 980px; margin: 28px auto; padding: 0 16px 60px;}
+  .panel{
+    background: var(--card); border:1px solid #1f2937; border-radius:16px; padding:18px 16px; margin-bottom:16px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.25);
+  }
+  .meta{display:flex; gap:8px; flex-wrap:wrap; font-size:.84rem; color:var(--muted); margin:.25rem 0 .75rem}
+  .badge{border:1px solid #334155; border-radius:999px; padding:2px 10px}
+  h2{font-size:1.05rem; margin:.2rem 0 .7rem}
+  ol{margin:.2rem 0 .5rem; padding-left: 1.1rem}
+  .q{border-top:1px dashed #243041; padding-top:12px; margin-top:12px}
+  .q:first-child{border-top:none; padding-top:0; margin-top:0}
+  .opt{display:block; margin:.45rem 0; padding:10px 12px; border:1px solid #243041; border-radius:12px; cursor:pointer}
+  .opt:hover{border-color:#374151}
+  .opt input{margin-right:8px; transform: translateY(1px)}
+  .feedback{font-size:.92rem; margin-top:6px; display:none}
+  .feedback.ok{color:var(--ok)}
+  .feedback.bad{color:var(--bad)}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  button{
+    background:#111827; color:#e6edf3; border:1px solid #374151; border-radius:10px; padding:10px 14px; cursor:pointer;
+  }
+  button.primary{background: var(--accent); border-color:transparent}
+  .score{font-weight:600; color:#e6edf3}
+  .hint{color:var(--info); font-size:.9rem; display:none; margin-top:6px}
+  details{margin-top:10px}
+  summary{cursor:pointer; color:#cbd5e1}
+  code, .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; font-size:.95em}
+  .grid{display:grid; gap:16px; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); margin-top:10px}
+  .pill{display:inline-block; padding:2px 8px; border-radius:999px; background:#0f172a; border:1px solid #243041; color:#cbd5e1; font-size:.8rem}
+  footer{color:#8aa0b4; text-align:center; padding:30px 12px; border-top:1px solid #1f2937}
+</style>
+</head>
+<body>
+<header>
+  <h1>Test Interactivo — IPv4 vs IPv6</h1>
+  <p class="lead">Analogía “los asientos”, límites de IPv4, NAT, estructura y notación, tipos de direcciones IPv6 (unicast/multicast/anycast), autoconfiguración e IPsec.</p>
+</header>
+
+<main>
+  <section class="panel">
+    <div class="meta">
+      <span class="badge">Nivel: Básico → Avanzado</span>
+      <span class="badge">Preguntas: 30</span>
+      <span class="badge">Tiempo recomendado: 20–25 min</span>
+    </div>
+    <h2>Instrucciones</h2>
+    <ol>
+      <li>Responde cada pregunta y pulsa <strong>Corregir</strong> para ver aciertos y explicación.</li>
+      <li>Usa <strong>Pista</strong> si lo necesitas (no resta puntos).</li>
+      <li><strong>Reiniciar</strong> limpia tus respuestas para repetir el test.</li>
+    </ol>
+    <div class="actions">
+      <button class="primary" onclick="gradeAll()">Corregir</button>
+      <button onclick="showAllHints()">Mostrar todas las pistas</button>
+      <button onclick="resetAll()">Reiniciar</button>
+      <span class="score" id="scoreBox"></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque A — Conceptos y analogías</h2>
+
+    <div class="q" data-q="1" data-ans="b">
+      <div><strong>A1.</strong> En la analogía de los “asientos”, IPv6 aporta principalmente…</div>
+      <label class="opt"><input type="radio" name="q1" value="a"> Reducir la velocidad de enrutamiento</label>
+      <label class="opt"><input type="radio" name="q1" value="b"> Espacio prácticamente ilimitado de direcciones</label>
+      <label class="opt"><input type="radio" name="q1" value="c"> Eliminar la necesidad de routers</label>
+      <div class="feedback">Explicación: IPv6 amplía el “aforo” con 128 bits de dirección.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“Más asientos para todos”.</div>
+    </div>
+
+    <div class="q" data-q="2" data-ans="a">
+      <div><strong>A2.</strong> ¿Qué tamaño usa IPv4 para el direccionamiento?</div>
+      <label class="opt"><input type="radio" name="q2" value="a"> 32 bits</label>
+      <label class="opt"><input type="radio" name="q2" value="b"> 64 bits</label>
+      <label class="opt"><input type="radio" name="q2" value="c"> 128 bits</label>
+      <div class="feedback">Explicación: 2³² ≈ 4,3 mil millones de direcciones.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Cuatro octetos.</div>
+    </div>
+
+    <div class="q" data-q="3" data-ans="c">
+      <div><strong>A3.</strong> ¿Cuál fue un factor clave para el agotamiento de IPv4?</div>
+      <label class="opt"><input type="radio" name="q3" value="a"> La caída del uso de Internet</label>
+      <label class="opt"><input type="radio" name="q3" value="b"> Reducción del tamaño de las redes privadas</label>
+      <label class="opt"><input type="radio" name="q3" value="c"> El crecimiento masivo de dispositivos conectados</label>
+      <div class="feedback">Explicación: más dispositivos → más direcciones necesarias.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Móviles, IoT, etc.</div>
+    </div>
+
+    <div class="q" data-q="4" data-ans="b">
+      <div><strong>A4.</strong> ¿Para qué se usó NAT en IPv4?</div>
+      <label class="opt"><input type="radio" name="q4" value="a"> Para cifrar el tráfico</label>
+      <label class="opt"><input type="radio" name="q4" value="b"> Para reutilizar direcciones privadas y mitigar la escasez</label>
+      <label class="opt"><input type="radio" name="q4" value="c"> Para sustituir a los switches</label>
+      <div class="feedback">Explicación: NAT permitió “multiplicar” hosts tras pocas IP públicas.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Traducción de direcciones.</div>
+    </div>
+
+    <div class="q" data-q="5" data-ans="a">
+      <div><strong>A5.</strong> ¿Qué tamaño usa IPv6 para el direccionamiento?</div>
+      <label class="opt"><input type="radio" name="q5" value="a"> 128 bits</label>
+      <label class="opt"><input type="radio" name="q5" value="b"> 32 bits</label>
+      <label class="opt"><input type="radio" name="q5" value="c"> 48 bits</label>
+      <div class="feedback">Explicación: espacio masivo de direcciones globales.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Ocho bloques hex.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque B — Estructura y notación</h2>
+
+    <div class="q" data-q="6" data-ans="c">
+      <div><strong>B6.</strong> Formato típico de IPv4:</div>
+      <label class="opt"><input type="radio" name="q6" value="a"> 8 bloques hex separados por ':'</label>
+      <label class="opt"><input type="radio" name="q6" value="b"> 6 bloques binarios</label>
+      <label class="opt"><input type="radio" name="q6" value="c"> 4 octetos en decimal separados por '.'</label>
+      <div class="feedback">Explicación: ejemplo: 192.168.1.1</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Puntos y decimal.</div>
+    </div>
+
+    <div class="q" data-q="7" data-ans="a">
+      <div><strong>B7.</strong> Formato típico de IPv6:</div>
+      <label class="opt"><input type="radio" name="q7" value="a"> 8 bloques hex separados por ':'</label>
+      <label class="opt"><input type="radio" name="q7" value="b"> 4 octetos en decimal</label>
+      <label class="opt"><input type="radio" name="q7" value="c"> 6 grupos separados por '-' </label>
+      <div class="feedback">Explicación: ejemplo: 2001:0db8:0000:0000:0000:0000:0000:0001</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Hexadecimal y dos puntos.</div>
+    </div>
+
+    <div class="q" data-q="8" data-ans="b">
+      <div><strong>B8.</strong> ¿Para qué sirve <span class="mono">::</span> en IPv6?</div>
+      <label class="opt"><input type="radio" name="q8" value="a"> Para separar octetos</label>
+      <label class="opt"><input type="radio" name="q8" value="b"> Para omitir secuencias de ceros consecutivos</label>
+      <label class="opt"><input type="radio" name="q8" value="c"> Para indicar una IP privada</label>
+      <div class="feedback">Explicación: compresión de notación al suprimir ceros.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Direcciones más legibles.</div>
+    </div>
+
+    <div class="q" data-q="9" data-ans="a">
+      <div><strong>B9.</strong> Selecciona una representación válida comprimida:</div>
+      <label class="opt"><input type="radio" name="q9" value="a"> <span class="mono">2001:db8::1</span></label>
+      <label class="opt"><input type="radio" name="q9" value="b"> <span class="mono">192.168::1</span></label>
+      <label class="opt"><input type="radio" name="q9" value="c"> <span class="mono">2001-db8-0-0-0-0-0-1</span></label>
+      <div class="feedback">Explicación: IPv6 usa “:”, IPv4 usa “.”; mezcla no válida.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">No mezcles formatos.</div>
+    </div>
+
+    <div class="q" data-q="10" data-ans="c">
+      <div><strong>B10.</strong> ¿Cuántas direcciones aprox. permite IPv6?</div>
+      <label class="opt"><input type="radio" name="q10" value="a"> 4,3 × 10<sup>9</sup></label>
+      <label class="opt"><input type="radio" name="q10" value="b"> 1 × 10<sup>12</sup></label>
+      <label class="opt"><input type="radio" name="q10" value="c"> 3,4 × 10<sup>38</sup></label>
+      <div class="feedback">Explicación: ~340 undecillones (340 con 38 ceros).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">128 bits.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque C — Clases IPv4 (recordatorio) y transición</h2>
+
+    <div class="q" data-q="11" data-ans="b">
+      <div><strong>C11.</strong> ¿Qué clases se emplean para redes de propósito general?</div>
+      <label class="opt"><input type="radio" name="q11" value="a"> D y E</label>
+      <label class="opt"><input type="radio" name="q11" value="b"> A, B y C</label>
+      <label class="opt"><input type="radio" name="q11" value="c"> Solo A</label>
+      <div class="feedback">Explicación: D=multicast, E=experimentación.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">A, B, C son las comunes.</div>
+    </div>
+
+    <div class="q" data-q="12" data-ans="a">
+      <div><strong>C12.</strong> Clase D y E se usan para…</div>
+      <label class="opt"><input type="radio" name="q12" value="a"> Multicast y fines experimentales</label>
+      <label class="opt"><input type="radio" name="q12" value="b"> Servidores web</label>
+      <label class="opt"><input type="radio" name="q12" value="c"> VLANs</label>
+      <div class="feedback">Explicación: no se asignan a hosts de uso general.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Usos especiales.</div>
+    </div>
+
+    <div class="q" data-q="13" data-ans="c">
+      <div><strong>C13.</strong> ¿Qué motivó el salto de IPv4 a IPv6?</div>
+      <label class="opt"><input type="radio" name="q13" value="a"> IPv4 era demasiado rápido</label>
+      <label class="opt"><input type="radio" name="q13" value="b"> Las redes dejaron de crecer</label>
+      <label class="opt"><input type="radio" name="q13" value="c"> Escasez de direcciones y necesidad de escalar</label>
+      <div class="feedback">Explicación: crecimiento + limitación de 32 bits.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Más dispositivos cada año.</div>
+    </div>
+
+    <div class="q" data-q="14" data-ans="b">
+      <div><strong>C14.</strong> IPv6 se considera una “evolución natural” de IPv4 porque…</div>
+      <label class="opt"><input type="radio" name="q14" value="a"> Usa direcciones más cortas</label>
+      <label class="opt"><input type="radio" name="q14" value="b"> Amplía espacio y añade mejoras (autoconfiguración, routing, seguridad)</label>
+      <label class="opt"><input type="radio" name="q14" value="c"> Sustituye los switches por routers</label>
+      <div class="feedback">Explicación: soluciona límites y añade capacidades.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">No “rompe”, mejora.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque D — Tipos de direcciones IPv6</h2>
+
+    <div class="q" data-q="15" data-ans="a">
+      <div><strong>D15.</strong> <em>Unicast</em> significa que el paquete se envía a…</div>
+      <label class="opt"><input type="radio" name="q15" value="a"> Un único destinatario</label>
+      <label class="opt"><input type="radio" name="q15" value="b"> Todos los hosts de la red</label>
+      <label class="opt"><input type="radio" name="q15" value="c"> Un grupo, pero llega al más cercano</label>
+      <div class="feedback">Explicación: punto a punto, el caso más común.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Acceder a una web.</div>
+    </div>
+
+    <div class="q" data-q="16" data-ans="b">
+      <div><strong>D16.</strong> <em>Multicast</em> permite…</div>
+      <label class="opt"><input type="radio" name="q16" value="a"> Traducir direcciones</label>
+      <label class="opt"><input type="radio" name="q16" value="b"> Enviar un paquete a múltiples receptores suscritos</label>
+      <label class="opt"><input type="radio" name="q16" value="c"> Enviar solo a routers</label>
+      <div class="feedback">Explicación: ideal para streaming o videoconferencias.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Un paquete, muchos receptores.</div>
+    </div>
+
+    <div class="q" data-q="17" data-ans="c">
+      <div><strong>D17.</strong> <em>Anycast</em> entrega el paquete a…</div>
+      <label class="opt"><input type="radio" name="q17" value="a"> Todos los hosts del mundo</label>
+      <label class="opt"><input type="radio" name="q17" value="b"> Un único host elegido al azar</label>
+      <label class="opt"><input type="radio" name="q17" value="c"> El miembro del grupo más cercano según enrutamiento</label>
+      <div class="feedback">Explicación: reduce latencia al escoger el destino “más próximo”.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Ideal para DNS.</div>
+    </div>
+
+    <div class="q" data-q="18" data-ans="b">
+      <div><strong>D18.</strong> Caso de uso típico de multicast:</div>
+      <label class="opt"><input type="radio" name="q18" value="a"> Consultar una API de un servidor</label>
+      <label class="opt"><input type="radio" name="q18" value="b"> Transmisión en vivo a muchos espectadores</label>
+      <label class="opt"><input type="radio" name="q18" value="c"> Autenticación de usuarios</label>
+      <div class="feedback">Explicación: un flujo llega a todos los suscritos.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Streaming.</div>
+    </div>
+
+    <div class="q" data-q="19" data-ans="a">
+      <div><strong>D19.</strong> Caso de uso típico de anycast:</div>
+      <label class="opt"><input type="radio" name="q19" value="a"> Servidores DNS que responden desde el nodo más cercano</label>
+      <label class="opt"><input type="radio" name="q19" value="b"> Enviar a todos los routers de la red</label>
+      <label class="opt"><input type="radio" name="q19" value="c"> Copiar datos a cada host manualmente</label>
+      <div class="feedback">Explicación: mejora tiempos de respuesta y resiliencia.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Proximidad.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque E — Ventajas de IPv6 (autoconfig., enrutamiento, seguridad)</h2>
+
+    <div class="q" data-q="20" data-ans="c">
+      <div><strong>E20.</strong> La autoconfiguración en IPv6 implica…</div>
+      <label class="opt"><input type="radio" name="q20" value="a"> Siempre requiere servidor DHCP</label>
+      <label class="opt"><input type="radio" name="q20" value="b"> Solo funciona si hay NAT</label>
+      <label class="opt"><input type="radio" name="q20" value="c"> Los dispositivos pueden obtener su IP sin configuración manual</label>
+      <div class="feedback">Explicación: reduce carga operativa en redes grandes.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">“Se configuran solos”.</div>
+    </div>
+
+    <div class="q" data-q="21" data-ans="b">
+      <div><strong>E21.</strong> ¿Qué mejora de enrutamiento sugiere el texto para IPv6?</div>
+      <label class="opt"><input type="radio" name="q21" value="a"> Más saltos obligatorios</label>
+      <label class="opt"><input type="radio" name="q21" value="b"> Estructura más jerárquica y agregable</label>
+      <label class="opt"><input type="radio" name="q21" value="c"> Eliminar las tablas</label>
+      <div class="feedback">Explicación: agrupar direcciones facilita el encaminamiento.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Menos congestión.</div>
+    </div>
+
+    <div class="q" data-q="22" data-ans="a">
+      <div><strong>E22.</strong> IPv6 integra de forma nativa…</div>
+      <label class="opt"><input type="radio" name="q22" value="a"> IPsec</label>
+      <label class="opt"><input type="radio" name="q22" value="b"> NAT</label>
+      <label class="opt"><input type="radio" name="q22" value="c"> STP</label>
+      <div class="feedback">Explicación: cifrado y autenticación a nivel IP.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Seguridad integrada.</div>
+    </div>
+
+    <div class="q" data-q="23" data-ans="c">
+      <div><strong>E23.</strong> ¿Qué afirmación es correcta sobre NAT e IPv6?</div>
+      <label class="opt"><input type="radio" name="q23" value="a"> IPv6 depende de NAT</label>
+      <label class="opt"><input type="radio" name="q23" value="b"> NAT aumenta el espacio de direcciones IPv6</label>
+      <label class="opt"><input type="radio" name="q23" value="c"> IPv6 reduce la necesidad de NAT gracias a su espacio de direcciones</label>
+      <div class="feedback">Explicación: más direcciones → menos traducción.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Cada host puede tener su IP global.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bloque F — Escenarios y verificación</h2>
+
+    <div class="q" data-q="24" data-ans="b">
+      <div><strong>F24.</strong> Red doméstica con muchos dispositivos IoT:</div>
+      <label class="opt"><input type="radio" name="q24" value="a"> Solo IP estáticas manuales</label>
+      <label class="opt"><input type="radio" name="q24" value="b"> IPv6 con autoconfiguración facilita la gestión</label>
+      <label class="opt"><input type="radio" name="q24" value="c"> Desactivar el router</label>
+      <div class="feedback">Explicación: menos trabajo manual, más escalable.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Automatiza la dirección.</div>
+    </div>
+
+    <div class="q" data-q="25" data-ans="a">
+      <div><strong>F25.</strong> Señala la dirección que pertenece a IPv6:</div>
+      <label class="opt"><input type="radio" name="q25" value="a"> <span class="mono">2001:db8::2</span></label>
+      <label class="opt"><input type="radio" name="q25" value="b"> <span class="mono">172.16.0.1</span></label>
+      <label class="opt"><input type="radio" name="q25" value="c"> <span class="mono">10.0.0.254</span></label>
+      <div class="feedback">Explicación: formato hexadecimal con “:”.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Dos puntos.</div>
+    </div>
+
+    <div class="q" data-q="26" data-ans="c">
+      <div><strong>F26.</strong> ¿Qué afirmación es <u>incorrecta</u> sobre IPv6 según el texto?</div>
+      <label class="opt"><input type="radio" name="q26" value="a"> Mejora el enrutamiento por su estructura</label>
+      <label class="opt"><input type="radio" name="q26" value="b"> Incorpora IPsec</label>
+      <label class="opt"><input type="radio" name="q26" value="c"> Reduce la necesidad de routers</label>
+      <div class="feedback">Explicación: IPv6 no elimina routers.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Cuidado con “elimina”.</div>
+    </div>
+
+    <div class="q" data-q="27" data-ans="b">
+      <div><strong>F27.</strong> Magnitud correcta del espacio IPv6 (verdadero/falso): “IPv6 = 340 con <em>36</em> ceros”.</div>
+      <label class="opt"><input type="radio" name="q27" value="a"> Verdadero</label>
+      <label class="opt"><input type="radio" name="q27" value="b"> Falso</label>
+      <div class="feedback">Explicación: correcto es 340 con <strong>38</strong> ceros (~3,4×10^38).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">128 bits = 2^128.</div>
+    </div>
+
+    <div class="q" data-q="28" data-ans="a">
+      <div><strong>F28.</strong> Al acceder a un sitio web concreto, el tráfico IP suele ser…</div>
+      <label class="opt"><input type="radio" name="q28" value="a"> Unicast</label>
+      <label class="opt"><input type="radio" name="q28" value="b"> Multicast</label>
+      <label class="opt"><input type="radio" name="q28" value="c"> Anycast en el navegador</label>
+      <div class="feedback">Explicación: cliente ↔ servidor es punto a punto (unicast).</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Destino único.</div>
+    </div>
+
+    <div class="q" data-q="29" data-ans="c">
+      <div><strong>F29.</strong> ¿Qué combinación alinea ventajas del texto?</div>
+      <label class="opt"><input type="radio" name="q29" value="a"> IPv6 + NAT + sin IPsec</label>
+      <label class="opt"><input type="radio" name="q29" value="b"> IPv4 + sin clases + sin mejoras</label>
+      <label class="opt"><input type="radio" name="q29" value="c"> IPv6 + autoconfiguración + IPsec + mejor encaminamiento</label>
+      <div class="feedback">Explicación: resume las ventajas clave de IPv6.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Automatiza, escala, protege.</div>
+    </div>
+
+    <div class="q" data-q="30" data-ans="b">
+      <div><strong>F30.</strong> Para reducir latencia hacia un servicio replicado en varios puntos, prefieres…</div>
+      <label class="opt"><input type="radio" name="q30" value="a"> Multicast</label>
+      <label class="opt"><input type="radio" name="q30" value="b"> Anycast</label>
+      <label class="opt"><input type="radio" name="q30" value="c"> Broadcast</label>
+      <div class="feedback">Explicación: anycast elige el nodo más cercano por enrutamiento.</div>
+      <button onclick="toggleHint(this)">Pista</button><div class="hint">Cercanía.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Resumen rápido</h2>
+    <div class="grid">
+      <div>
+        <div class="pill">IPv4</div>
+        <ul>
+          <li>32 bits (~4,3×10^9 direcciones)</li>
+          <li>NAT para paliar escasez</li>
+          <li>Clases A/B/C (D multicast, E experimental)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pill">IPv6</div>
+        <ul>
+          <li>128 bits (~3,4×10^38 direcciones)</li>
+          <li>Unicast, multicast, anycast</li>
+          <li>Autoconfiguración y mejor enrutamiento</li>
+          <li>IPsec integrado</li>
+        </ul>
+      </div>
+      <div>
+        <div class="pill">Notación</div>
+        <ul>
+          <li>IPv4: decimal con puntos</li>
+          <li>IPv6: hexadecimal con “:”</li>
+          <li><span class="mono">::</span> comprime ceros consecutivos</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Test generado para práctica educativa. Abre el archivo en tu navegador. Sin dependencias externas.
+</footer>
+
+<script>
+function gradeAll(){
+  const qs = document.querySelectorAll('.q');
+  let ok = 0;
+  qs.forEach(q=>{
+    const name = 'q'+q.dataset.q;
+    const ans = q.dataset.ans;
+    const chosen = document.querySelector('input[name="'+name+'"]:checked');
+    const fb = q.querySelector('.feedback');
+    if(!fb) return;
+    fb.style.display = 'block';
+    if(chosen && chosen.value === ans){
+      fb.classList.remove('bad'); fb.classList.add('ok');
+      fb.textContent = '✔ Correcto. ' + fb.textContent.replace(/^✔ Correcto\.\s*/,'').replace(/^✘ Incorrecto\.\s*/,'');
+      ok++;
+    }else{
+      fb.classList.remove('ok'); fb.classList.add('bad');
+      const correctLabel = q.querySelector('input[value="'+ans+'"]').parentElement.textContent.trim();
+      fb.textContent = '✘ Incorrecto. Respuesta correcta: ' + correctLabel + '. ' + fb.textContent.replace(/^✔ Correcto\.\s*/,'').replace(/^✘ Incorrecto\.\s*/,'');
+    }
+  });
+  document.getElementById('scoreBox').textContent = 'Puntuación: ' + ok + ' / ' + qs.length;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function toggleHint(btn){
+  const hint = btn.nextElementSibling;
+  if(!hint) return;
+  hint.style.display = (hint.style.display==='block') ? 'none' : 'block';
+}
+function showAllHints(){
+  document.querySelectorAll('.hint').forEach(h=>h.style.display='block');
+}
+function resetAll(){
+  document.querySelectorAll('input[type="radio"]').forEach(i=> i.checked=false);
+  document.querySelectorAll('.feedback').forEach(f=>{f.style.display='none'; f.classList.remove('ok','bad');});
+  document.querySelectorAll('.hint').forEach(h=>h.style.display='none');
+  document.getElementById('scoreBox').textContent='';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>

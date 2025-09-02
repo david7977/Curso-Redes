@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Subnetting Aplicado</title>
+  <style>
+    body {font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background: #f4f8fb;}
+    h1 {color: #003366;}
+    h2 {color: #00509e;}
+    .explicacion, .conceptos, .desglose, .resumen, .analogias, .novato {background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 0 5px #ccc;}
+    .preguntas {background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px #ccc;}
+    .pregunta {margin-bottom: 15px;}
+    .pregunta.correcta {color: green; font-weight: bold;}
+    .pregunta.incorrecta {color: red; font-weight: bold;}
+    button {margin: 10px 5px; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;}
+    .btn-corregir {background: #28a745; color: white;}
+    .btn-reiniciar {background: #dc3545; color: white;}
+    .btn-barajar {background: #007bff; color: white;}
+  </style>
+</head>
+<body>
+  <h1>📘 Subnetting aplicado</h1>
+
+  <div class="explicacion">
+    <h2>🧾 Explicación General</h2>
+    <p>El subnetting es la técnica que permite dividir una red grande en redes más pequeñas llamadas subredes. Esto mejora la eficiencia, la seguridad y la organización de los recursos de red. Es como dividir una gran oficina en departamentos: cada uno tiene su propio espacio, pero todos forman parte de la misma empresa.</p>
+  </div>
+
+  <div class="conceptos">
+    <h2>🧩 Conceptos Clave</h2>
+    <ul>
+      <li><b>Subred:</b> una porción de una red más grande.</li>
+      <li><b>Máscara de subred:</b> define qué parte de la dirección IP es la red y cuál es para los hosts.</li>
+      <li><b>Hosts:</b> dispositivos que se conectan en una red.</li>
+      <li><b>Router:</b> dispositivo que conecta redes y dirige el tráfico.</li>
+    </ul>
+  </div>
+
+  <div class="desglose">
+    <h2>📚 Desglose Técnico del Texto</h2>
+    <ul>
+      <li>Subnetting divide una red de clase C en subredes.</li>
+      <li>Cada subred tiene su propio rango de direcciones IP.</li>
+      <li>La configuración requiere ajustar el router y los dispositivos finales.</li>
+      <li>El Default Gateway debe coincidir con la IP del router en esa subred.</li>
+      <li>Se puede comprobar la conectividad con pings y simulaciones.</li>
+    </ul>
+  </div>
+
+  <div class="resumen">
+    <h2>📑 Resumen Exprés</h2>
+    <p>Subnetting = dividir redes grandes en subredes pequeñas ➝ mejora organización, seguridad y eficiencia.</p>
+  </div>
+
+  <div class="analogias">
+    <h2>💡 Analogía</h2>
+    <p>Es como tener una gran urbanización y dividirla en manzanas con calles propias. Cada manzana funciona de manera independiente, pero todas pertenecen a la misma ciudad.</p>
+  </div>
+
+  <div class="novato">
+    <h2>👶 Explicación para Principiantes</h2>
+    <p>Imagina que tienes una caja de juguetes enorme, pero quieres separar los coches, los muñecos y las pelotas. El subnetting hace exactamente eso con las direcciones IP: organiza y separa para que no haya caos.</p>
+  </div>
+
+  <div class="preguntas">
+    <h2>❓ Preguntas de Repaso</h2>
+
+    <div class="pregunta">
+      <p>1. ¿Qué es subnetting?</p>
+      <input type="radio" name="p1"> Dividir una red en subredes más pequeñas.<br>
+      <input type="radio" name="p1"> Un protocolo de seguridad.<br>
+      <input type="radio" name="p1"> Un software de monitoreo.
+    </div>
+
+    <div class="pregunta">
+      <p>2. ¿Qué indica la máscara de subred?</p>
+      <input type="radio" name="p2"> El número de routers disponibles.<br>
+      <input type="radio" name="p2"> Qué parte de la IP es la red y cuál es para hosts.<br>
+      <input type="radio" name="p2"> El nivel de seguridad de la red.
+    </div>
+
+    <div class="pregunta">
+      <p>3. En subnetting, ¿qué función cumple el Default Gateway?</p>
+      <input type="radio" name="p3"> Permite a los dispositivos salir de la subred.<br>
+      <input type="radio" name="p3"> Asigna direcciones IP.<br>
+      <input type="radio" name="p3"> Cifra las comunicaciones.
+    </div>
+
+    <div class="pregunta">
+      <p>4. ¿Qué pasa si no se configura bien la subred?</p>
+      <input type="radio" name="p4"> Nada, la red funciona igual.<br>
+      <input type="radio" name="p4"> Los dispositivos no se comunican correctamente.<br>
+      <input type="radio" name="p4"> Los dispositivos funcionan más rápido.
+    </div>
+
+    <div class="pregunta">
+      <p>5. ¿Cuál es la ventaja principal de usar subnetting en una empresa?</p>
+      <input type="radio" name="p5"> Reducir la cantidad de routers.<br>
+      <input type="radio" name="p5"> Mejorar seguridad, organización y eficiencia.<br>
+      <input type="radio" name="p5"> Aumentar la velocidad de internet en todos los casos.
+    </div>
+
+    <div class="pregunta">
+      <p>6. A nivel profesional: ¿Por qué subnetting ayuda en la seguridad?</p>
+      <input type="radio" name="p6"> Porque aísla amenazas dentro de una subred.<br>
+      <input type="radio" name="p6"> Porque bloquea internet.<br>
+      <input type="radio" name="p6"> Porque borra direcciones IP.
+    </div>
+
+  </div>
+
+  <div style="margin-top:20px;">
+    <button class="btn-corregir" onclick="corregir()">Corregir</button>
+    <button class="btn-barajar" onclick="barajar()">Barajar Preguntas</button>
+    <button class="btn-reiniciar" onclick="reiniciar()">Reiniciar</button>
+  </div>
+
+  <script>
+    function corregir(){
+      const respuestas = {
+        p1: 0, // primera opción correcta
+        p2: 1,
+        p3: 0,
+        p4: 1,
+        p5: 1,
+        p6: 0
+      };
+      for (let p in respuestas){
+        const opciones = document.getElementsByName(p);
+        opciones.forEach((op, i) => {
+          if (op.checked){
+            if (i === respuestas[p]) {
+              op.parentElement.className = "pregunta correcta";
+            } else {
+              op.parentElement.className = "pregunta incorrecta";
+            }
+          }
+        });
+      }
+    }
+
+    function reiniciar(){
+      const preguntas = document.querySelectorAll(".pregunta");
+      preguntas.forEach(p => {
+        p.className = "pregunta";
+        const opciones = p.querySelectorAll("input");
+        opciones.forEach(op => op.checked = false);
+      });
+    }
+
+    function barajar(){
+      const contenedor = document.querySelector(".preguntas");
+      const preguntas = Array.from(contenedor.querySelectorAll(".pregunta"));
+      for (let i = preguntas.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        contenedor.insertBefore(preguntas[j], preguntas[i]);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Direccionamiento IP Privado y NAT</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background: #f4f6f9; }
+    h1 { color: #2c3e50; }
+    h2 { color: #34495e; }
+    .explicacion, .conceptos, .desglose, .resumen, .resumen-express, .quiz { 
+      background: #fff; padding: 15px; margin-bottom: 20px; border-radius: 8px; 
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+    .correct { color: green; font-weight: bold; }
+    .incorrect { color: red; font-weight: bold; }
+    button { margin: 5px; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { opacity: 0.9; }
+    .btn-corr { background: #27ae60; color: white; }
+    .btn-rein { background: #c0392b; color: white; }
+    .btn-bar { background: #2980b9; color: white; }
+  </style>
+</head>
+<body>
+  <h1>📘 Direccionamiento IP Privado y NAT</h1>
+
+  <div class="explicacion">
+    <h2>🧾 Explicación General</h2>
+    <p>
+      Las direcciones IP privadas permiten la comunicación interna en redes locales como casas y oficinas. 
+      No se usan en Internet directamente, sino que son traducidas mediante <b>NAT (Network Address Translation)</b> 
+      en el router para compartir una única IP pública. 
+      Esto optimiza el uso de direcciones, evita el agotamiento de IPv4 y añade seguridad al ocultar las direcciones internas.
+    </p>
+  </div>
+
+  <div class="conceptos">
+    <h2>🧩 Conceptos Clave (como si tuvieras 10 años)</h2>
+    <ul>
+      <li>IP privada = tu dirección dentro de casa (nadie fuera puede verla).</li>
+      <li>IP pública = la dirección de tu casa en la ciudad (todos la ven).</li>
+      <li>NAT = portero que cambia tu dirección interna por la dirección pública de la casa cuando sales.</li>
+      <li>Gracias a NAT, varios dispositivos de tu red parecen ser uno solo en Internet.</li>
+    </ul>
+  </div>
+
+  <div class="desglose">
+    <h2>📚 Desglose Técnico</h2>
+    <ul>
+      <li><b>IP Privada:</b> Direcciones internas que no son accesibles desde Internet.</li>
+      <li><b>Bloques definidos por IETF:</b>
+        <ul>
+          <li>Clase A: 10.0.0.0 – 10.255.255.255</li>
+          <li>Clase B: 172.16.0.0 – 172.31.255.255</li>
+          <li>Clase C: 192.168.0.0 – 192.168.255.255</li>
+        </ul>
+      </li>
+      <li><b>NAT:</b> Traducción de direcciones privadas a una IP pública para acceder a Internet.</li>
+      <li><b>Ventajas:</b> Seguridad, eficiencia en uso de direcciones y escalabilidad.</li>
+    </ul>
+  </div>
+
+  <div class="resumen">
+    <h2>📝 Resumen Completo</h2>
+    <p>
+      Las IP privadas permiten la comunicación interna entre dispositivos sin exponerse directamente a Internet. 
+      Gracias al estándar IETF, existen rangos reservados en clases A, B y C. 
+      Cuando un dispositivo privado necesita acceder a Internet, el router utiliza NAT para sustituir su dirección privada por la IP pública de la red. 
+      Así, varios dispositivos pueden compartir una sola dirección pública, optimizando el espacio IPv4 y aumentando la seguridad.
+    </p>
+  </div>
+
+  <div class="resumen-express">
+    <h2>⚡ Resumen Express</h2>
+    <ul>
+      <li>IP privada = comunicación interna.</li>
+      <li>No son enrutables en Internet.</li>
+      <li>Bloques A (10.x.x.x), B (172.16-31.x.x), C (192.168.x.x).</li>
+      <li>NAT = traduce privadas a públicas.</li>
+      <li>Permite que muchos compartan una IP pública.</li>
+      <li>Optimiza IPv4 y añade seguridad.</li>
+    </ul>
+  </div>
+
+  <div class="quiz">
+    <h2>❓ Preguntas de Autoevaluación</h2>
+    <form id="quizForm">
+      <ol>
+        <li>
+          ¿Qué es una IP privada?<br>
+          <input type="radio" name="q1" value="a"> Una dirección única en Internet.<br>
+          <input type="radio" name="q1" value="b"> Una dirección usada dentro de redes locales.<br>
+          <input type="radio" name="q1" value="c"> Un protocolo de seguridad.<br>
+        </li><br>
+
+        <li>
+          ¿Por qué las IP privadas no son accesibles desde Internet?<br>
+          <input type="radio" name="q2" value="a"> Porque son filtradas por NAT.<br>
+          <input type="radio" name="q2" value="b"> Porque no están enrutadas en redes públicas.<br>
+          <input type="radio" name="q2" value="c"> Porque requieren IPv6.<br>
+        </li><br>
+
+        <li>
+          ¿Qué mecanismo traduce direcciones privadas a públicas?<br>
+          <input type="radio" name="q3" value="a"> DHCP.<br>
+          <input type="radio" name="q3" value="b"> NAT.<br>
+          <input type="radio" name="q3" value="c"> DNS.<br>
+        </li><br>
+
+        <li>
+          ¿Cuáles son los bloques reservados para IP privadas?<br>
+          <input type="radio" name="q4" value="a"> 8.8.8.8 y 1.1.1.1.<br>
+          <input type="radio" name="q4" value="b"> 10.x.x.x, 172.16-31.x.x, 192.168.x.x.<br>
+          <input type="radio" name="q4" value="c"> 100.x.x.x y 150.x.x.x.<br>
+        </li><br>
+
+        <li>
+          ¿Qué ventaja principal ofrece NAT?<br>
+          <input type="radio" name="q5" value="a"> Permite compartir una IP pública y añade seguridad.<br>
+          <input type="radio" name="q5" value="b"> Hace que todas las IP privadas sean públicas.<br>
+          <input type="radio" name="q5" value="c"> Reemplaza IPv6.<br>
+        </li><br>
+
+        <li>
+          (Profesional) En una empresa con 500 empleados, ¿por qué sería inviable dar una IP pública a cada dispositivo?<br>
+          <input type="radio" name="q6" value="a"> Porque escasean las direcciones IPv4.<br>
+          <input type="radio" name="q6" value="b"> Porque no es seguro ni eficiente.<br>
+          <input type="radio" name="q6" value="c"> Ambas respuestas son correctas.<br>
+        </li>
+      </ol>
+    </form>
+    <button class="btn-corr" onclick="corregir()">Corregir</button>
+    <button class="btn-bar" onclick="barajar()">Barajar</button>
+    <button class="btn-rein" onclick="reiniciar()">Reiniciar</button>
+    <p id="resultado"></p>
+  </div>
+
+  <script>
+    const respuestasCorrectas = {
+      q1: "b",
+      q2: "b",
+      q3: "b",
+      q4: "b",
+      q5: "a",
+      q6: "c"
+    };
+
+    const explicaciones = {
+      q1: "Las IP privadas son direcciones internas que solo funcionan dentro de redes locales.",
+      q2: "Las IP privadas no se enrutan en Internet, por eso no son accesibles desde fuera.",
+      q3: "El NAT traduce las IP privadas en públicas para salir a Internet.",
+      q4: "Los bloques privados son: 10.0.0.0/8, 172.16.0.0/12 y 192.168.0.0/16.",
+      q5: "NAT permite compartir una IP pública y oculta las IP internas, añadiendo seguridad.",
+      q6: "Dar IP pública a cada dispositivo sería imposible por escasez y falta de seguridad."
+    };
+
+    function corregir() {
+      let form = document.forms["quizForm"];
+      let resultado = "";
+      let correctas = 0;
+      let total = Object.keys(respuestasCorrectas).length;
+
+      for (let q in respuestasCorrectas) {
+        let respuesta = form[q].value;
+        if (respuesta === respuestasCorrectas[q]) {
+          resultado += `<p class='correct'>Pregunta ${q.slice(1)} correcta ✔️</p>`;
+          correctas++;
+        } else {
+          resultado += `<p class='incorrect'>Pregunta ${q.slice(1)} incorrecta ❌. Respuesta correcta: ${respuestasCorrectas[q]} → ${explicaciones[q]}</p>`;
+        }
+      }
+      document.getElementById("resultado").innerHTML = 
+        `<b>Resultado: ${correctas} de ${total} correctas</b><br>` + resultado;
+    }
+
+    function reiniciar() {
+      document.getElementById("quizForm").reset();
+      document.getElementById("resultado").innerHTML = "";
+    }
+
+    function barajar() {
+      let ol = document.querySelector("ol");
+      for (let i = ol.children.length; i >= 0; i--) {
+        ol.appendChild(ol.children[Math.random() * i | 0]);
+      }
+    }
+  </script>
+</body>
+</html>
